@@ -41,30 +41,6 @@
             background: radial-gradient(circle at center, rgba(2,4,10,0.3) 0%, rgba(2,4,10,0.9) 100%);
         }
 
-        /* ПИКСЕЛЬНЫЕ РАКЕТЫ */
-        .flying-objects {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            pointer-events: none; overflow: hidden;
-        }
-
-        .pixel-rocket {
-            position: absolute; width: 40px; height: 40px; opacity: 0;
-            filter: drop-shadow(0 0 8px rgba(255, 123, 0, 0.8)); /* Свечение от огня */
-            shape-rendering: crispEdges; /* Чтобы пиксели были четкими */
-        }
-
-        /* Настройка траекторий и размеров ракет */
-        .r1 { top: 10%; left: 110%; animation: rocketFly 6s linear infinite 0s; transform: scale(1); }
-        .r2 { top: 40%; left: 110%; animation: rocketFly 8s linear infinite 2.5s; transform: scale(0.7); }
-        .r3 { top: 75%; left: 110%; animation: rocketFly 5s linear infinite 4s; transform: scale(1.3); }
-        .r4 { top: 25%; left: 110%; animation: rocketFly 7s linear infinite 6s; transform: scale(0.9); }
-        .r5 { top: 60%; left: 110%; animation: rocketFly 9s linear infinite 1.5s; transform: scale(1.1); }
-
-        @keyframes rocketFly {
-            0% { transform: translate(0, 0) rotate(-45deg); opacity: 1; }
-            100% { transform: translate(-130vw, 130vh) rotate(-45deg); opacity: 0; }
-        }
-
         /* ШАПКА */
         .hero {
             position: relative; height: 120px; display: flex; align-items: center; justify-content: center;
@@ -128,8 +104,12 @@
         }
         .nav-item:active { background: rgba(255,255,255,0.1); }
         .nav-item.active { color: var(--primary); }
-        .nav-icon { width: 32px; height: 32px; fill: currentColor; transition: 0.3s; }
-        .nav-item.active .nav-icon { filter: drop-shadow(0 0 8px var(--primary-glow)); }
+        
+        /* Иконки в меню */
+        .nav-icon-svg { width: 32px; height: 32px; fill: currentColor; transition: 0.3s; }
+        .nav-item.active .nav-icon-svg { filter: drop-shadow(0 0 8px var(--primary-glow)); }
+        .nav-icon-emoji { font-size: 28px; filter: drop-shadow(0 0 8px transparent); transition: 0.3s; }
+        .nav-item.active .nav-icon-emoji { filter: drop-shadow(0 0 8px var(--primary-glow)); }
         
         .cart-badge { position: absolute; top: 2px; right: 2px; background: var(--danger); color: white; font-size: 10px; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; display: none; box-shadow: 0 0 10px var(--danger); border: 1px solid #000; }
 
@@ -162,92 +142,9 @@
 </head>
 <body>
 
-    <!-- ФОН И РАКЕТЫ -->
+    <!-- ФОН -->
     <div class="space-bg"></div>
     <div class="space-overlay"></div>
-    
-    <div class="flying-objects">
-        <!-- Пиксельные ракеты (нарисованы кодом SVG) -->
-        <svg class="pixel-rocket r1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <rect x="10" y="2" width="4" height="2" fill="#a3c2ff"/>
-            <rect x="9" y="4" width="6" height="2" fill="#a3c2ff"/>
-            <rect x="9" y="6" width="6" height="6" fill="#a3c2ff"/>
-            <rect x="8" y="6" width="1" height="6" fill="#4a6cf7"/>
-            <rect x="15" y="6" width="1" height="6" fill="#4a6cf7"/>
-            <rect x="10" y="7" width="4" height="4" fill="#2b3d94"/>
-            <rect x="11" y="8" width="2" height="2" fill="#4a6cf7"/>
-            <rect x="6" y="12" width="3" height="4" fill="#4a6cf7"/>
-            <rect x="15" y="12" width="3" height="4" fill="#4a6cf7"/>
-            <rect x="9" y="12" width="6" height="2" fill="#4a6cf7"/>
-            <rect x="10" y="14" width="4" height="2" fill="#4a6cf7"/>
-            <rect x="11" y="16" width="2" height="3" fill="#ff7b00"/>
-            <rect x="11" y="19" width="2" height="2" fill="#ffd000"/>
-        </svg>
-
-        <svg class="pixel-rocket r2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <rect x="10" y="2" width="4" height="2" fill="#a3c2ff"/>
-            <rect x="9" y="4" width="6" height="2" fill="#a3c2ff"/>
-            <rect x="9" y="6" width="6" height="6" fill="#a3c2ff"/>
-            <rect x="8" y="6" width="1" height="6" fill="#4a6cf7"/>
-            <rect x="15" y="6" width="1" height="6" fill="#4a6cf7"/>
-            <rect x="10" y="7" width="4" height="4" fill="#2b3d94"/>
-            <rect x="11" y="8" width="2" height="2" fill="#4a6cf7"/>
-            <rect x="6" y="12" width="3" height="4" fill="#4a6cf7"/>
-            <rect x="15" y="12" width="3" height="4" fill="#4a6cf7"/>
-            <rect x="9" y="12" width="6" height="2" fill="#4a6cf7"/>
-            <rect x="10" y="14" width="4" height="2" fill="#4a6cf7"/>
-            <rect x="11" y="16" width="2" height="3" fill="#ff7b00"/>
-            <rect x="11" y="19" width="2" height="2" fill="#ffd000"/>
-        </svg>
-
-        <svg class="pixel-rocket r3" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <rect x="10" y="2" width="4" height="2" fill="#a3c2ff"/>
-            <rect x="9" y="4" width="6" height="2" fill="#a3c2ff"/>
-            <rect x="9" y="6" width="6" height="6" fill="#a3c2ff"/>
-            <rect x="8" y="6" width="1" height="6" fill="#4a6cf7"/>
-            <rect x="15" y="6" width="1" height="6" fill="#4a6cf7"/>
-            <rect x="10" y="7" width="4" height="4" fill="#2b3d94"/>
-            <rect x="11" y="8" width="2" height="2" fill="#4a6cf7"/>
-            <rect x="6" y="12" width="3" height="4" fill="#4a6cf7"/>
-            <rect x="15" y="12" width="3" height="4" fill="#4a6cf7"/>
-            <rect x="9" y="12" width="6" height="2" fill="#4a6cf7"/>
-            <rect x="10" y="14" width="4" height="2" fill="#4a6cf7"/>
-            <rect x="11" y="16" width="2" height="3" fill="#ff7b00"/>
-            <rect x="11" y="19" width="2" height="2" fill="#ffd000"/>
-        </svg>
-
-        <svg class="pixel-rocket r4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <rect x="10" y="2" width="4" height="2" fill="#a3c2ff"/>
-            <rect x="9" y="4" width="6" height="2" fill="#a3c2ff"/>
-            <rect x="9" y="6" width="6" height="6" fill="#a3c2ff"/>
-            <rect x="8" y="6" width="1" height="6" fill="#4a6cf7"/>
-            <rect x="15" y="6" width="1" height="6" fill="#4a6cf7"/>
-            <rect x="10" y="7" width="4" height="4" fill="#2b3d94"/>
-            <rect x="11" y="8" width="2" height="2" fill="#4a6cf7"/>
-            <rect x="6" y="12" width="3" height="4" fill="#4a6cf7"/>
-            <rect x="15" y="12" width="3" height="4" fill="#4a6cf7"/>
-            <rect x="9" y="12" width="6" height="2" fill="#4a6cf7"/>
-            <rect x="10" y="14" width="4" height="2" fill="#4a6cf7"/>
-            <rect x="11" y="16" width="2" height="3" fill="#ff7b00"/>
-            <rect x="11" y="19" width="2" height="2" fill="#ffd000"/>
-        </svg>
-
-        <svg class="pixel-rocket r5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <rect x="10" y="2" width="4" height="2" fill="#a3c2ff"/>
-            <rect x="9" y="4" width="6" height="2" fill="#a3c2ff"/>
-            <rect x="9" y="6" width="6" height="6" fill="#a3c2ff"/>
-            <rect x="8" y="6" width="1" height="6" fill="#4a6cf7"/>
-            <rect x="15" y="6" width="1" height="6" fill="#4a6cf7"/>
-            <rect x="10" y="7" width="4" height="4" fill="#2b3d94"/>
-            <rect x="11" y="8" width="2" height="2" fill="#4a6cf7"/>
-            <rect x="6" y="12" width="3" height="4" fill="#4a6cf7"/>
-            <rect x="15" y="12" width="3" height="4" fill="#4a6cf7"/>
-            <rect x="9" y="12" width="6" height="2" fill="#4a6cf7"/>
-            <rect x="10" y="14" width="4" height="2" fill="#4a6cf7"/>
-            <rect x="11" y="16" width="2" height="3" fill="#ff7b00"/>
-            <rect x="11" y="19" width="2" height="2" fill="#ffd000"/>
-        </svg>
-    </div>
     
     <div id="toast" class="toast">Добавлено в корзину</div>
 
@@ -302,26 +199,26 @@
         </div>
     </div>
 
-    <!-- НИЖНЕЕ МЕНЮ (ТОЛЬКО ИКОНКИ) -->
+    <!-- НИЖНЕЕ МЕНЮ -->
     <div class="bottom-nav">
-        <!-- Каталог -->
+        <!-- Каталог (Эмодзи коробки) -->
         <div class="nav-item" onclick="switchTab('catalog')" id="nav-catalog">
-            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 4h16v16H4V4zm2 2v12h12V6H6z"/></svg>
+            <div class="nav-icon-emoji">📦</div>
         </div>
         <!-- Корзина -->
         <div class="nav-item" onclick="switchTab('cart')" id="nav-cart">
             <div style="position:relative;">
-                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                <svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
                 <div class="cart-badge" id="cart-badge">0</div>
             </div>
         </div>
         <!-- Профиль -->
         <div class="nav-item" onclick="switchTab('profile')" id="nav-profile">
-            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
         </div>
         <!-- Админ -->
         <div class="nav-item" onclick="switchTab('admin')" id="nav-admin" style="display: none; color: var(--admin-color);">
-            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1zm1-8h-2V7h2v2z"/></svg>
+            <svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1zm1-8h-2V7h2v2z"/></svg>
         </div>
     </div>
 
@@ -356,9 +253,10 @@
             window.Telegram.WebApp.setHeaderColor('#02040a');
         }
 
+        // БАЗА ТОВАРОВ (Убрал NEW, оставил ХИТ и ТОП)
         let products = [
             { id: 1, title: "XROS 6 Mini Black", desc: "Цвет: Черный", stock: 5, price: 1800, category: "pods", badge: "ХИТ", img: "" },
-            { id: 2, title: "XROS 6 Mini Jelly Blue", desc: "Цвет: Голубой", stock: 3, price: 1800, category: "pods", badge: "NEW", img: "" },
+            { id: 2, title: "XROS 6 Mini Jelly Blue", desc: "Цвет: Голубой", stock: 3, price: 1800, category: "pods", badge: "", img: "" },
             { 
                 id: 3, 
                 title: "Монашка Sweet", 
