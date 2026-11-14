@@ -31,7 +31,7 @@
             position: relative;
         }
 
-        /* ФОН С ЧЕРНОЙ ДЫРОЙ */
+        /* ФОН */
         .space-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
             background: url('https://i.pinimg.com/736x/91/11/1f/91111fd5d503d82c3081f0239c16490e.jpg') center/cover no-repeat;
@@ -43,14 +43,46 @@
 
         /* ШАПКА */
         .hero {
-            position: relative; height: 120px; display: flex; align-items: center; justify-content: center;
+            position: relative; height: 100px; display: flex; align-items: center; justify-content: center;
             border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(2,4,10,0.4);
         }
 
         .hero h1 {
-            font-size: 32px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase;
+            font-size: 28px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase;
             color: var(--primary); text-shadow: 0 0 10px var(--primary-glow);
             font-family: monospace;
+        }
+
+        /* ПОИСК */
+        .search-container {
+            padding: 15px 20px 0 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            background: var(--surface);
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+            font-family: 'Exo 2', sans-serif;
+            transition: 0.3s;
+        }
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+        .search-icon {
+            position: absolute;
+            left: 35px;
+            width: 20px;
+            height: 20px;
+            fill: var(--text-muted);
+            pointer-events: none;
         }
 
         .filters { display: flex; gap: 10px; padding: 15px 20px; overflow-x: auto; scrollbar-width: none; }
@@ -67,8 +99,9 @@
         .card-img-wrapper {
             width: 100%; height: 140px; background: linear-gradient(135deg, rgba(10,26,58,0.8), rgba(21,15,41,0.8));
             display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--surface-border);
+            position: relative; overflow: hidden;
         }
-        .card-img { width: 100%; height: 100%; object-fit: cover; }
+        .card-img { width: 100%; height: 100%; object-fit: contain; padding: 10px;}
         .card-no-img { width: 35px; height: 35px; fill: var(--primary); opacity: 0.6; }
 
         .badge { position: absolute; top: 10px; left: 10px; background: rgba(0, 242, 254, 0.9); color: #000; padding: 4px 8px; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; box-shadow: 0 0 10px var(--primary-glow); z-index: 2; }
@@ -77,8 +110,6 @@
         .card-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; line-height: 1.2; }
         .card-stock { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
         .stock-dot { width: 5px; height: 5px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 8px var(--primary); }
-        
-        .card-flavors { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 
         .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
         .price { font-size: 16px; font-weight: 800; color: var(--text); }
@@ -89,7 +120,7 @@
         .qty-btn { background: transparent; border: none; color: var(--primary); width: 28px; height: 32px; font-size: 18px; font-weight: bold; cursor: pointer; }
         .qty-num { color: var(--text); font-weight: 800; font-size: 14px; min-width: 20px; text-align: center; }
 
-        /* НИЖНЕЕ МЕНЮ (ТОЛЬКО ИКОНКИ) */
+        /* НИЖНЕЕ МЕНЮ */
         .bottom-nav { 
             position: fixed; bottom: 0; left: 0; right: 0; height: 70px; 
             background: rgba(5, 9, 20, 0.95); backdrop-filter: blur(20px); 
@@ -97,18 +128,11 @@
             border-top: 1px solid var(--surface-border); z-index: 999; 
             padding-bottom: env(safe-area-inset-bottom); 
         }
-        .nav-item { 
-            display: flex; justify-content: center; align-items: center; 
-            width: 50px; height: 50px; cursor: pointer; position: relative;
-            border-radius: 50%; transition: 0.3s; color: var(--text-muted); /* Цвет по умолчанию серый */
-        }
+        .nav-item { display: flex; justify-content: center; align-items: center; width: 50px; height: 50px; cursor: pointer; position: relative; border-radius: 50%; transition: 0.3s; color: var(--text-muted); }
         .nav-item:active { background: rgba(255,255,255,0.1); }
-        .nav-item.active { color: var(--primary); } /* Активный цвет голубой */
-        
-        /* Иконки в меню */
+        .nav-item.active { color: var(--primary); }
         .nav-icon-svg { width: 30px; height: 30px; fill: currentColor; transition: 0.3s; }
         .nav-item.active .nav-icon-svg { filter: drop-shadow(0 0 8px var(--primary-glow)); }
-        
         .cart-badge { position: absolute; top: 2px; right: 2px; background: var(--danger); color: white; font-size: 10px; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; display: none; box-shadow: 0 0 10px var(--danger); border: 1px solid #000; }
 
         .page { display: none; animation: fadeIn 0.4s ease-out; } .page.active { display: block; }
@@ -129,7 +153,6 @@
         .admin-controls { display: flex; align-items: center; gap: 10px; }
         .admin-btn { background: var(--surface); border: 1px solid var(--admin-color); color: var(--admin-color); width: 30px; height: 30px; border-radius: 8px; font-size: 18px; cursor: pointer; }
         .admin-input { width: 50px; text-align: center; background: transparent; border: 1px solid var(--admin-color); color: white; border-radius: 8px; font-size: 16px; font-weight: bold; }
-        .admin-flavors-input { width: 100%; padding: 8px; background: rgba(0,0,0,0.5); border: 1px solid var(--admin-color); color: #fff; border-radius: 8px; font-family: 'Exo 2'; font-size: 12px; }
         
         .export-btn { width: 100%; background: var(--admin-color); color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: bold; margin-top: 20px; cursor: pointer; font-size: 16px; }
         #export-textarea { width: 100%; height: 150px; background: #000; color: var(--admin-color); border: 1px solid var(--admin-color); margin-top: 10px; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 12px; display: none; }
@@ -140,7 +163,6 @@
 </head>
 <body>
 
-    <!-- ФОН -->
     <div class="space-bg"></div>
     <div class="space-overlay"></div>
     
@@ -152,10 +174,15 @@
             <h1 id="matrix-text"></h1>
         </div>
         
+        <!-- СТРОКА ПОИСКА -->
+        <div class="search-container">
+            <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input type="text" id="searchInput" class="search-input" placeholder="Поиск по названию..." oninput="handleSearch()">
+        </div>
+
         <div class="filters">
             <button class="filter-btn active" onclick="filterProducts('all', this)">Все товары</button>
             <button class="filter-btn" onclick="filterProducts('pods', this)">Поды</button>
-            <button class="filter-btn" onclick="filterProducts('liquids', this)">Жидкости</button>
         </div>
         <div class="grid" id="catalog-grid"></div>
     </div>
@@ -190,7 +217,6 @@
     <div id="page-admin" class="page">
         <div class="cart-container">
             <h2 style="margin-bottom: 20px; color: var(--admin-color);">АДМИН-ПАНЕЛЬ</h2>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">У жиж меняй текст вкусов. Если хочешь скрыть жижу — поставь остаток 0. У подов меняй количество.</p>
             <div id="admin-list"></div>
             <button class="export-btn" onclick="generateCode()">Сгенерировать код</button>
             <textarea id="export-textarea" readonly></textarea>
@@ -199,56 +225,41 @@
 
     <!-- НИЖНЕЕ МЕНЮ -->
     <div class="bottom-nav">
-        <!-- Каталог (Иконка коробки SVG) -->
         <div class="nav-item" onclick="switchTab('catalog')" id="nav-catalog">
             <svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8zM12 3.5l6.5 3.6L12 10.7 5.5 7.1 12 3.5zM4 8.6l7 3.9v6.6l-7-3.9V8.6zm9 10.5v-6.6l7-3.9v6.6l-7 3.9z"/></svg>
         </div>
-        <!-- Корзина -->
         <div class="nav-item" onclick="switchTab('cart')" id="nav-cart">
             <div style="position:relative;">
                 <svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
                 <div class="cart-badge" id="cart-badge">0</div>
             </div>
         </div>
-        <!-- Профиль -->
         <div class="nav-item" onclick="switchTab('profile')" id="nav-profile">
             <svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
         </div>
-        <!-- Админ -->
         <div class="nav-item" onclick="switchTab('admin')" id="nav-admin" style="display: none; color: var(--admin-color);">
             <svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1zm1-8h-2V7h2v2z"/></svg>
         </div>
     </div>
 
     <script>
-        // ЭФФЕКТ МАТРИЦЫ (зациклен каждые 14 секунд)
+        // ЭФФЕКТ МАТРИЦЫ (зациклен)
         function runMatrixEffect() {
             const targetText = "LEGION SHOP";
             const chars = "!<>-_\\/[]{}—=+*^?#________01";
             let iteration = 0;
             const el = document.getElementById("matrix-text");
-            
-            // Сразу заполняем случайными символами перед сборкой
             el.innerText = targetText.split("").map(() => chars[Math.floor(Math.random() * chars.length)]).join("");
-
             const interval = setInterval(() => {
-                el.innerText = targetText
-                    .split("")
-                    .map((letter, index) => {
-                        if(index < iteration) return targetText[index];
-                        return chars[Math.floor(Math.random() * chars.length)];
-                    })
-                    .join("");
-                
+                el.innerText = targetText.split("").map((letter, index) => {
+                    if(index < iteration) return targetText[index];
+                    return chars[Math.floor(Math.random() * chars.length)];
+                }).join("");
                 if(iteration >= targetText.length) clearInterval(interval);
                 iteration += 1 / 3;
             }, 50);
         }
-
-        // Запуск первого раза
         runMatrixEffect();
-        
-        // Запуск каждые 14 секунд (14000 мс)
         setInterval(runMatrixEffect, 14000);
 
         const ADMIN_USERNAME = 'managerlegionshop'; 
@@ -260,37 +271,26 @@
             window.Telegram.WebApp.setHeaderColor('#02040a');
         }
 
-        // БАЗА ТОВАРОВ
+        // ТОВАРЫ (Только XROS 6 Mini и XROS 6)
+        // Обрати внимание на поле img. Там указаны имена файлов, которые ты должен загрузить.
         let products = [
-            { id: 1, title: "XROS 6 Mini Black", desc: "Цвет: Черный", stock: 5, price: 1800, category: "pods", badge: "ХИТ", img: "" },
-            { id: 2, title: "XROS 6 Mini Jelly Blue", desc: "Цвет: Голубой", stock: 3, price: 1800, category: "pods", badge: "", img: "" },
-            { 
-                id: 3, 
-                title: "Монашка Sweet", 
-                desc: "80 мг", 
-                flavors: ["Арбуз лайм малина", "Газировка с вишней", "Клубника банан", "Мохито со льдом", "Черника дыня", "Кислый Чупа-Чупс"],
-                stock: 10, 
-                price: 500, 
-                category: "liquids", 
-                badge: "",
-                img: ""
-            },
-            { 
-                id: 4, 
-                title: "Самоубийца 100мг", 
-                desc: "Danger", 
-                flavors: ["Кислое яблоко ежевика", "Зеленый скиттлс", "Кола лесные ягоды", "Классический энергетик"],
-                stock: 8, 
-                price: 550, 
-                category: "liquids", 
-                badge: "ТОП",
-                img: ""
-            }
+            { id: 1, title: "XROS 6 Mini Black", desc: "Цвет: Черный", stock: 5, price: 1800, category: "pods", badge: "ХИТ", img: "xros6mini_black.jpg" },
+            { id: 2, title: "XROS 6 Mini Jelly Blue", desc: "Цвет: Голубой", stock: 3, price: 1800, category: "pods", badge: "", img: "xros6mini_blue.jpg" },
+            { id: 3, title: "XROS 6 Mini Plume Pink", desc: "Цвет: Розовый", stock: 2, price: 1800, category: "pods", badge: "", img: "xros6mini_pink.jpg" },
+            { id: 4, title: "XROS 6", desc: "Мощный под с экраном", stock: 4, price: 2500, category: "pods", badge: "NEW", img: "xros6.jpg" }
         ];
 
         let cart = [];
         let activeCategory = 'all'; 
+        let searchQuery = ''; // Переменная для поиска
+
         try { cart = JSON.parse(localStorage.getItem('legion_cart_cosmic')) || []; } catch(e) {}
+
+        // Обработчик поиска
+        function handleSearch() {
+            searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            renderProducts();
+        }
 
         function filterProducts(category, btnElement) {
             activeCategory = category; 
@@ -302,9 +302,14 @@
         function renderProducts() {
             const grid = document.getElementById('catalog-grid');
             
+            // Фильтруем по категории
             let filtered = products.filter(p => p.stock > 0);
             if (activeCategory !== 'all') {
                 filtered = filtered.filter(p => p.category === activeCategory);
+            }
+            // Фильтруем по поиску
+            if (searchQuery !== '') {
+                filtered = filtered.filter(p => p.title.toLowerCase().includes(searchQuery));
             }
             
             grid.innerHTML = filtered.map(p => {
@@ -315,22 +320,19 @@
                     ? `<button class="buy-btn" onclick="changeQty(${p.id}, 1)">+</button>`
                     : `<div class="qty-control"><button class="qty-btn" onclick="changeQty(${p.id}, -1)">-</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button></div>`;
 
+                // Логика отображения фото
                 let imgHTML = '';
                 if (p.img && p.img.trim() !== "") {
-                    imgHTML = `<img src="${p.img}" class="card-img" alt="${p.title}">`;
+                    // Если фото есть, пытаемся загрузить. Если ошибка (onerror) - показываем SVG иконку.
+                    imgHTML = `
+                        <img src="${p.img}" class="card-img" alt="${p.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <svg class="card-no-img" style="display:none;" viewBox="0 0 24 24"><path d="M18 4H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 12H8V8h8v8z"/></svg>
+                    `;
                 } else {
-                    let iconSVG = p.category === 'pods' 
-                        ? `<svg class="card-no-img" viewBox="0 0 24 24"><path d="M18 4H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 12H8V8h8v8z"/></svg>` 
-                        : `<svg class="card-no-img" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
-                    imgHTML = iconSVG;
+                    imgHTML = `<svg class="card-no-img" viewBox="0 0 24 24"><path d="M18 4H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 12H8V8h8v8z"/></svg>`;
                 }
 
-                let infoHTML = '';
-                if (p.category === 'liquids' && p.flavors) {
-                    infoHTML = `<div class="card-flavors"><span style="color:var(--primary); font-weight:600;">Вкусы:</span> ${p.flavors.join(', ')}</div>`;
-                } else {
-                    infoHTML = `<div class="card-stock"><div class="stock-dot"></div> В наличии (${p.stock})</div>`;
-                }
+                let infoHTML = `<div class="card-stock"><div class="stock-dot"></div> В наличии (${p.stock})</div>`;
 
                 return `
                 <div class="card">
@@ -398,32 +400,16 @@
         function renderAdminPanel() {
             const list = document.getElementById('admin-list');
             list.innerHTML = products.map(p => {
-                let controlHTML = '';
-                
-                if (p.category === 'liquids') {
-                    controlHTML = `
-                        <input type="text" class="admin-flavors-input" value="${p.flavors ? p.flavors.join(', ') : ''}" onchange="setFlavors(${p.id}, this.value)" placeholder="Вкусы через запятую">
-                        <div style="margin-top:10px; display:flex; align-items:center; gap:10px; font-size:12px; color:var(--text-muted);">
-                            Скрыть (0): <input type="number" class="admin-input" value="${p.stock}" onchange="setStock(${p.id}, this.value)">
-                        </div>
-                    `;
-                } else {
-                    controlHTML = `
+                return `
+                <div class="admin-item">
+                    <div class="admin-header">
+                        <div class="admin-title">${p.title}</div>
                         <div class="admin-controls">
                             <button class="admin-btn" onclick="updateStock(${p.id}, -1)">-</button>
                             <input type="number" class="admin-input" value="${p.stock}" onchange="setStock(${p.id}, this.value)">
                             <button class="admin-btn" onclick="updateStock(${p.id}, 1)">+</button>
                         </div>
-                    `;
-                }
-
-                return `
-                <div class="admin-item">
-                    <div class="admin-header">
-                        <div class="admin-title">${p.title}</div>
-                        ${p.category !== 'liquids' ? controlHTML : ''}
                     </div>
-                    ${p.category === 'liquids' ? controlHTML : ''}
                 </div>
                 `;
             }).join('');
@@ -440,12 +426,6 @@
             const p = products.find(p => p.id === id);
             p.stock = parseInt(val) || 0;
             if(p.stock < 0) p.stock = 0;
-            renderAdminPanel();
-        }
-
-        function setFlavors(id, val) {
-            const p = products.find(p => p.id === id);
-            p.flavors = val.split(',').map(f => f.trim()).filter(f => f !== '');
             renderAdminPanel();
         }
 
