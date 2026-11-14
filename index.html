@@ -8,29 +8,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #050914;
-            --surface: rgba(15, 25, 50, 0.6);
-            --surface-border: rgba(0, 240, 255, 0.2);
+            --bg: #02040a;
+            --surface: rgba(10, 15, 30, 0.7);
+            --surface-border: rgba(0, 240, 255, 0.3);
             --primary: #00f2fe;
-            --primary-glow: rgba(0, 242, 254, 0.4);
+            --primary-glow: rgba(0, 242, 254, 0.5);
             --text: #ffffff;
             --text-muted: #8ba3c7;
             --danger: #ff3366;
             --admin-color: #2ecc71;
+            --meteor-color: #ffaa00;
         }
 
-        /* ЖЕСТКО СКРЫВАЕМ ПЛАШКУ NETLIFY */
-        #netlify-badge, 
-        .netlify-badge,
-        iframe[title="netlify"],
-        a[href*="netlify.com"],
-        div[style*="netlify"] {
-            display: none !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-            pointer-events: none !important;
-            z-index: -9999 !important;
-        }
+        /* Скрываем плашку Netlify */
+        #netlify-badge, .netlify-badge, iframe[title="netlify"], a[href*="netlify.com"], div[style*="netlify"] { display: none !important; }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Exo 2', sans-serif; -webkit-tap-highlight-color: transparent; }
 
@@ -42,211 +33,166 @@
             position: relative;
         }
 
+        /* ФОН С ЧЕРНОЙ ДЫРОЙ */
         .space-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background: radial-gradient(circle at 50% 0%, #0a1a3a 0%, #050914 70%);
+            background: url('https://i.pinimg.com/1200x/36/65/6e/36656e1fabeb3f61c484794490c65abf.jpg') center/cover no-repeat;
+            background-color: #000;
+            opacity: 0.6; /* Чтоб не перебивало текст */
         }
+        /* Планеты и звезды (дополнительный слой) */
         .stars {
             position: absolute; width: 100%; height: 100%;
-            background-image: 
-                radial-gradient(1px 1px at 20px 30px, #ffffff, rgba(0,0,0,0)),
-                radial-gradient(1px 1px at 40px 70px, #ffffff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 90px 40px, #00f2fe, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 160px 120px, #ffffff, rgba(0,0,0,0));
+            background-image: radial-gradient(1px 1px at 20px 30px, #ffffff, rgba(0,0,0,0)), radial-gradient(1px 1px at 40px 70px, #ffffff, rgba(0,0,0,0)), radial-gradient(2px 2px at 90px 40px, #00f2fe, rgba(0,0,0,0)), radial-gradient(2px 2px at 160px 120px, #ffffff, rgba(0,0,0,0));
             background-repeat: repeat; background-size: 200px 200px;
-            animation: twinkle 5s infinite alternate;
+            animation: twinkle 4s infinite alternate;
         }
         @keyframes twinkle { 0% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        /* КОСМИЧЕСКАЯ ШАПКА */
+        /* ШАПКА С ПРОЛЕТАЮЩИМ ТЕКСТОМ */
         .hero {
             position: relative;
-            height: 140px;
+            height: 120px;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            background: radial-gradient(circle at center, rgba(0,242,254,0.05) 0%, transparent 60%);
+            background: radial-gradient(circle at center, rgba(0,242,254,0.1) 0%, transparent 70%);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .flying-text-container { position: relative; z-index: 2; animation: flyAround 8s linear infinite; }
+        .flying-text-container {
+            position: absolute;
+            white-space: nowrap;
+            animation: flyAcross 10s linear infinite;
+            z-index: 5;
+        }
 
-        .hero h1 { 
-            font-size: 28px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; text-align: center;
+        .hero h1 {
+            font-size: 32px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase;
         }
 
         .shimmer-text {
             background: linear-gradient(90deg, #00f2fe 0%, #ffffff 50%, #00f2fe 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 3s linear infinite;
+            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: shine 2s linear infinite;
         }
         @keyframes shine { to { background-position: 200% center; } }
 
-        @keyframes flyAround {
-            0% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(15px, -10px) scale(1.02); }
-            50% { transform: translate(0, -20px) scale(1); }
-            75% { transform: translate(-15px, -10px) scale(0.98); }
-            100% { transform: translate(0, 0) scale(1); }
+        /* Ползание по всей ширине */
+        @keyframes flyAcross {
+            0% { transform: translateX(100vw); }
+            100% { transform: translateX(-100%); }
         }
 
-        .hero p { font-size: 13px; color: var(--text-muted); letter-spacing: 1px; position: relative; z-index: 2; }
-
-        /* Метеориты */
+        /* ОГНЕННЫЕ МЕТЕОРИТЫ */
+        .meteor-container { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; }
         .meteor {
-            position: absolute; width: 2px; height: 2px; background: #fff; border-radius: 50%;
-            box-shadow: 0 0 10px 2px var(--primary); opacity: 0;
+            position: absolute; width: 4px; height: 4px; background: #fff; border-radius: 50%;
+            box-shadow: 0 0 15px 5px var(--meteor-color); opacity: 0;
         }
         .meteor::after {
-            content: ''; position: absolute; top: 50%; transform: translateY(-50%); width: 80px; height: 1px;
-            background: linear-gradient(90deg, var(--primary), transparent);
+            content: ''; position: absolute; top: 50%; transform: translateY(-50%); width: 150px; height: 2px;
+            background: linear-gradient(90deg, var(--meteor-color), transparent);
+            border-radius: 50%;
         }
-        .m1 { top: -20px; left: 10%; animation: meteorDrop 3s linear infinite 0s; }
-        .m2 { top: -20px; left: 70%; animation: meteorDrop 4s linear infinite 1.5s; }
-        .m3 { top: -20px; left: 40%; animation: meteorDrop 2.5s linear infinite 0.7s; }
-        .m4 { top: -20px; left: 90%; animation: meteorDrop 3.5s linear infinite 2.5s; }
-        @keyframes meteorDrop {
-            0% { transform: translate(0, 0) rotate(-45deg); opacity: 1; }
-            100% { transform: translate(-150px, 150px) rotate(-45deg); opacity: 0; }
+        /* Траектории полета */
+        .m1 { top: 10%; left: 110%; animation: meteorFly 2s linear infinite 0s; }
+        .m2 { top: 30%; left: 110%; animation: meteorFly 2.5s linear infinite 1s; }
+        .m3 { top: 50%; left: 110%; animation: meteorFly 1.8s linear infinite 2s; }
+        .m4 { top: 70%; left: 110%; animation: meteorFly 3s linear infinite 0.5s; }
+        .m5 { top: 20%; left: 110%; animation: meteorFly 2.2s linear infinite 3.5s; }
+        .m6 { top: 80%; left: 110%; animation: meteorFly 1.5s linear infinite 4s; }
+        .m7 { top: 40%; left: 110%; animation: meteorFly 2.8s linear infinite 2.5s; }
+        .m8 { top: 90%; left: 110%; animation: meteorFly 2s linear infinite 5s; }
+
+        @keyframes meteorFly {
+            0% { transform: translate(0, 0) rotate(-35deg); opacity: 1; }
+            100% { transform: translate(-800px, 600px) rotate(-35deg); opacity: 0; }
         }
 
         .filters { display: flex; gap: 10px; padding: 15px 20px; overflow-x: auto; scrollbar-width: none; }
         .filters::-webkit-scrollbar { display: none; }
-        .filter-btn {
-            background: var(--surface); backdrop-filter: blur(10px); border: 1px solid var(--surface-border);
-            color: var(--text-muted); padding: 8px 16px; border-radius: 20px; font-size: 14px; white-space: nowrap; 
-            transition: 0.3s; cursor: pointer; font-family: 'Exo 2', sans-serif;
-        }
+        .filter-btn { background: var(--surface); backdrop-filter: blur(10px); border: 1px solid var(--surface-border); color: var(--text-muted); padding: 8px 16px; border-radius: 20px; font-size: 14px; white-space: nowrap; transition: 0.3s; cursor: pointer; }
         .filter-btn.active { background: var(--primary); color: #000; font-weight: 800; border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
 
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px 20px 20px; }
 
-        .card {
-            background: var(--surface); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;
-            border: 1px solid var(--surface-border); transition: transform 0.2s, box-shadow 0.3s;
-            position: relative;
-        }
+        .card { background: var(--surface); backdrop-filter: blur(15px); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; border: 1px solid var(--surface-border); transition: 0.3s; position: relative; }
         .card:active { transform: scale(0.97); box-shadow: 0 0 20px var(--primary-glow); }
         
-        /* Стильная заглушка вместо фото */
-        .card-no-img { 
-            width: 100%; height: 100px; background: linear-gradient(135deg, #0a1a3a, #150f29);
-            display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--surface-border);
-        }
-        .card-no-img svg { width: 40px; height: 40px; fill: var(--primary); opacity: 0.5; }
-
-        .badge {
-            position: absolute; top: 10px; left: 10px; background: rgba(0, 242, 254, 0.9); color: #000;
-            padding: 4px 8px; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase;
-            box-shadow: 0 0 10px var(--primary-glow); z-index: 2;
-        }
+        .card-no-img { width: 100%; height: 90px; background: linear-gradient(135deg, rgba(10,26,58,0.8), rgba(21,15,41,0.8)); display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--surface-border); }
+        .card-no-img svg { width: 35px; height: 35px; fill: var(--primary); opacity: 0.6; }
+        .badge { position: absolute; top: 10px; left: 10px; background: rgba(0, 242, 254, 0.9); color: #000; padding: 4px 8px; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; box-shadow: 0 0 10px var(--primary-glow); z-index: 2; }
 
         .card-body { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
         .card-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; line-height: 1.2; }
-        .card-stock { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 5px; }
+        .card-stock { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
         .stock-dot { width: 5px; height: 5px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 8px var(--primary); }
         
-        .card-footer { display: flex; justify-content: space-between; align-items: center; }
+        /* Вкусы жижи */
+        .card-flavors { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+
+        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
         .price { font-size: 16px; font-weight: 800; color: var(--text); }
         
-        .buy-btn {
-            background: transparent; border: 2px solid var(--primary); color: var(--primary); width: 34px; height: 34px;
-            border-radius: 10px; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: 0.3s; box-shadow: inset 0 0 10px rgba(0, 242, 254, 0.2);
-            user-select: none; padding-bottom: 2px;
-        }
-        .buy-btn:active { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); transform: scale(0.9); }
-
-        .qty-control {
-            display: flex; align-items: center; background: rgba(0, 242, 254, 0.1);
-            border: 1px solid var(--primary); border-radius: 10px; overflow: hidden;
-        }
-        .qty-btn {
-            background: transparent; border: none; color: var(--primary); width: 28px; height: 32px;
-            font-size: 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;
-        }
-        .qty-btn:active { background: rgba(0, 242, 254, 0.3); }
+        .buy-btn { background: transparent; border: 2px solid var(--primary); color: var(--primary); width: 34px; height: 34px; border-radius: 10px; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
+        .buy-btn:active { background: var(--primary); color: #000; }
+        .qty-control { display: flex; align-items: center; background: rgba(0, 242, 254, 0.1); border: 1px solid var(--primary); border-radius: 10px; overflow: hidden; }
+        .qty-btn { background: transparent; border: none; color: var(--primary); width: 28px; height: 32px; font-size: 18px; font-weight: bold; cursor: pointer; }
         .qty-num { color: var(--text); font-weight: 800; font-size: 14px; min-width: 20px; text-align: center; }
 
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0; height: 75px;
-            background: rgba(5, 9, 20, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            display: flex; justify-content: space-around; align-items: center;
-            border-top: 1px solid var(--surface-border); z-index: 999; /* Подняли выше плашки */
-            padding-bottom: env(safe-area-inset-bottom);
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
-        }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; color: var(--text-muted);
-            font-size: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; position: relative;
-            z-index: 1000; /* Чтобы точно кликалось */
-        }
-        .nav-item.active { color: var(--primary); text-shadow: 0 0 10px var(--primary-glow); }
-        .nav-icon { width: 24px; height: 24px; margin-bottom: 4px; fill: currentColor; transition: 0.3s; }
-        .nav-item.active .nav-icon { filter: drop-shadow(0 0 5px var(--primary)); }
-        
-        .cart-badge {
-            position: absolute; top: -5px; right: -10px; background: var(--danger); color: white;
-            font-size: 10px; font-weight: bold; width: 16px; height: 16px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; display: none;
-            box-shadow: 0 0 10px var(--danger);
-        }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 75px; background: rgba(5, 9, 20, 0.95); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid var(--surface-border); z-index: 999; padding-bottom: env(safe-area-inset-bottom); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 10px; font-weight: 600; cursor: pointer; }
+        .nav-item.active { color: var(--primary); }
+        .nav-icon { width: 24px; height: 24px; margin-bottom: 4px; fill: currentColor; }
+        .cart-badge { position: absolute; top: -5px; right: -10px; background: var(--danger); color: white; font-size: 10px; font-weight: bold; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; display: none; }
 
-        .page { display: none; animation: fadeIn 0.4s ease-out; }
-        .page.active { display: block; }
+        .page { display: none; animation: fadeIn 0.4s ease-out; } .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
         .cart-container { padding: 20px; }
         .cart-item { display: flex; justify-content: space-between; align-items: center; background: var(--surface); backdrop-filter: blur(10px); border: 1px solid var(--surface-border); padding: 15px; border-radius: 16px; margin-bottom: 10px; }
-        .checkout-btn {
-            position: fixed; bottom: 90px; left: 20px; right: 20px;
-            background: linear-gradient(90deg, #00f2fe 0%, #4facfe 100%); color: #000;
-            padding: 16px; border-radius: 16px; border: none; font-size: 16px; font-weight: 800; text-transform: uppercase;
-            box-shadow: 0 10px 20px var(--primary-glow); cursor: pointer; display: none; font-family: 'Exo 2', sans-serif;
-        }
+        .checkout-btn { position: fixed; bottom: 90px; left: 20px; right: 20px; background: linear-gradient(90deg, #00f2fe 0%, #4facfe 100%); color: #000; padding: 16px; border-radius: 16px; border: none; font-size: 16px; font-weight: 800; text-transform: uppercase; box-shadow: 0 10px 20px var(--primary-glow); cursor: pointer; display: none; }
 
-        .profile-menu-item {
-            background: var(--surface); border: 1px solid var(--surface-border);
-            padding: 16px; border-radius: 16px; margin-bottom: 10px; display: flex; justify-content: space-between;
-            align-items: center; cursor: pointer; transition: 0.2s;
-        }
-        .profile-menu-item:active { background: rgba(0, 242, 254, 0.1); transform: scale(0.98); }
+        .profile-menu-item { background: var(--surface); border: 1px solid var(--surface-border); padding: 16px; border-radius: 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
         .profile-menu-item span { font-size: 15px; font-weight: 600; }
         .profile-menu-item .arrow { color: var(--primary); font-size: 18px; }
 
         /* Админка */
-        .admin-item { display: flex; justify-content: space-between; background: var(--surface); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--surface-border); }
+        .admin-item { display: flex; flex-direction: column; background: var(--surface); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--surface-border); }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .admin-title { font-size: 14px; font-weight: 600; }
         .admin-controls { display: flex; align-items: center; gap: 10px; }
         .admin-btn { background: var(--surface); border: 1px solid var(--admin-color); color: var(--admin-color); width: 30px; height: 30px; border-radius: 8px; font-size: 18px; cursor: pointer; }
         .admin-input { width: 50px; text-align: center; background: transparent; border: 1px solid var(--admin-color); color: white; border-radius: 8px; font-size: 16px; font-weight: bold; }
+        .admin-flavors-input { width: 100%; padding: 8px; background: rgba(0,0,0,0.5); border: 1px solid var(--admin-color); color: #fff; border-radius: 8px; font-family: 'Exo 2'; font-size: 12px; }
+        
         .export-btn { width: 100%; background: var(--admin-color); color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: bold; margin-top: 20px; cursor: pointer; font-size: 16px; }
         #export-textarea { width: 100%; height: 150px; background: #000; color: var(--admin-color); border: 1px solid var(--admin-color); margin-top: 10px; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 12px; display: none; }
 
-        .toast {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
-            background: rgba(0, 242, 254, 0.9); color: #000; padding: 12px 24px; border-radius: 30px;
-            font-weight: 800; font-size: 14px; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 2000; opacity: 0;
-            box-shadow: 0 0 20px var(--primary-glow); pointer-events: none;
-        }
+        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: rgba(0, 242, 254, 0.9); color: #000; padding: 12px 24px; border-radius: 30px; font-weight: 800; font-size: 14px; transition: 0.4s; z-index: 2000; opacity: 0; pointer-events: none; }
         .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     </style>
 </head>
 <body>
 
+    <!-- ФОН -->
     <div class="space-bg"><div class="stars"></div></div>
+    
     <div id="toast" class="toast">Добавлено в корзину</div>
 
     <!-- КАТАЛОГ -->
     <div id="page-catalog" class="page active">
         <div class="hero">
-            <div class="meteor m1"></div><div class="meteor m2"></div><div class="meteor m3"></div><div class="meteor m4"></div>
-            <div class="flying-text-container"><h1 class="shimmer-text">LEGION SHOP</h1></div>
-            <p>Космический ассортимент</p>
+            <div class="meteor-container">
+                <div class="meteor m1"></div><div class="meteor m2"></div><div class="meteor m3"></div><div class="meteor m4"></div>
+                <div class="meteor m5"></div><div class="meteor m6"></div><div class="meteor m7"></div><div class="meteor m8"></div>
+            </div>
+            <div class="flying-text-container">
+                <h1 class="shimmer-text">LEGION SHOP</h1>
+            </div>
         </div>
+        
         <div class="filters">
             <button class="filter-btn active" onclick="filterProducts('all', this)">Все товары</button>
             <button class="filter-btn" onclick="filterProducts('pods', this)">Поды</button>
@@ -275,17 +221,17 @@
                     <p style="color:var(--primary); font-size:14px;">@managerlegionshop</p>
                 </div>
             </div>
-            <div class="profile-menu-item" onclick="alert('История заказов пока пуста')"><div><span>История заказов</span></div><span class="arrow">›</span></div>
-            <div class="profile-menu-item" onclick="alert('У вас пока нет промокодов')"><div><span>Ваши промокоды</span></div><span class="arrow">›</span></div>
+            <div class="profile-menu-item"><div><span>История заказов</span></div><span class="arrow">›</span></div>
+            <div class="profile-menu-item"><div><span>Ваши промокоды</span></div><span class="arrow">›</span></div>
             <div class="profile-menu-item" onclick="window.open('https://t.me/managerlegionshop', '_blank')"><div><span>Поддержка</span></div><span class="arrow">›</span></div>
         </div>
     </div>
 
-    <!-- АДМИНКА (Скрытая вкладка) -->
+    <!-- АДМИНКА -->
     <div id="page-admin" class="page">
         <div class="cart-container">
             <h2 style="margin-bottom: 20px; color: var(--admin-color);">АДМИН-ПАНЕЛЬ</h2>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Меняй наличие товаров. Кнопка ниже сгенерирует код, который нужно вставить в файл index.html.</p>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">У жиж меняй текст вкусов. Если хочешь скрыть жижу — поставь остаток 0. У подов меняй количество.</p>
             <div id="admin-list"></div>
             <button class="export-btn" onclick="generateCode()">Сгенерировать код</button>
             <textarea id="export-textarea" readonly></textarea>
@@ -294,46 +240,48 @@
 
     <!-- НИЖНЕЕ МЕНЮ -->
     <div class="bottom-nav">
-        <div class="nav-item" onclick="switchTab('catalog')" id="nav-catalog">
-            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 4h16v16H4V4zm2 2v12h12V6H6z"/></svg><span>Каталог</span>
-        </div>
+        <div class="nav-item" onclick="switchTab('catalog')" id="nav-catalog"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 4h16v16H4V4zm2 2v12h12V6H6z"/></svg><span>Каталог</span></div>
         <div class="nav-item" onclick="switchTab('cart')" id="nav-cart">
-            <div style="position:relative;">
-                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
-                <div class="cart-badge" id="cart-badge">0</div>
-            </div><span>Корзина</span>
+            <div style="position:relative;"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg><div class="cart-badge" id="cart-badge">0</div></div><span>Корзина</span>
         </div>
-        <div class="nav-item" onclick="switchTab('profile')" id="nav-profile">
-            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Профиль</span>
-        </div>
-        <!-- Вкладка админа (скрыта по умолчанию) -->
-        <div class="nav-item" onclick="switchTab('admin')" id="nav-admin" style="display: none; color: var(--admin-color);">
-            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1zm1-8h-2V7h2v2z"/></svg>
-            <span>Админ</span>
-        </div>
+        <div class="nav-item" onclick="switchTab('profile')" id="nav-profile"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Профиль</span></div>
+        <div class="nav-item" onclick="switchTab('admin')" id="nav-admin" style="display: none; color: var(--admin-color);"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1zm1-8h-2V7h2v2z"/></svg><span>Админ</span></div>
     </div>
 
     <script>
-        // ВАШ ЮЗЕРНЕЙМ ДЛЯ ДОСТУПА К АДМИНКЕ
         const ADMIN_USERNAME = 'managerlegionshop'; 
-
         const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
-        if (tgUser && tgUser.username === ADMIN_USERNAME) {
-            document.getElementById('nav-admin').style.display = 'flex';
-        }
+        if (tgUser && tgUser.username === ADMIN_USERNAME) document.getElementById('nav-admin').style.display = 'flex';
 
         if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.expand();
-            window.Telegram.WebApp.setHeaderColor('#050914');
+            window.Telegram.WebApp.setHeaderColor('#02040a');
         }
 
-        // ТОВАРЫ (без картинок)
+        // ОБНОВЛЕННАЯ БАЗА ТОВАРОВ
         let products = [
             { id: 1, title: "XROS 6 Mini Black", desc: "Цвет: Черный", stock: 5, price: 1800, category: "pods", badge: "ХИТ" },
             { id: 2, title: "XROS 6 Mini Jelly Blue", desc: "Цвет: Голубой", stock: 3, price: 1800, category: "pods", badge: "NEW" },
-            { id: 3, title: "XROS 6 Mini Plume Pink", desc: "Цвет: Розовый", stock: 2, price: 1800, category: "pods", badge: "" },
-            { id: 4, title: "Монашка Sweet", desc: "80 мг", stock: 10, price: 500, category: "liquids", badge: "" },
-            { id: 5, title: "Самоубийца 100мг", desc: "Danger", stock: 8, price: 550, category: "liquids", badge: "ТОП" }
+            { 
+                id: 3, 
+                title: "Монашка Sweet", 
+                desc: "80 мг", 
+                flavors: ["Арбуз лайм малина", "Газировка с вишней", "Клубника банан", "Мохито со льдом", "Черника дыня", "Кислый Чупа-Чупс"],
+                stock: 10, 
+                price: 500, 
+                category: "liquids", 
+                badge: "" 
+            },
+            { 
+                id: 4, 
+                title: "Самоубийца 100мг", 
+                desc: "Danger", 
+                flavors: ["Кислое яблоко ежевика", "Зеленый скиттлс", "Кола лесные ягоды", "Классический энергетик"],
+                stock: 8, 
+                price: 550, 
+                category: "liquids", 
+                badge: "ТОП" 
+            }
         ];
 
         let cart = [];
@@ -349,45 +297,41 @@
 
         function renderProducts() {
             const grid = document.getElementById('catalog-grid');
-            const filtered = activeCategory === 'all' ? products : products.filter(p => p.category === activeCategory);
+            
+            // ФИЛЬТРУЕМ: Скрываем ВСЕ товары, у которых stock = 0
+            let filtered = products.filter(p => p.stock > 0);
+            if (activeCategory !== 'all') {
+                filtered = filtered.filter(p => p.category === activeCategory);
+            }
             
             grid.innerHTML = filtered.map(p => {
                 const cartItem = cart.find(item => item.id === p.id);
                 const qty = cartItem ? cartItem.qty : 0;
                 
-                let actionHTML = '';
-                let stockText = p.stock > 0 ? `<div class="stock-dot"></div> В наличии (${p.stock})` : `<div style="width:5px; height:5px; background:#ff3366; border-radius:50%;"></div> Нет в наличии`;
-                
-                if (p.stock <= 0) {
-                    actionHTML = `<button class="buy-btn" style="border-color:#8ba3c7; color:#8ba3c7; opacity:0.5;" disabled>+</button>`;
-                } else if (qty === 0) {
-                    actionHTML = `<button class="buy-btn" onclick="changeQty(${p.id}, 1)">+</button>`;
-                } else {
-                    actionHTML = `
-                        <div class="qty-control">
-                            <button class="qty-btn" onclick="changeQty(${p.id}, -1)">-</button>
-                            <span class="qty-num">${qty}</span>
-                            <button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button>
-                        </div>
-                    `;
-                }
+                let actionHTML = qty === 0 
+                    ? `<button class="buy-btn" onclick="changeQty(${p.id}, 1)">+</button>`
+                    : `<div class="qty-control"><button class="qty-btn" onclick="changeQty(${p.id}, -1)">-</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button></div>`;
 
-                // Иконка вместо фото (в зависимости от категории)
                 let iconSVG = p.category === 'pods' 
                     ? `<svg viewBox="0 0 24 24"><path d="M18 4H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 12H8V8h8v8z"/></svg>` 
                     : `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
 
+                // ЕСЛИ ЭТО ЖИЖА: Показываем вкусы. ЕСЛИ ПОД: Показываем наличие
+                let infoHTML = '';
+                if (p.category === 'liquids' && p.flavors) {
+                    infoHTML = `<div class="card-flavors"><span style="color:var(--primary); font-weight:600;">Вкусы:</span> ${p.flavors.join(', ')}</div>`;
+                } else {
+                    infoHTML = `<div class="card-stock"><div class="stock-dot"></div> В наличии (${p.stock})</div>`;
+                }
+
                 return `
                 <div class="card">
-                    <div class="card-no-img">
-                        ${iconSVG}
-                        ${p.badge ? `<div class="badge">${p.badge}</div>` : ''}
-                    </div>
+                    <div class="card-no-img">${iconSVG}${p.badge ? `<div class="badge">${p.badge}</div>` : ''}</div>
                     <div class="card-body">
                         <div>
                             <div class="card-title">${p.title}</div>
                             <div style="font-size:10px; color:var(--primary); margin-bottom:4px;">${p.desc}</div>
-                            <div class="card-stock">${stockText}</div>
+                            ${infoHTML}
                         </div>
                         <div class="card-footer">
                             <div class="price shimmer-text">${p.price} ₽</div>
@@ -404,7 +348,7 @@
             const product = products.find(p => p.id === id);
             
             if (existing) {
-                if (delta > 0 && existing.qty >= product.stock) return; // Не даем добавить больше остатка
+                if (delta > 0 && existing.qty >= product.stock) return; // Нельзя купить больше остатка
                 existing.qty += delta;
                 if (existing.qty <= 0) cart = cart.filter(item => item.id !== id); 
             } else if (delta > 0) {
@@ -442,16 +386,38 @@
         // === ЛОГИКА АДМИНКИ ===
         function renderAdminPanel() {
             const list = document.getElementById('admin-list');
-            list.innerHTML = products.map(p => `
+            list.innerHTML = products.map(p => {
+                let controlHTML = '';
+                
+                // Для жиж: текстовое поле для вкусов и поле для остатка (чтобы скрыть)
+                if (p.category === 'liquids') {
+                    controlHTML = `
+                        <input type="text" class="admin-flavors-input" value="${p.flavors ? p.flavors.join(', ') : ''}" onchange="setFlavors(${p.id}, this.value)" placeholder="Вкусы через запятую">
+                        <div style="margin-top:10px; display:flex; align-items:center; gap:10px; font-size:12px; color:var(--text-muted);">
+                            Скрыть (0): <input type="number" class="admin-input" value="${p.stock}" onchange="setStock(${p.id}, this.value)">
+                        </div>
+                    `;
+                } else {
+                    // Для подов: кнопки +/-
+                    controlHTML = `
+                        <div class="admin-controls">
+                            <button class="admin-btn" onclick="updateStock(${p.id}, -1)">-</button>
+                            <input type="number" class="admin-input" value="${p.stock}" onchange="setStock(${p.id}, this.value)">
+                            <button class="admin-btn" onclick="updateStock(${p.id}, 1)">+</button>
+                        </div>
+                    `;
+                }
+
+                return `
                 <div class="admin-item">
-                    <div style="font-size: 13px; font-weight: 600; width: 50%;">${p.title}</div>
-                    <div class="admin-controls">
-                        <button class="admin-btn" onclick="updateStock(${p.id}, -1)">-</button>
-                        <input type="number" class="admin-input" value="${p.stock}" onchange="setStock(${p.id}, this.value)">
-                        <button class="admin-btn" onclick="updateStock(${p.id}, 1)">+</button>
+                    <div class="admin-header">
+                        <div class="admin-title">${p.title}</div>
+                        ${p.category !== 'liquids' ? controlHTML : ''}
                     </div>
+                    ${p.category === 'liquids' ? controlHTML : ''}
                 </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function updateStock(id, delta) {
@@ -468,6 +434,13 @@
             renderAdminPanel();
         }
 
+        // Новая функция для сохранения вкусов
+        function setFlavors(id, val) {
+            const p = products.find(p => p.id === id);
+            p.flavors = val.split(',').map(f => f.trim()).filter(f => f !== '');
+            renderAdminPanel();
+        }
+
         function generateCode() {
             const textarea = document.getElementById('export-textarea');
             textarea.value = "let products = " + JSON.stringify(products, null, 4) + ";";
@@ -476,12 +449,10 @@
             document.execCommand('copy');
             alert("Код скопирован! Вставь его в index.html вместо старого 'let products = [...]'");
         }
-        // ========================
 
         function switchTab(tabId) {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-            
             document.getElementById(`page-${tabId}`).classList.add('active');
             document.getElementById(`nav-${tabId}`).classList.add('active');
             
