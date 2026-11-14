@@ -134,12 +134,11 @@
         .card:active { transform: scale(0.97); box-shadow: 0 0 25px var(--primary-glow); }
         
         .card-img-wrapper {
-            width: 100%; height: 140px; background: #ffffff; /* Белый фон для картинок */
+            width: 100%; height: 140px; background: #ffffff; 
             display: flex; align-items: center; justify-content: center; 
             border-bottom: 1px solid rgba(0, 240, 255, 0.2);
             position: relative; overflow: hidden;
         }
-        /* Свойства для нормального отображения фото без искажений */
         .card-img { width: 100%; height: 100%; object-fit: contain; padding: 5px; }
         .card-no-img { width: 40px; height: 40px; fill: var(--primary); opacity: 0.5; filter: drop-shadow(0 0 10px var(--primary)); }
 
@@ -228,6 +227,15 @@
 
         .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: rgba(0, 242, 254, 0.9); color: #000; padding: 12px 24px; border-radius: 30px; font-weight: 800; font-size: 14px; transition: 0.4s; z-index: 2000; opacity: 0; pointer-events: none; box-shadow: 0 0 20px var(--primary);}
         .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        /* Фикс для ПК: ограничиваем ширину карточек */
+        @media (min-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                max-width: 900px;
+                margin: 0 auto;
+            }
+        }
     </style>
 </head>
 <body>
@@ -293,7 +301,7 @@
 
     <!-- НИЖНЕЕ МЕНЮ -->
     <div class="bottom-nav">
-        <!-- Каталог (ТЕПЕРЬ ЛУПА) -->
+        <!-- Каталог (ЛУПА) -->
         <div class="nav-item" onclick="switchTab('catalog')" id="nav-catalog">
             <svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
         </div>
@@ -343,28 +351,20 @@
             window.Telegram.WebApp.setHeaderColor('#02040a');
         }
 
-        // ОБНОВЛЕННЫЙ МАССИВ ТОВАРОВ (Объединенные цвета)
+        // ОБНОВЛЕННЫЙ МАССИВ ТОВАРОВ С ВСЕМИ ЦВЕТАМИ И ЛИМИТОМ
         let products = [
-            { 
-                id: 1, 
-                title: "XROS 6 Mini", 
-                desc: "Цвета: Черный, Голубой, Розовый", 
-                stock: 10, // Суммарный остаток (5+3+2)
-                price: 1800, 
-                category: "pods", 
-                badge: "ХИТ", 
-                img: "xros6mini.jpg" 
-            },
-            { 
-                id: 2, 
-                title: "XROS 6", 
-                desc: "Цвета: Cosmic Black, Abyssal Blue, Slate Black, Carbon Fiber Gray, Silk Green, Silk Gray", 
-                stock: 4, 
-                price: 2500, 
-                category: "pods", 
-                badge: "NEW", 
-                img: "xros6.jpg" 
-            }
+            // XROS 6 MINI
+            { id: 1, title: "XROS 6 Mini Black", desc: "Цвет: Черный", stock: 5, maxLimit: 5, price: 1800, category: "pods", badge: "ХИТ", img: "xros6mini.jpg" },
+            { id: 2, title: "XROS 6 Mini Jelly Blue", desc: "Цвет: Голубой", stock: 0, maxLimit: 5, price: 1800, category: "pods", badge: "", img: "xros6mini.jpg" },
+            { id: 3, title: "XROS 6 Mini Plume Pink", desc: "Цвет: Розовый", stock: 0, maxLimit: 5, price: 1800, category: "pods", badge: "", img: "xros6mini.jpg" },
+            
+            // XROS 6
+            { id: 4, title: "XROS 6 Cosmic Black", desc: "Цвет: Космический черный", stock: 4, maxLimit: 5, price: 2500, category: "pods", badge: "NEW", img: "xros6.jpg" },
+            { id: 5, title: "XROS 6 Abyssal Blue", desc: "Цвет: Глубокий синий", stock: 0, maxLimit: 5, price: 2500, category: "pods", badge: "", img: "xros6.jpg" },
+            { id: 6, title: "XROS 6 Slate Black", desc: "Цвет: Аспидный черный", stock: 0, maxLimit: 5, price: 2500, category: "pods", badge: "", img: "xros6.jpg" },
+            { id: 7, title: "XROS 6 Carbon Fiber Gray", desc: "Цвет: Карбон", stock: 0, maxLimit: 5, price: 2500, category: "pods", badge: "", img: "xros6.jpg" },
+            { id: 8, title: "XROS 6 Silk Green", desc: "Цвет: Шелковый зеленый", stock: 0, maxLimit: 5, price: 2500, category: "pods", badge: "", img: "xros6.jpg" },
+            { id: 9, title: "XROS 6 Silk Gray", desc: "Цвет: Шелковый серый", stock: 0, maxLimit: 5, price: 2500, category: "pods", badge: "", img: "xros6.jpg" }
         ];
 
         let cart = [];
@@ -444,6 +444,13 @@
             
             if (existing) {
                 if (delta > 0 && existing.qty >= product.stock) return;
+                
+                // Проверка лимита
+                if (delta > 0 && existing.qty >= product.maxLimit) {
+                    alert(`Максимум ${product.maxLimit} шт. в одни руки!`);
+                    return;
+                }
+                
                 existing.qty += delta;
                 if (existing.qty <= 0) cart = cart.filter(item => item.id !== id); 
             } else if (delta > 0) {
@@ -532,13 +539,17 @@
 
         function checkout() {
             if (cart.length === 0) return;
-            let orderText = "🛒 *Новый заказ из приложения:*\n\n";
+            
+            let orderText = "🛒 Новый заказ из приложения:\n\n";
             let total = 0;
-            cart.forEach(item => {
-                orderText += `▪️ ${item.title} — ${item.qty} шт. (${item.price * item.qty} ₽)\n`;
+            
+            // Нумерация товаров и без звездочек
+            cart.forEach((item, index) => {
+                orderText += `${index + 1}. ${item.title} — ${item.qty} шт. (${item.price * item.qty} ₽)\n`;
                 total += item.price * item.qty;
             });
-            orderText += `\n💰 *Итого к оплате: ${total} ₽*`;
+            
+            orderText += `\n💰 Итого к оплате: ${total} ₽`;
             
             cart = [];
             saveCart(); updateBadge(); renderProducts(); switchTab('catalog');
