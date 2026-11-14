@@ -100,16 +100,14 @@
         .nav-item { 
             display: flex; justify-content: center; align-items: center; 
             width: 50px; height: 50px; cursor: pointer; position: relative;
-            border-radius: 50%; transition: 0.3s;
+            border-radius: 50%; transition: 0.3s; color: var(--text-muted); /* Цвет по умолчанию серый */
         }
         .nav-item:active { background: rgba(255,255,255,0.1); }
-        .nav-item.active { color: var(--primary); }
+        .nav-item.active { color: var(--primary); } /* Активный цвет голубой */
         
         /* Иконки в меню */
-        .nav-icon-svg { width: 32px; height: 32px; fill: currentColor; transition: 0.3s; }
+        .nav-icon-svg { width: 30px; height: 30px; fill: currentColor; transition: 0.3s; }
         .nav-item.active .nav-icon-svg { filter: drop-shadow(0 0 8px var(--primary-glow)); }
-        .nav-icon-emoji { font-size: 28px; filter: drop-shadow(0 0 8px transparent); transition: 0.3s; }
-        .nav-item.active .nav-icon-emoji { filter: drop-shadow(0 0 8px var(--primary-glow)); }
         
         .cart-badge { position: absolute; top: 2px; right: 2px; background: var(--danger); color: white; font-size: 10px; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; display: none; box-shadow: 0 0 10px var(--danger); border: 1px solid #000; }
 
@@ -201,9 +199,9 @@
 
     <!-- НИЖНЕЕ МЕНЮ -->
     <div class="bottom-nav">
-        <!-- Каталог (Эмодзи коробки) -->
+        <!-- Каталог (Иконка коробки SVG) -->
         <div class="nav-item" onclick="switchTab('catalog')" id="nav-catalog">
-            <div class="nav-icon-emoji">📦</div>
+            <svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8zM12 3.5l6.5 3.6L12 10.7 5.5 7.1 12 3.5zM4 8.6l7 3.9v6.6l-7-3.9V8.6zm9 10.5v-6.6l7-3.9v6.6l-7 3.9z"/></svg>
         </div>
         <!-- Корзина -->
         <div class="nav-item" onclick="switchTab('cart')" id="nav-cart">
@@ -223,13 +221,16 @@
     </div>
 
     <script>
-        // ЭФФЕКТ МАТРИЦЫ
+        // ЭФФЕКТ МАТРИЦЫ (зациклен каждые 14 секунд)
         function runMatrixEffect() {
             const targetText = "LEGION SHOP";
             const chars = "!<>-_\\/[]{}—=+*^?#________01";
             let iteration = 0;
             const el = document.getElementById("matrix-text");
             
+            // Сразу заполняем случайными символами перед сборкой
+            el.innerText = targetText.split("").map(() => chars[Math.floor(Math.random() * chars.length)]).join("");
+
             const interval = setInterval(() => {
                 el.innerText = targetText
                     .split("")
@@ -244,6 +245,12 @@
             }, 50);
         }
 
+        // Запуск первого раза
+        runMatrixEffect();
+        
+        // Запуск каждые 14 секунд (14000 мс)
+        setInterval(runMatrixEffect, 14000);
+
         const ADMIN_USERNAME = 'managerlegionshop'; 
         const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
         if (tgUser && tgUser.username === ADMIN_USERNAME) document.getElementById('nav-admin').style.display = 'flex';
@@ -253,7 +260,7 @@
             window.Telegram.WebApp.setHeaderColor('#02040a');
         }
 
-        // БАЗА ТОВАРОВ (Убрал NEW, оставил ХИТ и ТОП)
+        // БАЗА ТОВАРОВ
         let products = [
             { id: 1, title: "XROS 6 Mini Black", desc: "Цвет: Черный", stock: 5, price: 1800, category: "pods", badge: "ХИТ", img: "" },
             { id: 2, title: "XROS 6 Mini Jelly Blue", desc: "Цвет: Голубой", stock: 3, price: 1800, category: "pods", badge: "", img: "" },
@@ -483,7 +490,6 @@
             }
         }
 
-        runMatrixEffect();
         renderProducts(); 
         updateBadge();
     </script>
