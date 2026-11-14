@@ -500,4 +500,60 @@
         function updateStock(id, delta) {
             const p = products.find(p => p.id === id);
             p.stock += delta;
-            if(p.stock <
+            if(p.stock < 0) p.stock = 0;
+            renderAdminPanel();
+        }
+
+        function setStock(id, val) {
+            const p = products.find(p => p.id === id);
+            p.stock = parseInt(val) || 0;
+            if(p.stock < 0) p.stock = 0;
+            renderAdminPanel();
+        }
+
+        function generateCode() {
+            const textarea = document.getElementById('export-textarea');
+            textarea.value = "let products = " + JSON.stringify(products, null, 4) + ";";
+            textarea.style.display = 'block';
+            textarea.select();
+            document.execCommand('copy');
+            alert("Код скопирован! Вставь его в index.html вместо старого 'let products = [...]'");
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            document.getElementById(`page-${tabId}`).classList.add('active');
+            document.getElementById(`nav-${tabId}`).classList.add('active');
+            
+            if (tabId === 'cart') renderCart();
+            if (tabId === 'admin') renderAdminPanel();
+        }
+
+        function checkout() {
+            if (cart.length === 0) return;
+            let orderText = "🛒 *Новый заказ из приложения:*\n\n";
+            let total = 0;
+            cart.forEach(item => {
+                orderText += `▪️ ${item.title} — ${item.qty} шт. (${item.price * item.qty} ₽)\n`;
+                total += item.price * item.qty;
+            });
+            orderText += `\n💰 *Итого к оплате: ${total} ₽*`;
+            
+            cart = [];
+            saveCart(); updateBadge(); renderProducts(); switchTab('catalog');
+            const managerUsername = 'managerlegionshop';
+            const encodedText = encodeURIComponent(orderText);
+            
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.openTelegramLink(`https://t.me/${managerUsername}?text=${encodedText}`);
+            } else {
+                window.open(`https://t.me/${managerUsername}?text=${encodedText}`, '_blank');
+            }
+        }
+
+        renderProducts(); 
+        updateBadge();
+    </script>
+</body>
+</html>
