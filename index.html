@@ -9,17 +9,14 @@
     <style>
         :root {
             --bg: #02040a;
-            --surface: rgba(10, 15, 30, 0.7);
-            --surface-border: rgba(0, 240, 255, 0.3);
-            --primary: #00f2fe;
-            --primary-glow: rgba(0, 242, 254, 0.5);
+            --surface: rgba(10, 15, 30, 0.8);
             --text: #ffffff;
             --text-muted: #8ba3c7;
+            --primary: #00f2fe;
+            --primary-glow: rgba(0, 242, 254, 0.6);
             --danger: #ff3366;
             --admin-color: #2ecc71;
         }
-
-        #netlify-badge, .netlify-badge, iframe[title="netlify"], a[href*="netlify.com"], div[style*="netlify"] { display: none !important; }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Exo 2', sans-serif; -webkit-tap-highlight-color: transparent; }
 
@@ -31,133 +28,207 @@
             position: relative;
         }
 
-        /* ФОН */
+        /* ФОН С ЧЕРНОЙ ДЫРОЙ */
         .space-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
             background: url('https://i.pinimg.com/736x/91/11/1f/91111fd5d503d82c3081f0239c16490e.jpg') center/cover no-repeat;
         }
         .space-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background: radial-gradient(circle at center, rgba(2,4,10,0.3) 0%, rgba(2,4,10,0.9) 100%);
+            background: radial-gradient(circle at center, rgba(2,4,10,0.4) 0%, rgba(2,4,10,0.95) 100%);
         }
 
         /* ШАПКА */
         .hero {
             position: relative; height: 100px; display: flex; align-items: center; justify-content: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(2,4,10,0.4);
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2); background: rgba(2,4,10,0.5);
         }
 
         .hero h1 {
             font-size: 28px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase;
-            color: var(--primary); text-shadow: 0 0 10px var(--primary-glow);
+            color: var(--primary); text-shadow: 0 0 15px var(--primary-glow);
             font-family: monospace;
         }
 
-        /* ПОИСК */
+        /* НЕОНОВЫЙ ПОИСК */
         .search-container {
-            padding: 15px 20px 0 20px;
+            padding: 15px 20px 5px 20px;
             position: relative;
             display: flex;
             align-items: center;
-        }
-        .search-input {
-            width: 100%;
-            padding: 12px 15px 12px 45px;
-            background: var(--surface);
-            border: 1px solid var(--surface-border);
-            border-radius: 12px;
-            color: var(--text);
-            font-size: 14px;
-            outline: none;
-            font-family: 'Exo 2', sans-serif;
-            transition: 0.3s;
-        }
-        .search-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 15px var(--primary-glow);
         }
         .search-icon {
             position: absolute;
             left: 35px;
             width: 20px;
             height: 20px;
-            fill: var(--text-muted);
+            fill: var(--primary);
+            filter: drop-shadow(0 0 5px var(--primary));
             pointer-events: none;
+            z-index: 2;
         }
+        .search-input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            background: var(--surface);
+            border: 1px solid transparent;
+            /* Переливающийся градиентный контур */
+            background: linear-gradient(var(--bg), var(--bg)) padding-box,
+                        linear-gradient(45deg, var(--primary), #ffffff, #005a80) border-box;
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+        }
+        .search-input:focus {
+            box-shadow: 0 0 20px var(--primary-glow);
+            background: linear-gradient(var(--bg), var(--bg)) padding-box,
+                        linear-gradient(45deg, #005a80, var(--primary), #ffffff) border-box;
+        }
+        .search-input::placeholder { color: var(--text-muted); }
 
         .filters { display: flex; gap: 10px; padding: 15px 20px; overflow-x: auto; scrollbar-width: none; }
         .filters::-webkit-scrollbar { display: none; }
-        .filter-btn { background: var(--surface); backdrop-filter: blur(10px); border: 1px solid var(--surface-border); color: var(--text-muted); padding: 8px 16px; border-radius: 20px; font-size: 14px; white-space: nowrap; transition: 0.3s; cursor: pointer; }
-        .filter-btn.active { background: var(--primary); color: #000; font-weight: 800; border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
+        .filter-btn { 
+            background: var(--surface); 
+            border: 1px solid rgba(0,240,255,0.3); 
+            color: var(--text-muted); 
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            font-size: 14px; 
+            white-space: nowrap; 
+            transition: 0.3s; 
+            cursor: pointer; 
+        }
+        .filter-btn.active { 
+            background: var(--primary); 
+            color: #000; 
+            font-weight: 800; 
+            box-shadow: 0 0 15px var(--primary-glow); 
+        }
 
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px 20px 20px; }
 
-        .card { background: var(--surface); backdrop-filter: blur(15px); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; border: 1px solid var(--surface-border); transition: 0.3s; position: relative; }
-        .card:active { transform: scale(0.97); box-shadow: 0 0 20px var(--primary-glow); }
+        /* КАРТОЧКА С ПЕРЕЛИВАЮЩИМСЯ КРАЕМ */
+        .card { 
+            border-radius: 16px; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            transition: 0.3s;
+            
+            /* Эффект переливающейся рамки */
+            border: 2px solid transparent;
+            background: linear-gradient(rgba(5, 10, 25, 0.9), rgba(5, 10, 25, 0.9)) padding-box,
+                        linear-gradient(135deg, var(--primary), #1e3a8a, #ffffff, var(--primary)) border-box;
+            background-size: 300% 300%;
+            animation: borderShine 6s linear infinite;
+        }
+        @keyframes borderShine {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .card:active { transform: scale(0.97); box-shadow: 0 0 25px var(--primary-glow); }
         
-        /* МЕСТО ПОД ФОТО */
+        /* МЕСТО ПОД ФОТО (Темный фон, чтобы не было белых пятен) */
         .card-img-wrapper {
-            width: 100%; height: 140px; background: linear-gradient(135deg, rgba(10,26,58,0.8), rgba(21,15,41,0.8));
-            display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--surface-border);
+            width: 100%; height: 140px; background: #030816;
+            display: flex; align-items: center; justify-content: center; 
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
             position: relative; overflow: hidden;
         }
-        .card-img { width: 100%; height: 100%; object-fit: contain; padding: 10px;}
-        .card-no-img { width: 35px; height: 35px; fill: var(--primary); opacity: 0.6; }
+        .card-img { width: 100%; height: 100%; object-fit: cover; }
+        .card-no-img { width: 40px; height: 40px; fill: var(--primary); opacity: 0.5; filter: drop-shadow(0 0 10px var(--primary)); }
 
-        .badge { position: absolute; top: 10px; left: 10px; background: rgba(0, 242, 254, 0.9); color: #000; padding: 4px 8px; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; box-shadow: 0 0 10px var(--primary-glow); z-index: 2; }
+        .badge { 
+            position: absolute; top: 10px; left: 10px; 
+            background: linear-gradient(90deg, var(--primary), #ffffff); 
+            color: #000; padding: 4px 10px; border-radius: 8px; 
+            font-size: 10px; font-weight: 900; text-transform: uppercase; 
+            box-shadow: 0 0 10px var(--primary-glow); z-index: 2; 
+        }
 
         .card-body { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
-        .card-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; line-height: 1.2; }
+        .card-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; line-height: 1.2; text-shadow: 0 0 5px rgba(255,255,255,0.3); }
         .card-stock { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
-        .stock-dot { width: 5px; height: 5px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 8px var(--primary); }
+        .stock-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 8px var(--primary); }
 
         .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
-        .price { font-size: 16px; font-weight: 800; color: var(--text); }
+        .price { font-size: 18px; font-weight: 800; color: var(--primary); text-shadow: 0 0 8px var(--primary-glow); }
         
-        .buy-btn { background: transparent; border: 2px solid var(--primary); color: var(--primary); width: 34px; height: 34px; border-radius: 10px; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
-        .buy-btn:active { background: var(--primary); color: #000; }
-        .qty-control { display: flex; align-items: center; background: rgba(0, 242, 254, 0.1); border: 1px solid var(--primary); border-radius: 10px; overflow: hidden; }
+        .buy-btn { 
+            background: transparent; 
+            border: 2px solid var(--primary); 
+            color: var(--primary); 
+            width: 34px; height: 34px; 
+            border-radius: 10px; 
+            font-size: 20px; font-weight: bold; 
+            display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; transition: 0.3s; 
+            box-shadow: inset 0 0 10px rgba(0,240,255,0.2);
+        }
+        .buy-btn:active { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
+        
+        .qty-control { display: flex; align-items: center; background: rgba(0, 242, 254, 0.1); border: 1px solid var(--primary); border-radius: 10px; overflow: hidden; box-shadow: inset 0 0 10px rgba(0,240,255,0.2);}
         .qty-btn { background: transparent; border: none; color: var(--primary); width: 28px; height: 32px; font-size: 18px; font-weight: bold; cursor: pointer; }
-        .qty-num { color: var(--text); font-weight: 800; font-size: 14px; min-width: 20px; text-align: center; }
+        .qty-num { color: var(--text); font-weight: 800; font-size: 14px; min-width: 20px; text-align: center; text-shadow: 0 0 5px var(--primary); }
 
         /* НИЖНЕЕ МЕНЮ */
         .bottom-nav { 
             position: fixed; bottom: 0; left: 0; right: 0; height: 70px; 
-            background: rgba(5, 9, 20, 0.95); backdrop-filter: blur(20px); 
+            background: rgba(2, 4, 10, 0.95); backdrop-filter: blur(20px); 
             display: flex; justify-content: space-around; align-items: center; 
-            border-top: 1px solid var(--surface-border); z-index: 999; 
+            border-top: 1px solid rgba(0, 240, 255, 0.3); z-index: 999; 
             padding-bottom: env(safe-area-inset-bottom); 
+            box-shadow: 0 -5px 20px rgba(0, 240, 255, 0.1);
         }
-        .nav-item { display: flex; justify-content: center; align-items: center; width: 50px; height: 50px; cursor: pointer; position: relative; border-radius: 50%; transition: 0.3s; color: var(--text-muted); }
-        .nav-item:active { background: rgba(255,255,255,0.1); }
+        .nav-item { 
+            display: flex; justify-content: center; align-items: center; 
+            width: 50px; height: 50px; cursor: pointer; position: relative;
+            border-radius: 50%; transition: 0.3s; color: var(--text-muted); 
+        }
+        .nav-item:active { background: rgba(0, 240, 255, 0.1); }
         .nav-item.active { color: var(--primary); }
         .nav-icon-svg { width: 30px; height: 30px; fill: currentColor; transition: 0.3s; }
-        .nav-item.active .nav-icon-svg { filter: drop-shadow(0 0 8px var(--primary-glow)); }
-        .cart-badge { position: absolute; top: 2px; right: 2px; background: var(--danger); color: white; font-size: 10px; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; display: none; box-shadow: 0 0 10px var(--danger); border: 1px solid #000; }
+        .nav-item.active .nav-icon-svg { filter: drop-shadow(0 0 10px var(--primary)); }
+        
+        .cart-badge { 
+            position: absolute; top: 2px; right: 2px; 
+            background: var(--danger); color: white; 
+            font-size: 10px; font-weight: bold; 
+            width: 18px; height: 18px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            display: none; box-shadow: 0 0 10px var(--danger); border: 1px solid #000; 
+        }
 
         .page { display: none; animation: fadeIn 0.4s ease-out; } .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
         .cart-container { padding: 20px; }
-        .cart-item { display: flex; justify-content: space-between; align-items: center; background: var(--surface); backdrop-filter: blur(10px); border: 1px solid var(--surface-border); padding: 15px; border-radius: 16px; margin-bottom: 10px; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; background: var(--surface); border: 1px solid rgba(0,240,255,0.3); padding: 15px; border-radius: 16px; margin-bottom: 10px; box-shadow: 0 0 10px rgba(0,240,255,0.1);}
         .checkout-btn { position: fixed; bottom: 90px; left: 20px; right: 20px; background: linear-gradient(90deg, #00f2fe 0%, #4facfe 100%); color: #000; padding: 16px; border-radius: 16px; border: none; font-size: 16px; font-weight: 800; text-transform: uppercase; box-shadow: 0 10px 20px var(--primary-glow); cursor: pointer; display: none; }
 
-        .profile-menu-item { background: var(--surface); border: 1px solid var(--surface-border); padding: 16px; border-radius: 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .profile-menu-item { background: var(--surface); border: 1px solid rgba(0,240,255,0.2); padding: 16px; border-radius: 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
         .profile-menu-item span { font-size: 15px; font-weight: 600; }
         .profile-menu-item .arrow { color: var(--primary); font-size: 18px; }
 
         /* Админка */
-        .admin-item { display: flex; flex-direction: column; background: var(--surface); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--surface-border); }
+        .admin-item { display: flex; flex-direction: column; background: var(--surface); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--admin-color); box-shadow: 0 0 10px rgba(46, 204, 113, 0.2);}
         .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .admin-title { font-size: 14px; font-weight: 600; }
         .admin-controls { display: flex; align-items: center; gap: 10px; }
-        .admin-btn { background: var(--surface); border: 1px solid var(--admin-color); color: var(--admin-color); width: 30px; height: 30px; border-radius: 8px; font-size: 18px; cursor: pointer; }
+        .admin-btn { background: var(--surface); border: 1px solid var(--admin-color); color: var(--admin-color); width: 30px; height: 30px; border-radius: 8px; font-size: 18px; cursor: pointer; box-shadow: inset 0 0 5px rgba(46, 204, 113, 0.2);}
         .admin-input { width: 50px; text-align: center; background: transparent; border: 1px solid var(--admin-color); color: white; border-radius: 8px; font-size: 16px; font-weight: bold; }
         
-        .export-btn { width: 100%; background: var(--admin-color); color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: bold; margin-top: 20px; cursor: pointer; font-size: 16px; }
+        .export-btn { width: 100%; background: var(--admin-color); color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: bold; margin-top: 20px; cursor: pointer; font-size: 16px; box-shadow: 0 0 15px rgba(46, 204, 113, 0.4);}
         #export-textarea { width: 100%; height: 150px; background: #000; color: var(--admin-color); border: 1px solid var(--admin-color); margin-top: 10px; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 12px; display: none; }
 
-        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: rgba(0, 242, 254, 0.9); color: #000; padding: 12px 24px; border-radius: 30px; font-weight: 800; font-size: 14px; transition: 0.4s; z-index: 2000; opacity: 0; pointer-events: none; }
+        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: rgba(0, 242, 254, 0.9); color: #000; padding: 12px 24px; border-radius: 30px; font-weight: 800; font-size: 14px; transition: 0.4s; z-index: 2000; opacity: 0; pointer-events: none; box-shadow: 0 0 20px var(--primary);}
         .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     </style>
 </head>
@@ -174,10 +245,10 @@
             <h1 id="matrix-text"></h1>
         </div>
         
-        <!-- СТРОКА ПОИСКА -->
+        <!-- СТИЛЬНЫЙ ПОИСК -->
         <div class="search-container">
             <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-            <input type="text" id="searchInput" class="search-input" placeholder="Поиск по названию..." oninput="handleSearch()">
+            <input type="text" id="searchInput" class="search-input" placeholder="Найти девайс..." oninput="handleSearch()">
         </div>
 
         <div class="filters">
@@ -243,7 +314,7 @@
     </div>
 
     <script>
-        // ЭФФЕКТ МАТРИЦЫ (зациклен)
+        // ЭФФЕКТ МАТРИЦЫ
         function runMatrixEffect() {
             const targetText = "LEGION SHOP";
             const chars = "!<>-_\\/[]{}—=+*^?#________01";
@@ -271,8 +342,7 @@
             window.Telegram.WebApp.setHeaderColor('#02040a');
         }
 
-        // ТОВАРЫ (Только XROS 6 Mini и XROS 6)
-        // Обрати внимание на поле img. Там указаны имена файлов, которые ты должен загрузить.
+        // ТОВАРЫ
         let products = [
             { id: 1, title: "XROS 6 Mini Black", desc: "Цвет: Черный", stock: 5, price: 1800, category: "pods", badge: "ХИТ", img: "xros6mini_black.jpg" },
             { id: 2, title: "XROS 6 Mini Jelly Blue", desc: "Цвет: Голубой", stock: 3, price: 1800, category: "pods", badge: "", img: "xros6mini_blue.jpg" },
@@ -282,11 +352,10 @@
 
         let cart = [];
         let activeCategory = 'all'; 
-        let searchQuery = ''; // Переменная для поиска
+        let searchQuery = ''; 
 
         try { cart = JSON.parse(localStorage.getItem('legion_cart_cosmic')) || []; } catch(e) {}
 
-        // Обработчик поиска
         function handleSearch() {
             searchQuery = document.getElementById('searchInput').value.toLowerCase();
             renderProducts();
@@ -302,12 +371,10 @@
         function renderProducts() {
             const grid = document.getElementById('catalog-grid');
             
-            // Фильтруем по категории
             let filtered = products.filter(p => p.stock > 0);
             if (activeCategory !== 'all') {
                 filtered = filtered.filter(p => p.category === activeCategory);
             }
-            // Фильтруем по поиску
             if (searchQuery !== '') {
                 filtered = filtered.filter(p => p.title.toLowerCase().includes(searchQuery));
             }
@@ -320,10 +387,8 @@
                     ? `<button class="buy-btn" onclick="changeQty(${p.id}, 1)">+</button>`
                     : `<div class="qty-control"><button class="qty-btn" onclick="changeQty(${p.id}, -1)">-</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button></div>`;
 
-                // Логика отображения фото
                 let imgHTML = '';
                 if (p.img && p.img.trim() !== "") {
-                    // Если фото есть, пытаемся загрузить. Если ошибка (onerror) - показываем SVG иконку.
                     imgHTML = `
                         <img src="${p.img}" class="card-img" alt="${p.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                         <svg class="card-no-img" style="display:none;" viewBox="0 0 24 24"><path d="M18 4H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 12H8V8h8v8z"/></svg>
@@ -392,8 +457,8 @@
             let total = 0;
             container.innerHTML = cart.map(item => {
                 total += item.price * item.qty;
-                return `<div class="cart-item"><div><div style="font-weight: 600; font-size: 15px;">${item.title}</div><div style="font-size:12px; color:var(--text-muted); margin-top:4px;">${item.qty} шт.</div></div><div style="font-weight:800; font-size:16px; color:var(--primary);">${item.price * item.qty} ₽</div></div>`;
-            }).join('') + `<div style="margin-top:20px; font-size:20px; font-weight:800; display:flex; justify-content:space-between; border-top: 1px solid var(--surface-border); padding-top: 15px;"><span>Итого:</span> <span style="color:var(--primary);">${total} ₽</span></div>`;
+                return `<div class="cart-item"><div><div style="font-weight: 600; font-size: 15px;">${item.title}</div><div style="font-size:12px; color:var(--text-muted); margin-top:4px;">${item.qty} шт.</div></div><div style="font-weight:800; font-size:16px; color:var(--primary); text-shadow: 0 0 5px var(--primary);">${item.price * item.qty} ₽</div></div>`;
+            }).join('') + `<div style="margin-top:20px; font-size:20px; font-weight:800; display:flex; justify-content:space-between; border-top: 1px solid var(--surface-border); padding-top: 15px;"><span>Итого:</span> <span style="color:var(--primary); text-shadow: 0 0 5px var(--primary);">${total} ₽</span></div>`;
         }
 
         // === АДМИНКА ===
