@@ -52,9 +52,14 @@
 
         .card:active { transform: scale(0.97); box-shadow: 0 0 25px var(--primary-glow); }
         
-        /* Увеличили высоту картинки и убрали отступы, чтобы фото вытягивалось */
+        /* Стили для картинок */
         .card-img-wrapper { width: 100%; height: 170px; background: #ffffff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(0, 240, 255, 0.2); position: relative; overflow: hidden; }
         .card-img { width: 100%; height: 100%; object-fit: contain; padding: 0; }
+        
+        /* Специально для жидкостей - прозрачный фон и заполнение */
+        .liquid-img-wrapper { background: transparent !important; border-bottom: none !important; }
+        .liquid-img { object-fit: cover !important; border-radius: 14px 14px 0 0; }
+
         .card-no-img { width: 40px; height: 40px; fill: var(--primary); opacity: 0.5; filter: drop-shadow(0 0 10px var(--primary)); }
 
         .badge { position: absolute; top: 10px; left: 10px; background: linear-gradient(90deg, var(--primary), #ffffff); color: #000; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 900; text-transform: uppercase; box-shadow: 0 0 10px var(--primary-glow); z-index: 2; }
@@ -67,14 +72,27 @@
         .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
         .price { font-size: 18px; font-weight: 800; color: var(--primary); text-shadow: 0 0 8px var(--primary-glow); }
         
-        .buy-btn { background: transparent; border: 2px solid var(--primary); color: var(--primary); width: 34px; height: 34px; border-radius: 10px; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; box-shadow: inset 0 0 10px rgba(0,240,255,0.2); }
-        .buy-btn:active { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
+        /* Обновленный плюсик (ровнее и ярче) */
+        .buy-btn { 
+            background: rgba(0, 242, 254, 0.1); 
+            border: 2px solid var(--primary); 
+            color: var(--primary); 
+            width: 36px; height: 36px; 
+            border-radius: 10px; 
+            font-size: 24px; font-weight: 800; 
+            display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; transition: 0.3s; 
+            box-shadow: 0 0 15px var(--primary-glow), inset 0 0 10px rgba(0,240,255,0.2);
+            padding-bottom: 3px;
+            line-height: 1;
+        }
+        .buy-btn:active { background: var(--primary); color: #000; box-shadow: 0 0 25px var(--primary); }
         
         .qty-control { display: flex; align-items: center; background: rgba(0, 242, 254, 0.1); border: 1px solid var(--primary); border-radius: 10px; overflow: hidden; box-shadow: inset 0 0 10px rgba(0,240,255,0.2);}
         .qty-btn { background: transparent; border: none; color: var(--primary); width: 28px; height: 32px; font-size: 18px; font-weight: bold; cursor: pointer; }
         .qty-num { color: var(--text); font-weight: 800; font-size: 14px; min-width: 20px; text-align: center; text-shadow: 0 0 5px var(--primary); }
 
-        /* Стили для выбора вкусов */
+        /* Стили для выбора вариантов */
         .choose-flavor-btn { width: 100%; background: var(--primary); color: #000; border: none; padding: 8px; border-radius: 10px; font-weight: 800; font-size: 13px; margin-top: 10px; cursor: pointer; text-transform: uppercase; box-shadow: 0 0 10px var(--primary-glow); transition: 0.3s; }
         .choose-flavor-btn:active { transform: scale(0.95); }
         .variants-container { display: none; flex-direction: column; gap: 8px; margin-top: 10px; border-top: 1px solid rgba(0, 240, 255, 0.2); padding-top: 10px; }
@@ -97,11 +115,10 @@
 
         .variant-name { font-size: 11px; color: #fff; flex-grow: 1; }
         
-        /* Модифицируем кнопки для вариантов, чтобы они были меньше */
-        .variant-item .qty-control { height: 26px; }
-        .variant-item .qty-btn { height: 26px; width: 24px; font-size: 16px; }
+        .variant-item .qty-control { height: 28px; }
+        .variant-item .qty-btn { height: 28px; width: 24px; font-size: 16px; }
         .variant-item .qty-num { font-size: 12px; }
-        .variant-item .buy-btn { height: 26px; width: 26px; font-size: 16px; border-radius: 8px; }
+        .variant-item .buy-btn { height: 28px; width: 28px; font-size: 18px; border-radius: 8px; padding-bottom: 2px;}
 
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 70px; background: rgba(2, 4, 10, 0.95); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(0, 240, 255, 0.3); z-index: 999; padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -5px 20px rgba(0, 240, 255, 0.1); }
         .nav-item { display: flex; justify-content: center; align-items: center; width: 50px; height: 50px; cursor: pointer; position: relative; border-radius: 50%; transition: 0.3s; color: var(--text-muted); }
@@ -152,15 +169,12 @@
     <div class="space-overlay"></div>
     <div id="toast" class="toast">Добавлено в корзину</div>
 
-    <!-- КАТАЛОГ -->
     <div id="page-catalog" class="page active">
         <div class="hero"><h1 id="matrix-text"></h1></div>
-        
         <div class="search-container">
             <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-            <input type="text" id="searchInput" class="search-input" placeholder="Найти девайс, жижу или картридж..." oninput="handleSearch()">
+            <input type="text" id="searchInput" class="search-input" placeholder="Найти товар..." oninput="handleSearch()">
         </div>
-
         <div class="filters">
             <button class="filter-btn active" onclick="filterProducts('all', this)">Все товары</button>
             <button class="filter-btn" onclick="filterProducts('pods', this)">Поды</button>
@@ -170,7 +184,6 @@
         <div class="grid" id="catalog-grid"></div>
     </div>
 
-    <!-- КОРЗИНА -->
     <div id="page-cart" class="page">
         <div class="cart-container">
             <h2 style="margin-bottom: 20px; color: var(--primary); text-shadow: 0 0 10px var(--primary-glow);">КОРЗИНА</h2>
@@ -180,7 +193,6 @@
         <button class="checkout-btn" id="checkout-btn" onclick="checkout()">Оформить заказ</button>
     </div>
 
-    <!-- ПРОФИЛЬ -->
     <div id="page-profile" class="page">
         <div class="cart-container">
             <div style="display:flex; align-items:center; gap:15px; margin-bottom:30px;">
@@ -196,7 +208,6 @@
         </div>
     </div>
 
-    <!-- АДМИНКА -->
     <div id="page-admin" class="page">
         <div class="cart-container">
             <h2 style="margin-bottom: 20px; color: var(--admin-color);">АДМИН-ПАНЕЛЬ</h2>
@@ -206,7 +217,6 @@
         </div>
     </div>
 
-    <!-- НИЖНЕЕ МЕНЮ -->
     <div class="bottom-nav">
         <div class="nav-item" onclick="switchTab('catalog')" id="nav-catalog">
             <svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
@@ -226,7 +236,6 @@
     </div>
 
     <script>
-        // --- БЛОК ИНИЦИАЛИЗАЦИИ ПОЛЬЗОВАТЕЛЯ ---
         const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
         
         function initProfile() {
@@ -253,7 +262,6 @@
             }
         }
 
-        // ЭФФЕКТ МАТРИЦЫ
         function runMatrixEffect() {
             const targetText = "LEGION SHOP";
             const chars = "!<>-_\\/[]{}—=+*^?#________01";
@@ -285,20 +293,36 @@
         // --- МАССИВ ТОВАРОВ ---
         let products = [
             // ПОДЫ
-            { id: 1, title: "XROS 6 Mini Black", desc: "Цвет: Черный", stock: 5, maxLimit: 5, price: 1800, category: "pods", badge: "ХИТ", img: "xros6mini.jpg" },
-            { id: 2, title: "XROS 6 Mini Jelly Blue", desc: "Цвет: Голубой", stock: 0, maxLimit: 5, price: 1800, category: "pods", badge: "", img: "xros6mini.jpg" },
-            { id: 3, title: "XROS 6 Mini Plume Pink", desc: "Цвет: Розовый", stock: 0, maxLimit: 5, price: 1800, category: "pods", badge: "", img: "xros6mini.jpg" },
-            { id: 4, title: "XROS 6 Cosmic Black", desc: "Цвет: Космический черный", stock: 4, maxLimit: 5, price: 2500, category: "pods", badge: "NEW", img: "xros6.jpg" },
-            { id: 5, title: "XROS 6 Abyssal Blue", desc: "Цвет: Глубокий синий", stock: 0, maxLimit: 5, price: 2500, category: "pods", badge: "", img: "xros6.jpg" },
-            { id: 6, title: "XROS 6 Slate Black", desc: "Цвет: Аспидный черный", stock: 0, maxLimit: 5, price: 2500, category: "pods", badge: "", img: "xros6.jpg" },
-            { id: 7, title: "XROS 6 Carbon Fiber Gray", desc: "Цвет: Карбон", stock: 0, maxLimit: 5, price: 2500, category: "pods", badge: "", img: "xros6.jpg" },
-            { id: 8, title: "XROS 6 Silk Green", desc: "Цвет: Шелковый зеленый", stock: 0, maxLimit: 5, price: 2500, category: "pods", badge: "", img: "xros6.jpg" },
-            { id: 9, title: "XROS 6 Silk Gray", desc: "Цвет: Шелковый серый", stock: 0, maxLimit: 5, price: 2500, category: "pods", badge: "", img: "xros6.jpg" },
+            { 
+                id: 1, title: "XROS 6", desc: "Мощный под с экраном", price: 2500, category: "pods", badge: "NEW", img: "xros6.jpg",
+                variants: [
+                    { name: "Aurora blue", stock: 1 },
+                    { name: "Silk brown", stock: 1 }
+                ]
+            },
+            { 
+                id: 2, title: "XROS 6 Mini", desc: "Компактный под", price: 1800, category: "pods", badge: "ХИТ", img: "xros6mini.jpg",
+                variants: [
+                    { name: "Black", stock: 1 },
+                    { name: "Jelly blue", stock: 1 },
+                    { name: "Jelly pink", stock: 1 },
+                    { name: "Jelly green", stock: 1 },
+                    { name: "Plume pink", stock: 1 },
+                    { name: "Plume white", stock: 1 },
+                    { name: "Titanium black", stock: 1 },
+                    { name: "Titanium silver", stock: 1 }
+                ]
+            },
             
             // КАРТРИДЖИ
-            { id: 18, title: "Картридж XROS 0.7Ω", desc: "Vaporesso XROS Series 3ml", stock: 8, maxLimit: 10, price: 300, category: "cartridges", badge: "NEW", img: "karik07om3ml.jpg" },
+            { 
+                id: 3, title: "Картридж XROS 0.7Ω", desc: "Vaporesso XROS Series 3ml", price: 300, category: "cartridges", badge: "NEW", img: "karik07om3ml.jpg",
+                variants: [
+                    { name: "0.7Ω (3ml)", stock: 8 }
+                ]
+            },
 
-            // ЖИЖИ (ПРИВЯЗКА К ТВОИМ ФОТО + НОВЫЕ ЦЕНЫ)
+            // ЖИЖИ
             { 
                 id: 10, title: "BJORN HEADSHOT 100", desc: "Кислые вкусы", stock: 1, price: 550, category: "liquids", badge: "", img: "bjornheadshot100.jpg",
                 variants: [
@@ -374,6 +398,7 @@
         try { cart = JSON.parse(localStorage.getItem('legion_cart_cosmic')) || []; } catch(e) {}
         let activeCategory = 'all'; 
         let searchQuery = ''; 
+        let openAccordions = {}; // Храним открытые карточки
 
         function handleSearch() {
             searchQuery = document.getElementById('searchInput').value.toLowerCase();
@@ -387,26 +412,21 @@
             renderProducts();
         }
 
-        // Показ/скрытие вкусов
         function toggleVariants(productId) {
+            openAccordions[productId] = !openAccordions[productId];
             const container = document.getElementById(`variants-${productId}`);
-            if (container.style.display === 'none' || container.style.display === '') {
-                container.style.display = 'flex';
-            } else {
-                container.style.display = 'none';
+            if (container) {
+                container.style.display = openAccordions[productId] ? 'flex' : 'none';
             }
         }
 
-        // Отрисовка каталога
         function renderProducts() {
             const grid = document.getElementById('catalog-grid');
             
             let filtered = products.filter(p => {
-                // Для жиж проверяем, есть ли хотя бы один вкус в наличии
-                if (p.category === 'liquids') {
-                    return p.variants && p.variants.some(v => v.stock > 0);
+                if (p.variants) {
+                    return p.variants.some(v => v.stock > 0);
                 }
-                // Для подов и картриджей проверяем общий stock
                 return p.stock > 0;
             });
 
@@ -418,22 +438,26 @@
             }
             
             grid.innerHTML = filtered.map(p => {
-                let isLiquid = p.category === 'liquids' && p.variants;
+                let hasVariants = p.variants && p.variants.length > 0;
+                let isLiquid = p.category === 'liquids';
+                
+                let wrapperClass = isLiquid ? 'card-img-wrapper liquid-img-wrapper' : 'card-img-wrapper';
+                let imgClass = isLiquid ? 'card-img liquid-img' : 'card-img';
+
                 let imgHTML = '';
                 if (p.img && p.img.trim() !== "") {
                     imgHTML = `
-                        <img src="${p.img}" class="card-img" alt="${p.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <img src="${p.img}" class="${imgClass}" alt="${p.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                         <svg class="card-no-img" style="display:none;" viewBox="0 0 24 24"><path d="M18 4H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 12H8V8h8v8z"/></svg>
                     `;
                 } else {
                     imgHTML = `<svg class="card-no-img" viewBox="0 0 24 24"><path d="M18 4H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 12H8V8h8v8z"/></svg>`;
                 }
 
-                // Генерация HTML для вкусов, если это жижа
                 let variantsHTML = '';
-                if (isLiquid) {
+                if (hasVariants) {
                     let variantsList = p.variants.map(v => {
-                        if (v.stock <= 0) return ''; // Скрываем, если нет в наличии
+                        if (v.stock <= 0) return ''; 
                         
                         let cartId = `${p.id}_${v.name}`;
                         let cartItem = cart.find(item => item.cartId === cartId);
@@ -454,28 +478,29 @@
                         `;
                     }).join('');
                     
+                    let btnText = isLiquid ? "Выбрать вкус" : "Выбрать цвет";
                     variantsHTML = `
-                        <button class="choose-flavor-btn" onclick="toggleVariants(${p.id})">Выбрать вкус</button>
-                        <div id="variants-${p.id}" class="variants-container">
+                        <button class="choose-flavor-btn" onclick="toggleVariants(${p.id})">${btnText}</button>
+                        <div id="variants-${p.id}" class="variants-container" style="display: ${openAccordions[p.id] ? 'flex' : 'none'};">
                             ${variantsList}
                         </div>
                     `;
                 } else {
-                    // Кнопка покупки для подов и картриджей
+                    // Одиночные товары без вариантов
                     const cartItem = cart.find(item => item.id === p.id);
                     const qty = cartItem ? cartItem.qty : 0;
                     variantsHTML = qty === 0 
-                        ? `<button class="buy-btn" onclick="changeQty(${p.id}, 1)">+</button>`
-                        : `<div class="qty-control"><button class="qty-btn" onclick="changeQty(${p.id}, -1)">-</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button></div>`;
+                        ? `<button class="buy-btn" onclick="changeQty(${p.id}, 1, ${p.id})">+</button>`
+                        : `<div class="qty-control"><button class="qty-btn" onclick="changeQty(${p.id}, -1, ${p.id})">-</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty(${p.id}, 1, ${p.id})">+</button></div>`;
                 }
 
-                let infoHTML = isLiquid 
+                let infoHTML = hasVariants 
                     ? `<div class="card-stock"><div class="stock-dot"></div> В наличии</div>` 
                     : `<div class="card-stock"><div class="stock-dot"></div> В наличии (${p.stock})</div>`;
 
                 return `
                 <div class="card">
-                    <div class="card-img-wrapper">
+                    <div class="${wrapperClass}">
                         ${imgHTML}
                         ${p.badge ? `<div class="badge">${p.badge}</div>` : ''}
                     </div>
@@ -485,8 +510,8 @@
                             <div style="font-size:10px; color:var(--primary); margin-bottom:4px; line-height:1.1;">${p.desc}</div>
                             ${infoHTML}
                         </div>
-                        <div class="card-footer" style="${isLiquid ? 'flex-direction: column; align-items: stretch;' : ''}">
-                            <div class="price" style="${isLiquid ? 'margin-bottom: 5px;' : ''}">${p.price} ₽</div>
+                        <div class="card-footer" style="${hasVariants ? 'flex-direction: column; align-items: stretch;' : ''}">
+                            <div class="price" style="${hasVariants ? 'margin-bottom: 5px;' : ''}">${p.price} ₽</div>
                             ${variantsHTML}
                         </div>
                     </div>
@@ -495,34 +520,34 @@
             }).join('');
         }
 
-        // Изменение количества (Универсальное для подов, картриджей и вкусов)
         function changeQty(cartId, delta, productId, variantName) {
+            if (!productId) productId = cartId; 
+            
             const existing = cart.find(item => item.cartId === cartId || (item.id === cartId && !variantName));
             
-            // Если это одиночный товар (под или картридж)
             if (!variantName) {
+                // Одиночные товары
                 const product = products.find(p => p.id === productId);
                 let cartItem = cart.find(item => item.id === productId);
                 
                 if (cartItem) {
                     if (delta > 0 && cartItem.qty >= product.stock) return;
-                    if (delta > 0 && cartItem.qty >= product.maxLimit) {
-                        alert(`Максимум ${product.maxLimit} шт. в одни руки!`); return;
+                    if (delta > 0 && cartItem.qty >= (product.maxLimit || 10)) {
+                        alert(`Максимум ${product.maxLimit || 10} шт. в одни руки!`); return;
                     }
                     cartItem.qty += delta;
                     if (cartItem.qty <= 0) cart = cart.filter(item => item.id !== productId); 
                 } else if (delta > 0) {
                     cart.push({ id: productId, title: product.title, price: product.price, qty: 1 });
                 }
-            } 
-            // Если это жижа (с вариантом)
-            else {
+            } else {
+                // С вариантами
                 const product = products.find(p => p.id === productId);
                 const variant = product.variants.find(v => v.name === variantName);
                 let cartItem = cart.find(item => item.cartId === cartId);
 
                 if (cartItem) {
-                    if (delta > 0 && cartItem.qty >= variant.stock) return; // Учитываем остаток вкуса
+                    if (delta > 0 && cartItem.qty >= variant.stock) return;
                     cartItem.qty += delta;
                     if (cartItem.qty <= 0) cart = cart.filter(item => item.cartId !== cartId); 
                 } else if (delta > 0) {
@@ -570,8 +595,7 @@
             list.innerHTML = products.map(p => {
                 let content = '';
                 
-                if (p.category === 'liquids' && p.variants) {
-                    // Отрисовка вкусов для жиж
+                if (p.variants && p.variants.length > 0) {
                     let variantsList = p.variants.map((v, index) => `
                         <div class="admin-variant-row">
                             <div class="admin-variant-title">${v.name}</div>
@@ -585,10 +609,9 @@
                     
                     content = `
                         ${variantsList}
-                        <button class="add-variant-btn" onclick="addVariant(${p.id})">+ Добавить вкус</button>
+                        <button class="add-variant-btn" onclick="addVariant(${p.id})">+ Добавить вариант</button>
                     `;
                 } else {
-                    // Отрисовка для подов и картриджей
                     content = `
                         <div class="admin-controls" style="justify-content: flex-end;">
                             <button class="admin-btn" onclick="updateStock(${p.id}, -1)">-</button>
@@ -623,7 +646,6 @@
             renderAdminPanel();
         }
 
-        // Управление вкусами в админке
         function updateVariantStock(productId, variantIndex, delta) {
             const p = products.find(p => p.id === productId);
             p.variants[variantIndex].stock += delta;
@@ -640,7 +662,7 @@
 
         function addVariant(productId) {
             const p = products.find(p => p.id === productId);
-            let name = prompt("Введите название нового вкуса:");
+            let name = prompt("Введите название нового варианта (вкус/цвет):");
             if (name && name.trim() !== "") {
                 p.variants.push({ name: name.trim(), stock: 0 });
                 renderAdminPanel();
