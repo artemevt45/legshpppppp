@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LegionShop | Cosmic</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
         /* БАЗОВАЯ ТЕМА (Сине-голубая) */
         :root, body[data-theme="base"] {
@@ -19,10 +19,10 @@
             --danger: #ff3366;
             --admin-color: #2ecc71;
             --nav-bg: rgba(2, 4, 10, 0.95);
-            --bg-image-opacity: 1;
+            --bg-image: url('bazatema.jpg');
         }
 
-        /* ТЕМНАЯ ТЕМА (Черная) */
+        /* ТЕМНАЯ ТЕМА (Черная с белым) */
         body[data-theme="dark"] {
             --bg: #000000;
             --surface: rgba(20, 20, 20, 0.85);
@@ -32,7 +32,7 @@
             --primary: #ffffff;
             --primary-glow: rgba(255, 255, 255, 0.6);
             --nav-bg: rgba(0, 0, 0, 0.95);
-            --bg-image-opacity: 0.2;
+            --bg-image: url('blacktema.jpg');
         }
 
         /* СВЕТЛАЯ ТЕМА */
@@ -45,33 +45,33 @@
             --primary: #007aff;
             --primary-glow: rgba(0, 122, 255, 0.4);
             --nav-bg: rgba(255, 255, 255, 0.95);
-            --bg-image-opacity: 0; /* Скрываем космос в светлой теме */
+            --bg-image: url('whitetema.jpg');
         }
 
-        /* КРАСНАЯ ТЕМА */
+        /* КРАСНАЯ ТЕМА (Темно-бардовая, без голубизны) */
         body[data-theme="red"] {
             --bg: #0a0000;
-            --surface: rgba(30, 5, 5, 0.85);
-            --surface-solid: #1e0505;
+            --surface: rgba(40, 0, 0, 0.85);
+            --surface-solid: #2b0000;
             --text: #ffffff;
             --text-muted: #c78b8b;
-            --primary: #ff3366;
-            --primary-glow: rgba(255, 51, 102, 0.6);
+            --primary: #d32f2f;
+            --primary-glow: rgba(211, 47, 47, 0.6);
             --nav-bg: rgba(10, 0, 0, 0.95);
-            --bg-image-opacity: 0.2;
+            --bg-image: url('redtema.jpg');
         }
 
-        /* СЕРАЯ ТЕМА */
+        /* СЕРАЯ ТЕМА (Светло-серый акцент) */
         body[data-theme="gray"] {
             --bg: #1a1a1a;
             --surface: rgba(40, 40, 40, 0.85);
             --surface-solid: #282828;
             --text: #ffffff;
             --text-muted: #aaaaaa;
-            --primary: #ff9900; /* Оранжевый акцент для серой темы */
-            --primary-glow: rgba(255, 153, 0, 0.6);
+            --primary: #b0bec5; 
+            --primary-glow: rgba(176, 190, 197, 0.6);
             --nav-bg: rgba(26, 26, 26, 0.95);
-            --bg-image-opacity: 0.1;
+            --bg-image: url('https://i.pinimg.com/736x/91/11/1f/91111fd5d503d82c3081f0239c16490e.jpg');
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Exo 2', sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -87,9 +87,9 @@
 
         .space-bg { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; 
-            background: url('https://i.pinimg.com/736x/91/11/1f/91111fd5d503d82c3081f0239c16490e.jpg') center/cover no-repeat;
-            opacity: var(--bg-image-opacity);
-            transition: opacity 0.3s;
+            background: var(--bg-image) center/cover no-repeat;
+            opacity: 1;
+            transition: background 0.3s;
         }
         .space-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; 
@@ -97,13 +97,32 @@
             transition: background 0.3s;
         }
 
+        /* АНИМАЦИЯ ЗАГОЛОВКА (ПИАНИНО) */
         .hero { position: relative; height: 100px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(128, 128, 128, 0.2); background: rgba(0,0,0,0.1); }
-        .hero h1 { font-size: 28px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 15px var(--primary-glow); font-family: monospace; }
+        .hero h1 { 
+            font-size: 38px; 
+            font-weight: 900; 
+            letter-spacing: 5px; 
+            text-transform: uppercase; 
+            color: var(--primary); 
+            text-shadow: 0 0 20px var(--primary-glow); 
+            display: flex;
+            gap: 2px;
+        }
+        .hero h1 span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(-30px);
+            animation: pianoDrop 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+        @keyframes pianoDrop {
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         .search-container { padding: 15px 20px 5px 20px; position: relative; display: flex; align-items: center; }
         .search-icon { position: absolute; left: 35px; width: 20px; height: 20px; fill: var(--primary); filter: drop-shadow(0 0 5px var(--primary)); pointer-events: none; z-index: 2; }
-        .search-input { width: 100%; padding: 12px 15px 12px 45px; background: var(--surface); border: 1px solid transparent; background: linear-gradient(var(--bg), var(--bg)) padding-box, linear-gradient(45deg, var(--primary), #ffffff, #005a80) border-box; border-radius: 12px; color: var(--text); font-size: 14px; outline: none; transition: 0.3s; box-shadow: 0 0 15px rgba(0, 242, 254, 0.1); }
-        .search-input:focus { box-shadow: 0 0 20px var(--primary-glow); background: linear-gradient(var(--bg), var(--bg)) padding-box, linear-gradient(45deg, #005a80, var(--primary), #ffffff) border-box; }
+        .search-input { width: 100%; padding: 12px 15px 12px 45px; background: var(--surface); border: 1px solid transparent; background: linear-gradient(var(--bg), var(--bg)) padding-box, linear-gradient(45deg, var(--primary), #ffffff, var(--primary)) border-box; border-radius: 12px; color: var(--text); font-size: 14px; outline: none; transition: 0.3s; box-shadow: 0 0 15px var(--primary-glow); }
+        .search-input:focus { box-shadow: 0 0 25px var(--primary-glow); }
         .search-input::placeholder { color: var(--text-muted); }
 
         .filters { display: flex; gap: 10px; padding: 15px 20px; overflow-x: auto; scrollbar-width: none; }
@@ -113,12 +132,12 @@
 
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px 20px 20px; }
 
-        .card { border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; position: relative; transition: 0.3s; border: 2px solid transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(135deg, var(--primary), #1e3a8a, #ffffff, var(--primary)) border-box; background-size: 300% 300%; animation: borderShine 6s linear infinite; }
+        .card { border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; position: relative; transition: 0.3s; border: 2px solid transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(135deg, var(--primary), var(--bg), var(--primary)) border-box; background-size: 300% 300%; animation: borderShine 6s linear infinite; }
         @keyframes borderShine { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
         .card:active { transform: scale(0.97); box-shadow: 0 0 25px var(--primary-glow); }
         
-        .card-img-wrapper { width: 100%; height: 170px; background: #ffffff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(0, 240, 255, 0.2); position: relative; overflow: hidden; }
+        .card-img-wrapper { width: 100%; height: 170px; background: #ffffff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(128, 128, 128, 0.2); position: relative; overflow: hidden; }
         .card-img { width: 100%; height: 100%; object-fit: contain; padding: 0; }
         
         .liquid-img-wrapper { background: transparent !important; border-bottom: none !important; }
@@ -170,7 +189,16 @@
 
         .cart-container { padding: 20px; }
         .cart-item { display: flex; justify-content: space-between; align-items: center; background: var(--surface); border: 1px solid var(--primary-glow); padding: 15px; border-radius: 16px; margin-bottom: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
-        .checkout-btn { position: fixed; bottom: 90px; left: 20px; right: 20px; background: linear-gradient(90deg, var(--primary) 0%, var(--primary-glow) 100%); color: var(--bg); padding: 16px; border-radius: 16px; border: none; font-size: 16px; font-weight: 800; text-transform: uppercase; box-shadow: 0 10px 20px var(--primary-glow); cursor: pointer; display: none; }
+        
+        /* НОВАЯ КНОПКА ОФОРМЛЕНИЯ */
+        .checkout-btn { 
+            position: fixed; bottom: 90px; left: 20px; right: 20px; 
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-glow) 100%); 
+            color: var(--bg); padding: 16px 20px; border-radius: 16px; border: none; 
+            font-size: 16px; font-weight: 800; text-transform: uppercase; 
+            box-shadow: 0 10px 20px var(--primary-glow); cursor: pointer; display: none; 
+            justify-content: space-between; align-items: center;
+        }
 
         .profile-menu-item { background: var(--surface); border: 1px solid var(--primary-glow); padding: 16px; border-radius: 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: var(--text); }
         .profile-menu-item span { font-size: 15px; font-weight: 600; }
@@ -203,7 +231,7 @@
     <div class="space-overlay"></div>
 
     <div id="page-catalog" class="page active">
-        <div class="hero"><h1 id="matrix-text"></h1></div>
+        <div class="hero"><h1 id="header-title"></h1></div>
         <div class="search-container">
             <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
             <input type="text" id="searchInput" class="search-input" placeholder="Найти товар..." oninput="handleSearch()">
@@ -223,13 +251,13 @@
             <div id="cart-items"></div>
             <div id="cart-empty-state" style="text-align:center; margin-top:50px; color:var(--text-muted);"><p>Ваша корзина пуста</p></div>
         </div>
-        <button class="checkout-btn" id="checkout-btn" onclick="checkout()">Оформить заказ</button>
+        <button class="checkout-btn" id="checkout-btn" onclick="checkout()"></button>
     </div>
 
     <div id="page-profile" class="page">
         <div class="cart-container">
             <div style="display:flex; align-items:center; gap:15px; margin-bottom:30px;">
-                <div id="user-avatar" style="width:60px; height:60px; background:linear-gradient(135deg, var(--primary), #4facfe); border-radius:50%; box-shadow: 0 0 20px var(--primary-glow); display:flex; justify-content:center; align-items:center; font-size:24px; font-weight:800; color:var(--bg); background-size:cover; background-position:center;"></div>
+                <div id="user-avatar" style="width:60px; height:60px; background:linear-gradient(135deg, var(--primary), var(--primary-glow)); border-radius:50%; box-shadow: 0 0 20px var(--primary-glow); display:flex; justify-content:center; align-items:center; font-size:24px; font-weight:800; color:var(--bg); background-size:cover; background-position:center;"></div>
                 <div>
                     <h3 id="user-name" style="font-size:18px;">Загрузка...</h3>
                     <p id="user-username" style="color:var(--primary); font-size:14px;">@...</p>
@@ -239,12 +267,12 @@
             <h3 style="margin-bottom: 10px; font-size: 15px; color: var(--text-muted);">ТЕМА ОФОРМЛЕНИЯ</h3>
             <div style="display: flex; gap: 8px; margin-bottom: 25px;">
                 <button onclick="setTheme('base')" class="theme-btn" style="background: #02040a; color: #00f2fe; border-color: #00f2fe;">Базовая</button>
-                <button onclick="setTheme('dark')" class="theme-btn" style="background: #000; color: #fff; border-color: #555;">Темная</button>
+                <button onclick="setTheme('dark')" class="theme-btn" style="background: #000; color: #fff; border-color: #fff;">Темная</button>
                 <button onclick="setTheme('light')" class="theme-btn" style="background: #f0f2f5; color: #000; border-color: #ccc;">Светлая</button>
             </div>
             <div style="display: flex; gap: 8px; margin-bottom: 30px;">
-                <button onclick="setTheme('red')" class="theme-btn" style="background: #ff3366; color: #fff; border-color: #ff3366;">Красная</button>
-                <button onclick="setTheme('gray')" class="theme-btn" style="background: #333; color: #ff9900; border-color: #ff9900;">Серая</button>
+                <button onclick="setTheme('red')" class="theme-btn" style="background: #2b0000; color: #d32f2f; border-color: #d32f2f;">Красная</button>
+                <button onclick="setTheme('gray')" class="theme-btn" style="background: #333; color: #b0bec5; border-color: #b0bec5;">Серая</button>
             </div>
 
             <div class="profile-menu-item"><div><span>Ваши промокоды</span></div><span class="arrow">›</span></div>
@@ -289,6 +317,24 @@
             localStorage.setItem('legion_theme', theme);
         }
 
+        // Анимация заголовка "Пианино"
+        function runPianoEffect() {
+            const el = document.getElementById("header-title");
+            const targetText = "LEGION SHOP";
+            el.innerHTML = "";
+            targetText.split("").forEach((char, index) => {
+                if (char === " ") {
+                    el.innerHTML += "&nbsp;";
+                } else {
+                    const span = document.createElement("span");
+                    span.innerText = char;
+                    span.style.animationDelay = `${index * 0.15}s`;
+                    el.appendChild(span);
+                }
+            });
+        }
+        runPianoEffect();
+
         const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
         
         function initProfile() {
@@ -315,24 +361,6 @@
             }
         }
 
-        function runMatrixEffect() {
-            const targetText = "LEGION SHOP";
-            const chars = "!<>-_\\/[]{}—=+*^?#________01";
-            let iteration = 0;
-            const el = document.getElementById("matrix-text");
-            el.innerText = targetText.split("").map(() => chars[Math.floor(Math.random() * chars.length)]).join("");
-            const interval = setInterval(() => {
-                el.innerText = targetText.split("").map((letter, index) => {
-                    if(index < iteration) return targetText[index];
-                    return chars[Math.floor(Math.random() * chars.length)];
-                }).join("");
-                if(iteration >= targetText.length) clearInterval(interval);
-                iteration += 1 / 3;
-            }, 50);
-        }
-        runMatrixEffect();
-        setInterval(runMatrixEffect, 14000);
-
         const ADMIN_USERNAME = 'managerlegionshop'; 
         if (tgUser && tgUser.username === ADMIN_USERNAME) {
             document.getElementById('nav-admin').style.display = 'flex';
@@ -357,11 +385,12 @@
                 id: 2, title: "XROS 6 Mini", desc: "Компактный под", price: 1800, category: "pods", badge: "ХИТ", img: "xros6mini.jpg",
                 variants: [
                     { name: "Black", stock: 1 },
+                    { name: "Brown", stock: 1 },
                     { name: "Jelly blue", stock: 1 },
-                    { name: "Jelly pink", stock: 1 },
+                    { name: "Jelly pink", stock: 2 },
                     { name: "Jelly green", stock: 1 },
-                    { name: "Plume pink", stock: 1 },
-                    { name: "Plume white", stock: 1 },
+                    { name: "Plume pink", stock: 2 },
+                    { name: "Plume white", stock: 2 },
                     { name: "Titanium black", stock: 1 },
                     { name: "Titanium silver", stock: 1 }
                 ]
@@ -446,13 +475,12 @@
             }
         ];
 
-        // Инициализация корзины с обновлением старых цен
         let cart = [];
         try { 
             cart = JSON.parse(localStorage.getItem('legion_cart_cosmic')) || []; 
             cart.forEach(item => {
                 const p = products.find(prod => prod.id === item.id);
-                if (p) item.price = p.price; // Принудительно обновляем цену
+                if (p) item.price = p.price;
             });
         } catch(e) {}
 
@@ -582,8 +610,6 @@
         function changeQty(cartId, delta, productId, variantName) {
             if (!productId) productId = cartId; 
             
-            const existing = cart.find(item => item.cartId === cartId || (item.id === cartId && !variantName));
-            
             if (!variantName) {
                 const product = products.find(p => p.id === productId);
                 let cartItem = cart.find(item => item.id === productId);
@@ -636,24 +662,26 @@
             const emptyState = document.getElementById('cart-empty-state');
             const checkoutBtn = document.getElementById('checkout-btn');
             
-            if (cart.length === 0) { container.innerHTML = ''; emptyState.style.display = 'block'; checkoutBtn.style.display = 'none'; return; }
-            emptyState.style.display = 'none'; checkoutBtn.style.display = 'block';
+            if (cart.length === 0) { 
+                container.innerHTML = ''; 
+                emptyState.style.display = 'block'; 
+                checkoutBtn.style.display = 'none'; 
+                return; 
+            }
+            emptyState.style.display = 'none'; 
+            checkoutBtn.style.display = 'flex'; // Включаем flex для кнопки
             
             let total = 0;
             container.innerHTML = cart.map(item => {
-                // Берем актуальную цену из products, чтобы не было старых цен
                 const currentProduct = products.find(p => p.id === item.id);
-                if (currentProduct) {
-                    item.price = currentProduct.price;
-                }
+                if (currentProduct) item.price = currentProduct.price;
                 
                 total += item.price * item.qty;
                 return `<div class="cart-item"><div><div style="font-weight: 600; font-size: 15px;">${item.title}</div><div style="font-size:12px; color:var(--text-muted); margin-top:4px;">${item.qty} шт.</div></div><div style="font-weight:800; font-size:16px; color:var(--primary); text-shadow: 0 0 5px var(--primary);">${item.price * item.qty} ₽</div></div>`;
-            }).join('') + `
-            <div style="margin-top:20px; padding-top: 15px; border-top: 1px solid var(--primary-glow); display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:18px; font-weight:800;">Итого:</span> 
-                <span style="font-size:24px; font-weight:900; color:var(--primary); text-shadow: 0 0 10px var(--primary);">${total} ₽</span>
-            </div>`;
+            }).join('');
+
+            // Обновляем кнопку с итоговой ценой
+            checkoutBtn.innerHTML = `<span>Оформить заказ</span> <span>${total} ₽</span>`;
         }
 
         // === АДМИНКА ===
