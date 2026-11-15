@@ -113,7 +113,7 @@
         .filter-btn { background: var(--surface); border: 1px solid var(--primary-glow); color: var(--text-muted); padding: 8px 16px; border-radius: 20px; font-size: 14px; white-space: nowrap; transition: 0.3s; cursor: pointer; }
         .filter-btn.active { background: var(--primary); color: var(--bg); font-weight: 800; box-shadow: 0 0 15px var(--primary-glow); }
 
-        /* Новая кнопка "Фильтры" */
+        /* Кнопка "Фильтры" */
         .filter-trigger-container { padding: 5px 20px 15px 20px; display: flex; justify-content: flex-start; }
         .open-filter-btn { 
             background: var(--surface); border: 1px solid var(--primary-glow); 
@@ -132,9 +132,10 @@
         #filter-modal.active { display: flex; opacity: 1; }
         
         .filter-content {
-            background: var(--modal-bg); width: 90%; max-width: 400px; border-radius: 20px;
+            background: var(--modal-bg); width: 85%; max-width: 360px; border-radius: 20px;
             padding: 20px; border: 1px solid var(--primary-glow); box-shadow: 0 0 30px var(--primary-glow);
             transform: translateY(20px); transition: transform 0.3s;
+            max-height: 75vh; overflow-y: auto;
         }
         #filter-modal.active .filter-content { transform: translateY(0); }
 
@@ -142,30 +143,32 @@
         .filter-group { margin-bottom: 20px; }
         .filter-group-title { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;}
         
+        .radio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
         .radio-label {
-            display: flex; align-items: center; padding: 10px 15px; margin-bottom: 8px;
-            background: var(--surface-solid); border-radius: 12px; border: 1px solid transparent;
-            cursor: pointer; transition: 0.2s; font-size: 14px;
+            display: flex; align-items: center; padding: 8px 12px;
+            background: var(--surface-solid); border-radius: 10px; border: 1px solid transparent;
+            cursor: pointer; transition: 0.2s; font-size: 13px;
         }
         .radio-label:active { background: rgba(128, 128, 128, 0.2); }
         .radio-label input[type="radio"] { display: none; }
         .radio-custom {
-            width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--text-muted);
-            margin-right: 12px; display: flex; justify-content: center; align-items: center;
+            width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--text-muted);
+            margin-right: 8px; display: flex; justify-content: center; align-items: center;
             transition: 0.2s;
         }
         .radio-label input[type="radio"]:checked + .radio-custom {
             border-color: var(--primary);
         }
         .radio-label input[type="radio"]:checked + .radio-custom::after {
-            content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--primary);
+            content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--primary);
             box-shadow: 0 0 8px var(--primary);
         }
         .radio-label input[type="radio"]:checked ~ span { color: var(--primary); font-weight: 600; }
 
         .apply-btn {
             width: 100%; background: var(--primary); color: var(--bg); border: none;
-            padding: 14px; border-radius: 12px; font-weight: 800; font-size: 16px;
+            padding: 12px; border-radius: 12px; font-weight: 800; font-size: 15px;
             cursor: pointer; box-shadow: 0 0 15px var(--primary-glow); text-transform: uppercase;
         }
         .apply-btn:active { transform: scale(0.95); }
@@ -176,15 +179,10 @@
         @keyframes borderShine { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         .card:hover, .card:active { transform: scale(0.98) translateY(-2px); box-shadow: 0 0 25px var(--primary-glow), inset 0 0 15px var(--primary-glow); border-color: var(--primary); }
         
-        /* Одинаковый размер картинок для всех категорий */
         .card-img-wrapper { width: 100%; height: 170px; background: #ffffff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(128, 128, 128, 0.2); position: relative; overflow: hidden; }
         .card-img { width: 100%; height: 100%; object-fit: contain; padding: 5px; transition: transform 0.3s; }
         .card:hover .card-img { transform: scale(1.05); }
         
-        /* Если хочешь, чтобы жидкости были без белого фона, но той же высоты, раскомментируй ниже: */
-        /* .liquid-img-wrapper { background: transparent; } */
-        /* .liquid-img { object-fit: cover; padding: 0; border-radius: 14px 14px 0 0; } */
-
         .card-no-img { width: 40px; height: 40px; fill: var(--primary); opacity: 0.5; filter: drop-shadow(0 0 10px var(--primary)); }
         .badge { position: absolute; top: 10px; left: 10px; background: linear-gradient(90deg, var(--primary), #ffffff); color: #000; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 900; text-transform: uppercase; z-index: 2; animation: badgePulse 2s infinite alternate; }
         @keyframes badgePulse { 0% { box-shadow: 0 0 5px var(--primary-glow); transform: scale(1); } 100% { box-shadow: 0 0 20px var(--primary), 0 0 10px var(--primary); transform: scale(1.05); } }
@@ -204,16 +202,16 @@
         .qty-btn { background: transparent; border: none; color: var(--primary); width: 28px; height: 32px; font-size: 18px; font-weight: bold; cursor: pointer; }
         .qty-num { color: var(--text); font-weight: 800; font-size: 14px; min-width: 20px; text-align: center; }
 
-        /* Легкая и компактная кнопка выбора */
+        /* Компактная кнопка выбора */
         .choose-flavor-btn { 
-            width: 100%; background: rgba(0, 242, 254, 0.1); color: var(--primary); 
-            border: 1px solid var(--primary); padding: 6px; border-radius: 8px; 
-            font-weight: 700; font-size: 12px; margin-top: 8px; cursor: pointer; 
-            text-transform: uppercase; transition: 0.3s; 
+            background: rgba(0, 242, 254, 0.1); color: var(--primary); 
+            border: 1px solid var(--primary); padding: 6px 12px; border-radius: 8px; 
+            font-weight: 700; font-size: 11px; margin-top: 8px; cursor: pointer; 
+            text-transform: uppercase; transition: 0.3s; width: auto; align-self: flex-start;
         }
         .choose-flavor-btn:active { background: var(--primary); color: var(--bg); }
         
-        .variants-container { display: none; flex-direction: column; gap: 8px; margin-top: 10px; border-top: 1px solid rgba(128, 128, 128, 0.2); padding-top: 10px; }
+        .variants-container { display: none; flex-direction: column; gap: 8px; margin-top: 10px; border-top: 1px solid rgba(128, 128, 128, 0.2); padding-top: 10px; width: 100%;}
         .variant-item { display: flex; justify-content: space-between; align-items: center; background: var(--surface-solid); padding: 6px 10px; border-radius: 8px; border: 1px solid rgba(128, 128, 128, 0.2); }
         
         .glossy-stock-box { background: linear-gradient(135deg, #ffffff, #c0c0c0, #ffffff); color: #000; font-weight: 900; font-size: 12px; padding: 2px 6px; border-radius: 4px; box-shadow: 0 0 8px rgba(255, 255, 255, 0.6); min-width: 22px; text-align: center; margin-right: 8px; }
@@ -295,55 +293,82 @@
     <!-- МОДАЛЬНОЕ ОКНО ФИЛЬТРОВ -->
     <div id="filter-modal">
         <div class="filter-content">
-            <h3>Настройки каталога</h3>
+            <h3>Фильтры</h3>
             
             <div class="filter-group">
                 <div class="filter-group-title">Сортировка</div>
-                <label class="radio-label">
-                    <input type="radio" name="sort" value="default" checked onchange="setSort('default')">
-                    <div class="radio-custom"></div> <span>По умолчанию</span>
-                </label>
-                <label class="radio-label">
-                    <input type="radio" name="sort" value="cheap" onchange="setSort('cheap')">
-                    <div class="radio-custom"></div> <span>Сначала дешевые</span>
-                </label>
-                <label class="radio-label">
-                    <input type="radio" name="sort" value="expensive" onchange="setSort('expensive')">
-                    <div class="radio-custom"></div> <span>Сначала дорогие</span>
-                </label>
+                <div class="radio-grid">
+                    <label class="radio-label">
+                        <input type="radio" name="sort" value="default" checked onchange="setSort('default')">
+                        <div class="radio-custom"></div> <span>По умолч.</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="sort" value="cheap" onchange="setSort('cheap')">
+                        <div class="radio-custom"></div> <span>Дешевле</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="sort" value="expensive" onchange="setSort('expensive')">
+                        <div class="radio-custom"></div> <span>Дороже</span>
+                    </label>
+                </div>
             </div>
 
-            <!-- Фильтр по МГ (появляется только для жиж) -->
+            <!-- Фильтр по Бренду (для подов) -->
+            <div class="filter-group" id="brand-section" style="display: none;">
+                <div class="filter-group-title">Бренд</div>
+                <div class="radio-grid">
+                    <label class="radio-label">
+                        <input type="radio" name="brand" value="all" checked onchange="setBrand('all')">
+                        <div class="radio-custom"></div> <span>Все</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="brand" value="Vaporesso" onchange="setBrand('Vaporesso')">
+                        <div class="radio-custom"></div> <span>Vaporesso</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="brand" value="Smoant" onchange="setBrand('Smoant')">
+                        <div class="radio-custom"></div> <span>Smoant</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="brand" value="Geekvape" onchange="setBrand('Geekvape')">
+                        <div class="radio-custom"></div> <span>Geekvape</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Фильтр по МГ (для жиж) -->
             <div class="filter-group" id="mg-section" style="display: none;">
                 <div class="filter-group-title">Крепость (мг)</div>
-                <label class="radio-label">
-                    <input type="radio" name="mg" value="0" checked onchange="setMg(0)">
-                    <div class="radio-custom"></div> <span>Все</span>
-                </label>
-                <label class="radio-label">
-                    <input type="radio" name="mg" value="20" onchange="setMg(20)">
-                    <div class="radio-custom"></div> <span>20 мг</span>
-                </label>
-                <label class="radio-label">
-                    <input type="radio" name="mg" value="50" onchange="setMg(50)">
-                    <div class="radio-custom"></div> <span>50 мг</span>
-                </label>
-                <label class="radio-label">
-                    <input type="radio" name="mg" value="70" onchange="setMg(70)">
-                    <div class="radio-custom"></div> <span>70 мг</span>
-                </label>
-                <label class="radio-label">
-                    <input type="radio" name="mg" value="80" onchange="setMg(80)">
-                    <div class="radio-custom"></div> <span>80 мг</span>
-                </label>
-                <label class="radio-label">
-                    <input type="radio" name="mg" value="90" onchange="setMg(90)">
-                    <div class="radio-custom"></div> <span>90 мг</span>
-                </label>
-                <label class="radio-label">
-                    <input type="radio" name="mg" value="100" onchange="setMg(100)">
-                    <div class="radio-custom"></div> <span>100 мг</span>
-                </label>
+                <div class="radio-grid">
+                    <label class="radio-label">
+                        <input type="radio" name="mg" value="0" checked onchange="setMg(0)">
+                        <div class="radio-custom"></div> <span>Все</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="mg" value="20" onchange="setMg(20)">
+                        <div class="radio-custom"></div> <span>20</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="mg" value="50" onchange="setMg(50)">
+                        <div class="radio-custom"></div> <span>50</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="mg" value="70" onchange="setMg(70)">
+                        <div class="radio-custom"></div> <span>70</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="mg" value="80" onchange="setMg(80)">
+                        <div class="radio-custom"></div> <span>80</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="mg" value="90" onchange="setMg(90)">
+                        <div class="radio-custom"></div> <span>90</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="mg" value="100" onchange="setMg(100)">
+                        <div class="radio-custom"></div> <span>100</span>
+                    </label>
+                </div>
             </div>
 
             <button class="apply-btn" onclick="closeFilters()">Применить</button>
@@ -411,7 +436,7 @@
                 <button onclick="setTheme('gray')" class="theme-btn" style="background: #333; color: #b0bec5; border-color: #b0bec5;">Серая</button>
             </div>
 
-            <div class="profile-menu-item"><div><span>Ваши промокоды</span></div><span class="arrow">›</span></div>
+            <div class="profile-menu-item" onclick="window.open('https://t.me/legionshopkurgan', '_blank')"><div><span>Наш ТГК</span></div><span class="arrow">›</span></div>
             <div class="profile-menu-item" onclick="window.open('https://t.me/managerlegionshop', '_blank')"><div><span>Поддержка</span></div><span class="arrow">›</span></div>
         </div>
     </div>
@@ -506,17 +531,17 @@
             window.Telegram.WebApp.setHeaderColor('#02040a');
         }
 
-        // МАССИВ ТОВАРОВ (ОБНОВЛЕНЫ НАЗВАНИЯ С "мг")
+        // МАССИВ ТОВАРОВ (ДОБАВЛЕН BRAND)
         let products = [
             { 
-                id: 1, title: "XROS 6", desc: "Мощный под с экраном", price: 2500, category: "pods", badge: "NEW", img: "xros6.jpg",
+                id: 1, title: "XROS 6", brand: "Vaporesso", desc: "Мощный под с экраном", price: 2500, category: "pods", badge: "NEW", img: "xros6.jpg",
                 variants: [
                     { name: "Aurora blue", stock: 1 },
                     { name: "Silk brown", stock: 1 }
                 ]
             },
             { 
-                id: 2, title: "XROS 6 Mini", desc: "Компактный под", price: 1800, category: "pods", badge: "ХИТ", img: "xros6mini.jpg",
+                id: 2, title: "XROS 6 Mini", brand: "Vaporesso", desc: "Компактный под", price: 1800, category: "pods", badge: "ХИТ", img: "xros6mini.jpg",
                 variants: [
                     { name: "Black", stock: 1 },
                     { name: "Brown", stock: 1 },
@@ -617,10 +642,12 @@
         let openAccordions = {}; 
         let currentSort = 'default';
         let currentMg = 0;
+        let currentBrand = 'all';
 
         function openFilters() {
             const modal = document.getElementById('filter-modal');
             document.getElementById('mg-section').style.display = (activeCategory === 'liquids') ? 'block' : 'none';
+            document.getElementById('brand-section').style.display = (activeCategory === 'pods') ? 'block' : 'none';
             modal.style.display = 'flex';
             setTimeout(() => modal.classList.add('active'), 10);
         }
@@ -638,6 +665,10 @@
 
         function setMg(mg) {
             currentMg = parseInt(mg);
+        }
+
+        function setBrand(brand) {
+            currentBrand = brand;
         }
 
         function handleSearch() {
@@ -672,6 +703,7 @@
 
                 if (activeCategory !== 'all' && p.category !== activeCategory) return false;
                 if (activeCategory === 'liquids' && currentMg > 0 && p.mg !== currentMg) return false;
+                if (activeCategory === 'pods' && currentBrand !== 'all' && p.brand !== currentBrand) return false;
 
                 if (searchQuery !== '') {
                     let matchTitle = p.title.toLowerCase().includes(searchQuery);
@@ -692,7 +724,6 @@
                 let hasVariants = p.variants && p.variants.length > 0;
                 let isLiquid = p.category === 'liquids';
                 
-                // Теперь все используют одинаковый класс-обертку для одинакового размера
                 let imgHTML = '';
                 if (p.img && p.img.trim() !== "") {
                     imgHTML = `
@@ -763,7 +794,7 @@
                             <div style="font-size:10px; color:var(--primary); margin-bottom:4px; line-height:1.1;">${p.desc}</div>
                             ${infoHTML}
                         </div>
-                        <div class="card-footer" style="${hasVariants ? 'flex-direction: column; align-items: stretch;' : ''}">
+                        <div class="card-footer" style="${hasVariants ? 'flex-direction: column; align-items: flex-start;' : ''}">
                             <div class="price" style="${hasVariants ? 'margin-bottom: 5px;' : ''}">${p.price} ₽</div>
                             ${variantsHTML}
                         </div>
@@ -854,15 +885,19 @@
             const hasCartridgeInCart = cart.some(item => item.category === 'cartridges' || (products.find(p=>p.id===item.id) && products.find(p=>p.id===item.id).category === 'cartridges'));
 
             if (hasPodInCart && !hasCartridgeInCart && cartridgeProduct) {
-                upsellHTML = `
-                    <div class="upsell-banner">
-                        <div class="upsell-text">
-                            <div>🔥 Отличное дополнение!</div>
-                            <div>${cartridgeProduct.title} - ${cartridgeProduct.price} ₽</div>
+                const cartVar = cartridgeProduct.variants.find(v => v.stock > 0);
+                if (cartVar) {
+                    const cartId = `${cartridgeProduct.id}_${cartVar.name}`;
+                    upsellHTML = `
+                        <div class="upsell-banner">
+                            <div class="upsell-text">
+                                <div>🔥 Отличное дополнение!</div>
+                                <div>${cartridgeProduct.title} - ${cartridgeProduct.price} ₽</div>
+                            </div>
+                            <button class="upsell-btn" onclick="changeQty('${cartId}', 1, ${cartridgeProduct.id}, '${cartVar.name}'); renderCart();">+ Добавить</button>
                         </div>
-                        <button class="upsell-btn" onclick="changeQty(${cartridgeProduct.id}, 1, ${cartridgeProduct.id}); renderCart();">+ Добавить</button>
-                    </div>
-                `;
+                    `;
+                }
             }
 
             container.innerHTML = cart.map(item => {
