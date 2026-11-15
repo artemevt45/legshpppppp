@@ -51,8 +51,10 @@
         @keyframes borderShine { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
         .card:active { transform: scale(0.97); box-shadow: 0 0 25px var(--primary-glow); }
-        .card-img-wrapper { width: 100%; height: 140px; background: #ffffff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(0, 240, 255, 0.2); position: relative; overflow: hidden; }
-        .card-img { width: 100%; height: 100%; object-fit: contain; padding: 5px; }
+        
+        /* Увеличили высоту картинки и убрали отступы, чтобы фото вытягивалось */
+        .card-img-wrapper { width: 100%; height: 170px; background: #ffffff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(0, 240, 255, 0.2); position: relative; overflow: hidden; }
+        .card-img { width: 100%; height: 100%; object-fit: contain; padding: 0; }
         .card-no-img { width: 40px; height: 40px; fill: var(--primary); opacity: 0.5; filter: drop-shadow(0 0 10px var(--primary)); }
 
         .badge { position: absolute; top: 10px; left: 10px; background: linear-gradient(90deg, var(--primary), #ffffff); color: #000; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 900; text-transform: uppercase; box-shadow: 0 0 10px var(--primary-glow); z-index: 2; }
@@ -77,7 +79,23 @@
         .choose-flavor-btn:active { transform: scale(0.95); }
         .variants-container { display: none; flex-direction: column; gap: 8px; margin-top: 10px; border-top: 1px solid rgba(0, 240, 255, 0.2); padding-top: 10px; }
         .variant-item { display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.5); padding: 6px 10px; border-radius: 8px; border: 1px solid rgba(0, 240, 255, 0.1); }
-        .variant-name { font-size: 11px; color: #fff; flex-grow: 1; padding-right: 5px; }
+        
+        /* Глянцевая рамка для количества */
+        .glossy-stock-box {
+            background: linear-gradient(135deg, #ffffff, #c0c0c0, #ffffff);
+            color: #000;
+            font-weight: 900;
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.6), inset 0 -2px 5px rgba(0,0,0,0.2);
+            text-shadow: 0 1px 1px rgba(255,255,255,0.8);
+            min-width: 22px;
+            text-align: center;
+            margin-right: 8px;
+        }
+
+        .variant-name { font-size: 11px; color: #fff; flex-grow: 1; }
         
         /* Модифицируем кнопки для вариантов, чтобы они были меньше */
         .variant-item .qty-control { height: 26px; }
@@ -140,13 +158,14 @@
         
         <div class="search-container">
             <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-            <input type="text" id="searchInput" class="search-input" placeholder="Найти девайс или жижу..." oninput="handleSearch()">
+            <input type="text" id="searchInput" class="search-input" placeholder="Найти девайс, жижу или картридж..." oninput="handleSearch()">
         </div>
 
         <div class="filters">
             <button class="filter-btn active" onclick="filterProducts('all', this)">Все товары</button>
             <button class="filter-btn" onclick="filterProducts('pods', this)">Поды</button>
-            <button class="filter-btn" onclick="filterProducts('liquids', this)">Жижи</button>
+            <button class="filter-btn" onclick="filterProducts('liquids', this)">Жижа</button>
+            <button class="filter-btn" onclick="filterProducts('cartridges', this)">Картриджи</button>
         </div>
         <div class="grid" id="catalog-grid"></div>
     </div>
@@ -276,9 +295,12 @@
             { id: 8, title: "XROS 6 Silk Green", desc: "Цвет: Шелковый зеленый", stock: 0, maxLimit: 5, price: 2500, category: "pods", badge: "", img: "xros6.jpg" },
             { id: 9, title: "XROS 6 Silk Gray", desc: "Цвет: Шелковый серый", stock: 0, maxLimit: 5, price: 2500, category: "pods", badge: "", img: "xros6.jpg" },
             
-            // ЖИЖИ (ПРИВЯЗКА К ТВОИМ ФОТО)
+            // КАРТРИДЖИ
+            { id: 18, title: "Картридж XROS 0.7Ω", desc: "Vaporesso XROS Series 3ml", stock: 8, maxLimit: 10, price: 300, category: "cartridges", badge: "NEW", img: "karik07om3ml.jpg" },
+
+            // ЖИЖИ (ПРИВЯЗКА К ТВОИМ ФОТО + НОВЫЕ ЦЕНЫ)
             { 
-                id: 10, title: "BJORN HEADSHOT 100", desc: "Кислые вкусы", stock: 1, price: 399, category: "liquids", badge: "", img: "bjornheadshot100.jpg",
+                id: 10, title: "BJORN HEADSHOT 100", desc: "Кислые вкусы", stock: 1, price: 550, category: "liquids", badge: "", img: "bjornheadshot100.jpg",
                 variants: [
                     { name: "Банан с кислинкой", stock: 1 },
                     { name: "Гранат мандарин", stock: 1 },
@@ -288,7 +310,7 @@
                 ]
             },
             { 
-                id: 11, title: "Злая Милфа 70", desc: "Освежающие вкусы", stock: 1, price: 399, category: "liquids", badge: "", img: "zlyamilfa70.jpg",
+                id: 11, title: "Злая Милфа 70", desc: "Освежающие вкусы", stock: 1, price: 500, category: "liquids", badge: "", img: "zlyamilfa70.jpg",
                 variants: [
                     { name: "Ледяная кола", stock: 1 },
                     { name: "Цитрусовый микс", stock: 1 },
@@ -296,7 +318,7 @@
                 ]
             },
             { 
-                id: 12, title: "Злая Монашка Bubble 80", desc: "Вкусы жвачек", stock: 1, price: 399, category: "liquids", badge: "", img: "zlyabubble80.jpg",
+                id: 12, title: "Злая Монашка Bubble 80", desc: "Вкусы жвачек", stock: 1, price: 500, category: "liquids", badge: "", img: "zlyabubble80.jpg",
                 variants: [
                     { name: "Кислый скиттлс черешня", stock: 1 },
                     { name: "Чупа-чупс с колой", stock: 1 },
@@ -304,7 +326,7 @@
                 ]
             },
             { 
-                id: 13, title: "Злая Монашка LEMONADE 80", desc: "Лимонады", stock: 1, price: 399, category: "liquids", badge: "", img: "zlyalemonade80.jpg",
+                id: 13, title: "Злая Монашка LEMONADE 80", desc: "Лимонады", stock: 1, price: 500, category: "liquids", badge: "", img: "zlyalemonade80.jpg",
                 variants: [
                     { name: "Вишнёвый швепс со скиттлс", stock: 1 },
                     { name: "Малина лайм мята", stock: 1 },
@@ -312,7 +334,7 @@
                 ]
             },
             { 
-                id: 14, title: "Злая Монашка SWEET 80", desc: "Сладкие вкусы", stock: 1, price: 399, category: "liquids", badge: "", img: "zlyasweet80.jpg",
+                id: 14, title: "Злая Монашка SWEET 80", desc: "Сладкие вкусы", stock: 1, price: 500, category: "liquids", badge: "", img: "zlyasweet80.jpg",
                 variants: [
                     { name: "Энергетик смородина", stock: 1 },
                     { name: "Фанта апельсин с кислой малиной", stock: 1 },
@@ -320,7 +342,7 @@
                 ]
             },
             { 
-                id: 15, title: "Кислая Убивашка 90", desc: "Кислые вкусы", stock: 1, price: 399, category: "liquids", badge: "", img: "ubivashkakislya90.jpg",
+                id: 15, title: "Кислая Убивашка 90", desc: "Кислые вкусы", stock: 1, price: 500, category: "liquids", badge: "", img: "ubivashkakislya90.jpg",
                 variants: [
                     { name: "Кислый Haribo", stock: 1 },
                     { name: "Кислый мармелад", stock: 1 },
@@ -328,7 +350,7 @@
                 ]
             },
             { 
-                id: 16, title: "Милфа HORNY 90", desc: "Энергетики и напитки", stock: 1, price: 399, category: "liquids", badge: "", img: "zlyamilfahorny90.jpg",
+                id: 16, title: "Милфа HORNY 90", desc: "Энергетики и напитки", stock: 1, price: 500, category: "liquids", badge: "", img: "zlyamilfahorny90.jpg",
                 variants: [
                     { name: "Кислый SKITTLES", stock: 1 },
                     { name: "RED BULL ягоды", stock: 1 },
@@ -336,7 +358,7 @@
                 ]
             },
             { 
-                id: 17, title: "Самоубийца V2 DANGER 100", desc: "Микс вкусов", stock: 1, price: 399, category: "liquids", badge: "", img: "samiubiycav2danger100.jpg",
+                id: 17, title: "Самоубийца V2 DANGER 100", desc: "Микс вкусов", stock: 1, price: 550, category: "liquids", badge: "", img: "samiubiycav2danger100.jpg",
                 variants: [
                     { name: "Классический энергетик", stock: 1 },
                     { name: "Кола лесные ягоды", stock: 1 },
@@ -384,7 +406,7 @@
                 if (p.category === 'liquids') {
                     return p.variants && p.variants.some(v => v.stock > 0);
                 }
-                // Для подов проверяем общий stock
+                // Для подов и картриджей проверяем общий stock
                 return p.stock > 0;
             });
 
@@ -423,7 +445,10 @@
 
                         return `
                             <div class="variant-item">
-                                <div class="variant-name">${v.name} <span style="color:var(--primary); font-size:10px;">(${v.stock})</span></div>
+                                <div style="display: flex; align-items: center; flex-grow: 1;">
+                                    <div class="glossy-stock-box">${v.stock}</div>
+                                    <div class="variant-name">${v.name}</div>
+                                </div>
                                 ${actionHTML}
                             </div>
                         `;
@@ -436,7 +461,7 @@
                         </div>
                     `;
                 } else {
-                    // Кнопка покупки для подов
+                    // Кнопка покупки для подов и картриджей
                     const cartItem = cart.find(item => item.id === p.id);
                     const qty = cartItem ? cartItem.qty : 0;
                     variantsHTML = qty === 0 
@@ -470,11 +495,11 @@
             }).join('');
         }
 
-        // Изменение количества (Универсальное для подов и вкусов)
+        // Изменение количества (Универсальное для подов, картриджей и вкусов)
         function changeQty(cartId, delta, productId, variantName) {
             const existing = cart.find(item => item.cartId === cartId || (item.id === cartId && !variantName));
             
-            // Если это под (без вариантов)
+            // Если это одиночный товар (под или картридж)
             if (!variantName) {
                 const product = products.find(p => p.id === productId);
                 let cartItem = cart.find(item => item.id === productId);
@@ -563,7 +588,7 @@
                         <button class="add-variant-btn" onclick="addVariant(${p.id})">+ Добавить вкус</button>
                     `;
                 } else {
-                    // Отрисовка для подов
+                    // Отрисовка для подов и картриджей
                     content = `
                         <div class="admin-controls" style="justify-content: flex-end;">
                             <button class="admin-btn" onclick="updateStock(${p.id}, -1)">-</button>
