@@ -28,129 +28,36 @@
             position: relative;
         }
 
-        /* ФОН С ЧЕРНОЙ ДЫРОЙ */
-        .space-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
-            background: url('https://i.pinimg.com/736x/91/11/1f/91111fd5d503d82c3081f0239c16490e.jpg') center/cover no-repeat;
-        }
-        .space-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background: radial-gradient(circle at center, rgba(2,4,10,0.4) 0%, rgba(2,4,10,0.95) 100%);
-        }
+        .space-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: url('https://i.pinimg.com/736x/91/11/1f/91111fd5d503d82c3081f0239c16490e.jpg') center/cover no-repeat; }
+        .space-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at center, rgba(2,4,10,0.4) 0%, rgba(2,4,10,0.95) 100%); }
 
-        /* ШАПКА */
-        .hero {
-            position: relative; height: 100px; display: flex; align-items: center; justify-content: center;
-            border-bottom: 1px solid rgba(0, 240, 255, 0.2); background: rgba(2,4,10,0.5);
-        }
+        .hero { position: relative; height: 100px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(0, 240, 255, 0.2); background: rgba(2,4,10,0.5); }
+        .hero h1 { font-size: 28px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 15px var(--primary-glow); font-family: monospace; }
 
-        .hero h1 {
-            font-size: 28px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase;
-            color: var(--primary); text-shadow: 0 0 15px var(--primary-glow);
-            font-family: monospace;
-        }
-
-        /* НЕОНОВЫЙ ПОИСК */
-        .search-container {
-            padding: 15px 20px 5px 20px;
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        .search-icon {
-            position: absolute;
-            left: 35px;
-            width: 20px;
-            height: 20px;
-            fill: var(--primary);
-            filter: drop-shadow(0 0 5px var(--primary));
-            pointer-events: none;
-            z-index: 2;
-        }
-        .search-input {
-            width: 100%;
-            padding: 12px 15px 12px 45px;
-            background: var(--surface);
-            border: 1px solid transparent;
-            background: linear-gradient(var(--bg), var(--bg)) padding-box,
-                        linear-gradient(45deg, var(--primary), #ffffff, #005a80) border-box;
-            border-radius: 12px;
-            color: var(--text);
-            font-size: 14px;
-            outline: none;
-            transition: 0.3s;
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
-        }
-        .search-input:focus {
-            box-shadow: 0 0 20px var(--primary-glow);
-            background: linear-gradient(var(--bg), var(--bg)) padding-box,
-                        linear-gradient(45deg, #005a80, var(--primary), #ffffff) border-box;
-        }
+        .search-container { padding: 15px 20px 5px 20px; position: relative; display: flex; align-items: center; }
+        .search-icon { position: absolute; left: 35px; width: 20px; height: 20px; fill: var(--primary); filter: drop-shadow(0 0 5px var(--primary)); pointer-events: none; z-index: 2; }
+        .search-input { width: 100%; padding: 12px 15px 12px 45px; background: var(--surface); border: 1px solid transparent; background: linear-gradient(var(--bg), var(--bg)) padding-box, linear-gradient(45deg, var(--primary), #ffffff, #005a80) border-box; border-radius: 12px; color: var(--text); font-size: 14px; outline: none; transition: 0.3s; box-shadow: 0 0 15px rgba(0, 242, 254, 0.1); }
+        .search-input:focus { box-shadow: 0 0 20px var(--primary-glow); background: linear-gradient(var(--bg), var(--bg)) padding-box, linear-gradient(45deg, #005a80, var(--primary), #ffffff) border-box; }
         .search-input::placeholder { color: var(--text-muted); }
 
         .filters { display: flex; gap: 10px; padding: 15px 20px; overflow-x: auto; scrollbar-width: none; }
         .filters::-webkit-scrollbar { display: none; }
-        .filter-btn { 
-            background: var(--surface); 
-            border: 1px solid rgba(0,240,255,0.3); 
-            color: var(--text-muted); 
-            padding: 8px 16px; 
-            border-radius: 20px; 
-            font-size: 14px; 
-            white-space: nowrap; 
-            transition: 0.3s; 
-            cursor: pointer; 
-        }
-        .filter-btn.active { 
-            background: var(--primary); 
-            color: #000; 
-            font-weight: 800; 
-            box-shadow: 0 0 15px var(--primary-glow); 
-        }
+        .filter-btn { background: var(--surface); border: 1px solid rgba(0,240,255,0.3); color: var(--text-muted); padding: 8px 16px; border-radius: 20px; font-size: 14px; white-space: nowrap; transition: 0.3s; cursor: pointer; }
+        .filter-btn.active { background: var(--primary); color: #000; font-weight: 800; box-shadow: 0 0 15px var(--primary-glow); }
 
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px 20px 20px; }
 
-        /* КАРТОЧКА С ПЕРЕЛИВАЮЩИМСЯ КРАЕМ */
-        .card { 
-            border-radius: 16px; 
-            overflow: hidden; 
-            display: flex; 
-            flex-direction: column; 
-            position: relative; 
-            transition: 0.3s;
-            
-            border: 2px solid transparent;
-            background: linear-gradient(rgba(5, 10, 25, 0.9), rgba(5, 10, 25, 0.9)) padding-box,
-                        linear-gradient(135deg, var(--primary), #1e3a8a, #ffffff, var(--primary)) border-box;
-            background-size: 300% 300%;
-            animation: borderShine 6s linear infinite;
-        }
-        @keyframes borderShine {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        .card { border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; position: relative; transition: 0.3s; border: 2px solid transparent; background: linear-gradient(rgba(5, 10, 25, 0.9), rgba(5, 10, 25, 0.9)) padding-box, linear-gradient(135deg, var(--primary), #1e3a8a, #ffffff, var(--primary)) border-box; background-size: 300% 300%; animation: borderShine 6s linear infinite; }
+        @keyframes borderShine { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
         .card:active { transform: scale(0.97); box-shadow: 0 0 25px var(--primary-glow); }
-        
-        .card-img-wrapper {
-            width: 100%; height: 140px; background: #ffffff; 
-            display: flex; align-items: center; justify-content: center; 
-            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
-            position: relative; overflow: hidden;
-        }
+        .card-img-wrapper { width: 100%; height: 140px; background: #ffffff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(0, 240, 255, 0.2); position: relative; overflow: hidden; }
         .card-img { width: 100%; height: 100%; object-fit: contain; padding: 5px; }
         .card-no-img { width: 40px; height: 40px; fill: var(--primary); opacity: 0.5; filter: drop-shadow(0 0 10px var(--primary)); }
 
-        .badge { 
-            position: absolute; top: 10px; left: 10px; 
-            background: linear-gradient(90deg, var(--primary), #ffffff); 
-            color: #000; padding: 4px 10px; border-radius: 8px; 
-            font-size: 10px; font-weight: 900; text-transform: uppercase; 
-            box-shadow: 0 0 10px var(--primary-glow); z-index: 2; 
-        }
+        .badge { position: absolute; top: 10px; left: 10px; background: linear-gradient(90deg, var(--primary), #ffffff); color: #000; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 900; text-transform: uppercase; box-shadow: 0 0 10px var(--primary-glow); z-index: 2; }
 
-        .card-body { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
+        .card-body { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
         .card-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; line-height: 1.2; text-shadow: 0 0 5px rgba(255,255,255,0.3); }
         .card-stock { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
         .stock-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 8px var(--primary); }
@@ -158,50 +65,34 @@
         .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
         .price { font-size: 18px; font-weight: 800; color: var(--primary); text-shadow: 0 0 8px var(--primary-glow); }
         
-        .buy-btn { 
-            background: transparent; 
-            border: 2px solid var(--primary); 
-            color: var(--primary); 
-            width: 34px; height: 34px; 
-            border-radius: 10px; 
-            font-size: 20px; font-weight: bold; 
-            display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; transition: 0.3s; 
-            box-shadow: inset 0 0 10px rgba(0,240,255,0.2);
-        }
+        .buy-btn { background: transparent; border: 2px solid var(--primary); color: var(--primary); width: 34px; height: 34px; border-radius: 10px; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; box-shadow: inset 0 0 10px rgba(0,240,255,0.2); }
         .buy-btn:active { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
         
         .qty-control { display: flex; align-items: center; background: rgba(0, 242, 254, 0.1); border: 1px solid var(--primary); border-radius: 10px; overflow: hidden; box-shadow: inset 0 0 10px rgba(0,240,255,0.2);}
         .qty-btn { background: transparent; border: none; color: var(--primary); width: 28px; height: 32px; font-size: 18px; font-weight: bold; cursor: pointer; }
         .qty-num { color: var(--text); font-weight: 800; font-size: 14px; min-width: 20px; text-align: center; text-shadow: 0 0 5px var(--primary); }
 
-        /* НИЖНЕЕ МЕНЮ */
-        .bottom-nav { 
-            position: fixed; bottom: 0; left: 0; right: 0; height: 70px; 
-            background: rgba(2, 4, 10, 0.95); backdrop-filter: blur(20px); 
-            display: flex; justify-content: space-around; align-items: center; 
-            border-top: 1px solid rgba(0, 240, 255, 0.3); z-index: 999; 
-            padding-bottom: env(safe-area-inset-bottom); 
-            box-shadow: 0 -5px 20px rgba(0, 240, 255, 0.1);
-        }
-        .nav-item { 
-            display: flex; justify-content: center; align-items: center; 
-            width: 50px; height: 50px; cursor: pointer; position: relative;
-            border-radius: 50%; transition: 0.3s; color: var(--text-muted); 
-        }
+        /* Стили для выбора вкусов */
+        .choose-flavor-btn { width: 100%; background: var(--primary); color: #000; border: none; padding: 8px; border-radius: 10px; font-weight: 800; font-size: 13px; margin-top: 10px; cursor: pointer; text-transform: uppercase; box-shadow: 0 0 10px var(--primary-glow); transition: 0.3s; }
+        .choose-flavor-btn:active { transform: scale(0.95); }
+        .variants-container { display: none; flex-direction: column; gap: 8px; margin-top: 10px; border-top: 1px solid rgba(0, 240, 255, 0.2); padding-top: 10px; }
+        .variant-item { display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.5); padding: 6px 10px; border-radius: 8px; border: 1px solid rgba(0, 240, 255, 0.1); }
+        .variant-name { font-size: 11px; color: #fff; flex-grow: 1; padding-right: 5px; }
+        
+        /* Модифицируем кнопки для вариантов, чтобы они были меньше */
+        .variant-item .qty-control { height: 26px; }
+        .variant-item .qty-btn { height: 26px; width: 24px; font-size: 16px; }
+        .variant-item .qty-num { font-size: 12px; }
+        .variant-item .buy-btn { height: 26px; width: 26px; font-size: 16px; border-radius: 8px; }
+
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 70px; background: rgba(2, 4, 10, 0.95); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(0, 240, 255, 0.3); z-index: 999; padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -5px 20px rgba(0, 240, 255, 0.1); }
+        .nav-item { display: flex; justify-content: center; align-items: center; width: 50px; height: 50px; cursor: pointer; position: relative; border-radius: 50%; transition: 0.3s; color: var(--text-muted); }
         .nav-item:active { background: rgba(0, 240, 255, 0.1); }
         .nav-item.active { color: var(--primary); }
         .nav-icon-svg { width: 30px; height: 30px; fill: currentColor; transition: 0.3s; }
         .nav-item.active .nav-icon-svg { filter: drop-shadow(0 0 10px var(--primary)); }
         
-        .cart-badge { 
-            position: absolute; top: 2px; right: 2px; 
-            background: var(--danger); color: white; 
-            font-size: 10px; font-weight: bold; 
-            width: 18px; height: 18px; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; 
-            display: none; box-shadow: 0 0 10px var(--danger); border: 1px solid #000; 
-        }
+        .cart-badge { position: absolute; top: 2px; right: 2px; background: var(--danger); color: white; font-size: 10px; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; display: none; box-shadow: 0 0 10px var(--danger); border: 1px solid #000; }
 
         .page { display: none; animation: fadeIn 0.4s ease-out; } .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
@@ -215,26 +106,25 @@
         .profile-menu-item .arrow { color: var(--primary); font-size: 18px; }
 
         /* Админка */
-        .admin-item { display: flex; flex-direction: column; background: var(--surface); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--admin-color); box-shadow: 0 0 10px rgba(46, 204, 113, 0.2);}
-        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .admin-title { font-size: 14px; font-weight: 600; }
+        .admin-item { display: flex; flex-direction: column; background: var(--surface); padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--admin-color); box-shadow: 0 0 10px rgba(46, 204, 113, 0.2);}
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid rgba(46, 204, 113, 0.3); padding-bottom: 8px;}
+        .admin-title { font-size: 14px; font-weight: 600; color: #fff; }
         .admin-controls { display: flex; align-items: center; gap: 10px; }
         .admin-btn { background: var(--surface); border: 1px solid var(--admin-color); color: var(--admin-color); width: 30px; height: 30px; border-radius: 8px; font-size: 18px; cursor: pointer; box-shadow: inset 0 0 5px rgba(46, 204, 113, 0.2);}
         .admin-input { width: 50px; text-align: center; background: transparent; border: 1px solid var(--admin-color); color: white; border-radius: 8px; font-size: 16px; font-weight: bold; }
         
+        .admin-variant-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; padding: 5px; background: rgba(0,0,0,0.3); border-radius: 6px; }
+        .admin-variant-title { font-size: 12px; color: #ccc; flex-grow: 1; }
+        .add-variant-btn { width: 100%; background: rgba(46, 204, 113, 0.1); color: var(--admin-color); border: 1px dashed var(--admin-color); padding: 8px; border-radius: 8px; font-weight: bold; font-size: 12px; margin-top: 5px; cursor: pointer; }
+
         .export-btn { width: 100%; background: var(--admin-color); color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: bold; margin-top: 20px; cursor: pointer; font-size: 16px; box-shadow: 0 0 15px rgba(46, 204, 113, 0.4);}
         #export-textarea { width: 100%; height: 150px; background: #000; color: var(--admin-color); border: 1px solid var(--admin-color); margin-top: 10px; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 12px; display: none; }
 
         .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: rgba(0, 242, 254, 0.9); color: #000; padding: 12px 24px; border-radius: 30px; font-weight: 800; font-size: 14px; transition: 0.4s; z-index: 2000; opacity: 0; pointer-events: none; box-shadow: 0 0 20px var(--primary);}
         .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-        /* Фикс для ПК: ограничиваем ширину карточек */
         @media (min-width: 768px) {
-            .grid {
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-                max-width: 900px;
-                margin: 0 auto;
-            }
+            .grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); max-width: 900px; margin: 0 auto; }
         }
     </style>
 </head>
@@ -242,23 +132,21 @@
 
     <div class="space-bg"></div>
     <div class="space-overlay"></div>
-    
     <div id="toast" class="toast">Добавлено в корзину</div>
 
     <!-- КАТАЛОГ -->
     <div id="page-catalog" class="page active">
-        <div class="hero">
-            <h1 id="matrix-text"></h1>
-        </div>
+        <div class="hero"><h1 id="matrix-text"></h1></div>
         
         <div class="search-container">
             <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-            <input type="text" id="searchInput" class="search-input" placeholder="Найти девайс..." oninput="handleSearch()">
+            <input type="text" id="searchInput" class="search-input" placeholder="Найти девайс или жижу..." oninput="handleSearch()">
         </div>
 
         <div class="filters">
             <button class="filter-btn active" onclick="filterProducts('all', this)">Все товары</button>
             <button class="filter-btn" onclick="filterProducts('pods', this)">Поды</button>
+            <button class="filter-btn" onclick="filterProducts('liquids', this)">Жижи</button>
         </div>
         <div class="grid" id="catalog-grid"></div>
     </div>
@@ -276,7 +164,6 @@
     <!-- ПРОФИЛЬ -->
     <div id="page-profile" class="page">
         <div class="cart-container">
-            <!-- Блок с данными пользователя. Добавлены ID для JS -->
             <div style="display:flex; align-items:center; gap:15px; margin-bottom:30px;">
                 <div id="user-avatar" style="width:60px; height:60px; background:linear-gradient(135deg, #00f2fe, #4facfe); border-radius:50%; box-shadow: 0 0 20px var(--primary-glow); display:flex; justify-content:center; align-items:center; font-size:24px; font-weight:800; color:#000; background-size:cover; background-position:center;"></div>
                 <div>
@@ -329,28 +216,18 @@
             const avatarEl = document.getElementById('user-avatar');
 
             if (tgUser) {
-                // Устанавливаем имя
                 let fullName = tgUser.first_name || '';
                 if (tgUser.last_name) fullName += ' ' + tgUser.last_name;
                 nameEl.innerText = fullName;
+                usernameEl.innerText = tgUser.username ? '@' + tgUser.username : '@id' + tgUser.id;
 
-                // Устанавливаем никнейм (если нет, то ID)
-                if (tgUser.username) {
-                    usernameEl.innerText = '@' + tgUser.username;
-                } else {
-                    usernameEl.innerText = '@id' + tgUser.id;
-                }
-
-                // Устанавливаем аватарку (если есть)
                 if (tgUser.photo_url) {
                     avatarEl.style.backgroundImage = `url('${tgUser.photo_url}')`;
-                    avatarEl.innerText = ''; // Убираем букву
+                    avatarEl.innerText = '';
                 } else {
-                    // Если фото нет, ставим первую букву имени
                     avatarEl.innerText = (tgUser.first_name ? tgUser.first_name.charAt(0).toUpperCase() : '?');
                 }
             } else {
-                // Если зашли не через Telegram (например, с ПК в браузере)
                 nameEl.innerText = "Гость";
                 usernameEl.innerText = "@no_telegram";
                 avatarEl.innerText = "Г";
@@ -376,7 +253,6 @@
         runMatrixEffect();
         setInterval(runMatrixEffect, 14000);
 
-        // Проверка на админа
         const ADMIN_USERNAME = 'managerlegionshop'; 
         if (tgUser && tgUser.username === ADMIN_USERNAME) {
             document.getElementById('nav-admin').style.display = 'flex';
@@ -387,27 +263,95 @@
             window.Telegram.WebApp.setHeaderColor('#02040a');
         }
 
-        // МАССИВ ТОВАРОВ С ВСЕМИ ЦВЕТАМИ И ЛИМИТОМ
+        // --- МАССИВ ТОВАРОВ ---
         let products = [
-            // XROS 6 MINI
+            // ПОДЫ
             { id: 1, title: "XROS 6 Mini Black", desc: "Цвет: Черный", stock: 5, maxLimit: 5, price: 1800, category: "pods", badge: "ХИТ", img: "xros6mini.jpg" },
             { id: 2, title: "XROS 6 Mini Jelly Blue", desc: "Цвет: Голубой", stock: 0, maxLimit: 5, price: 1800, category: "pods", badge: "", img: "xros6mini.jpg" },
             { id: 3, title: "XROS 6 Mini Plume Pink", desc: "Цвет: Розовый", stock: 0, maxLimit: 5, price: 1800, category: "pods", badge: "", img: "xros6mini.jpg" },
-            
-            // XROS 6
             { id: 4, title: "XROS 6 Cosmic Black", desc: "Цвет: Космический черный", stock: 4, maxLimit: 5, price: 2500, category: "pods", badge: "NEW", img: "xros6.jpg" },
             { id: 5, title: "XROS 6 Abyssal Blue", desc: "Цвет: Глубокий синий", stock: 0, maxLimit: 5, price: 2500, category: "pods", badge: "", img: "xros6.jpg" },
             { id: 6, title: "XROS 6 Slate Black", desc: "Цвет: Аспидный черный", stock: 0, maxLimit: 5, price: 2500, category: "pods", badge: "", img: "xros6.jpg" },
             { id: 7, title: "XROS 6 Carbon Fiber Gray", desc: "Цвет: Карбон", stock: 0, maxLimit: 5, price: 2500, category: "pods", badge: "", img: "xros6.jpg" },
             { id: 8, title: "XROS 6 Silk Green", desc: "Цвет: Шелковый зеленый", stock: 0, maxLimit: 5, price: 2500, category: "pods", badge: "", img: "xros6.jpg" },
-            { id: 9, title: "XROS 6 Silk Gray", desc: "Цвет: Шелковый серый", stock: 0, maxLimit: 5, price: 2500, category: "pods", badge: "", img: "xros6.jpg" }
+            { id: 9, title: "XROS 6 Silk Gray", desc: "Цвет: Шелковый серый", stock: 0, maxLimit: 5, price: 2500, category: "pods", badge: "", img: "xros6.jpg" },
+            
+            // ЖИЖИ (ПРИВЯЗКА К ТВОИМ ФОТО)
+            { 
+                id: 10, title: "BJORN HEADSHOT 100", desc: "Кислые вкусы", stock: 1, price: 399, category: "liquids", badge: "", img: "bjornheadshot100.jpg",
+                variants: [
+                    { name: "Банан с кислинкой", stock: 1 },
+                    { name: "Гранат мандарин", stock: 1 },
+                    { name: "Грейпфрут сибирские ягоды", stock: 1 },
+                    { name: "Малина клюква", stock: 1 },
+                    { name: "Яблочный Skittles", stock: 1 }
+                ]
+            },
+            { 
+                id: 11, title: "Злая Милфа 70", desc: "Освежающие вкусы", stock: 1, price: 399, category: "liquids", badge: "", img: "zlyamilfa70.jpg",
+                variants: [
+                    { name: "Ледяная кола", stock: 1 },
+                    { name: "Цитрусовый микс", stock: 1 },
+                    { name: "Ананасовая шипучка", stock: 1 }
+                ]
+            },
+            { 
+                id: 12, title: "Злая Монашка Bubble 80", desc: "Вкусы жвачек", stock: 1, price: 399, category: "liquids", badge: "", img: "zlyabubble80.jpg",
+                variants: [
+                    { name: "Кислый скиттлс черешня", stock: 1 },
+                    { name: "Чупа-чупс с колой", stock: 1 },
+                    { name: "Жвачка с кислой малиной", stock: 1 }
+                ]
+            },
+            { 
+                id: 13, title: "Злая Монашка LEMONADE 80", desc: "Лимонады", stock: 1, price: 399, category: "liquids", badge: "", img: "zlyalemonade80.jpg",
+                variants: [
+                    { name: "Вишнёвый швепс со скиттлс", stock: 1 },
+                    { name: "Малина лайм мята", stock: 1 },
+                    { name: "Цитрусовый микс", stock: 1 }
+                ]
+            },
+            { 
+                id: 14, title: "Злая Монашка SWEET 80", desc: "Сладкие вкусы", stock: 1, price: 399, category: "liquids", badge: "", img: "zlyasweet80.jpg",
+                variants: [
+                    { name: "Энергетик смородина", stock: 1 },
+                    { name: "Фанта апельсин с кислой малиной", stock: 1 },
+                    { name: "Гранатовый сок смородина лимон", stock: 1 }
+                ]
+            },
+            { 
+                id: 15, title: "Кислая Убивашка 90", desc: "Кислые вкусы", stock: 1, price: 399, category: "liquids", badge: "", img: "ubivashkakislya90.jpg",
+                variants: [
+                    { name: "Кислый Haribo", stock: 1 },
+                    { name: "Кислый мармелад", stock: 1 },
+                    { name: "Атомный цитрус", stock: 1 }
+                ]
+            },
+            { 
+                id: 16, title: "Милфа HORNY 90", desc: "Энергетики и напитки", stock: 1, price: 399, category: "liquids", badge: "", img: "zlyamilfahorny90.jpg",
+                variants: [
+                    { name: "Кислый SKITTLES", stock: 1 },
+                    { name: "RED BULL ягоды", stock: 1 },
+                    { name: "Освещающая COCA COLA", stock: 1 }
+                ]
+            },
+            { 
+                id: 17, title: "Самоубийца V2 DANGER 100", desc: "Микс вкусов", stock: 1, price: 399, category: "liquids", badge: "", img: "samiubiycav2danger100.jpg",
+                variants: [
+                    { name: "Классический энергетик", stock: 1 },
+                    { name: "Кола лесные ягоды", stock: 1 },
+                    { name: "Энергетик гранат", stock: 1 },
+                    { name: "Зелёный скиттлс", stock: 1 },
+                    { name: "Кислое яблоко ежевика", stock: 1 }
+                ]
+            }
         ];
 
+        // Инициализация корзины
         let cart = [];
+        try { cart = JSON.parse(localStorage.getItem('legion_cart_cosmic')) || []; } catch(e) {}
         let activeCategory = 'all'; 
         let searchQuery = ''; 
-
-        try { cart = JSON.parse(localStorage.getItem('legion_cart_cosmic')) || []; } catch(e) {}
 
         function handleSearch() {
             searchQuery = document.getElementById('searchInput').value.toLowerCase();
@@ -421,10 +365,29 @@
             renderProducts();
         }
 
+        // Показ/скрытие вкусов
+        function toggleVariants(productId) {
+            const container = document.getElementById(`variants-${productId}`);
+            if (container.style.display === 'none' || container.style.display === '') {
+                container.style.display = 'flex';
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
+        // Отрисовка каталога
         function renderProducts() {
             const grid = document.getElementById('catalog-grid');
             
-            let filtered = products.filter(p => p.stock > 0);
+            let filtered = products.filter(p => {
+                // Для жиж проверяем, есть ли хотя бы один вкус в наличии
+                if (p.category === 'liquids') {
+                    return p.variants && p.variants.some(v => v.stock > 0);
+                }
+                // Для подов проверяем общий stock
+                return p.stock > 0;
+            });
+
             if (activeCategory !== 'all') {
                 filtered = filtered.filter(p => p.category === activeCategory);
             }
@@ -433,13 +396,7 @@
             }
             
             grid.innerHTML = filtered.map(p => {
-                const cartItem = cart.find(item => item.id === p.id);
-                const qty = cartItem ? cartItem.qty : 0;
-                
-                let actionHTML = qty === 0 
-                    ? `<button class="buy-btn" onclick="changeQty(${p.id}, 1)">+</button>`
-                    : `<div class="qty-control"><button class="qty-btn" onclick="changeQty(${p.id}, -1)">-</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button></div>`;
-
+                let isLiquid = p.category === 'liquids' && p.variants;
                 let imgHTML = '';
                 if (p.img && p.img.trim() !== "") {
                     imgHTML = `
@@ -450,7 +407,46 @@
                     imgHTML = `<svg class="card-no-img" viewBox="0 0 24 24"><path d="M18 4H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 12H8V8h8v8z"/></svg>`;
                 }
 
-                let infoHTML = `<div class="card-stock"><div class="stock-dot"></div> В наличии (${p.stock})</div>`;
+                // Генерация HTML для вкусов, если это жижа
+                let variantsHTML = '';
+                if (isLiquid) {
+                    let variantsList = p.variants.map(v => {
+                        if (v.stock <= 0) return ''; // Скрываем, если нет в наличии
+                        
+                        let cartId = `${p.id}_${v.name}`;
+                        let cartItem = cart.find(item => item.cartId === cartId);
+                        let qty = cartItem ? cartItem.qty : 0;
+
+                        let actionHTML = qty === 0 
+                            ? `<button class="buy-btn" onclick="changeQty('${cartId}', 1, ${p.id}, '${v.name}')">+</button>`
+                            : `<div class="qty-control"><button class="qty-btn" onclick="changeQty('${cartId}', -1, ${p.id}, '${v.name}')">-</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty('${cartId}', 1, ${p.id}, '${v.name}')">+</button></div>`;
+
+                        return `
+                            <div class="variant-item">
+                                <div class="variant-name">${v.name} <span style="color:var(--primary); font-size:10px;">(${v.stock})</span></div>
+                                ${actionHTML}
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    variantsHTML = `
+                        <button class="choose-flavor-btn" onclick="toggleVariants(${p.id})">Выбрать вкус</button>
+                        <div id="variants-${p.id}" class="variants-container">
+                            ${variantsList}
+                        </div>
+                    `;
+                } else {
+                    // Кнопка покупки для подов
+                    const cartItem = cart.find(item => item.id === p.id);
+                    const qty = cartItem ? cartItem.qty : 0;
+                    variantsHTML = qty === 0 
+                        ? `<button class="buy-btn" onclick="changeQty(${p.id}, 1)">+</button>`
+                        : `<div class="qty-control"><button class="qty-btn" onclick="changeQty(${p.id}, -1)">-</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button></div>`;
+                }
+
+                let infoHTML = isLiquid 
+                    ? `<div class="card-stock"><div class="stock-dot"></div> В наличии</div>` 
+                    : `<div class="card-stock"><div class="stock-dot"></div> В наличии (${p.stock})</div>`;
 
                 return `
                 <div class="card">
@@ -464,9 +460,9 @@
                             <div style="font-size:10px; color:var(--primary); margin-bottom:4px; line-height:1.1;">${p.desc}</div>
                             ${infoHTML}
                         </div>
-                        <div class="card-footer">
-                            <div class="price">${p.price} ₽</div>
-                            ${actionHTML}
+                        <div class="card-footer" style="${isLiquid ? 'flex-direction: column; align-items: stretch;' : ''}">
+                            <div class="price" style="${isLiquid ? 'margin-bottom: 5px;' : ''}">${p.price} ₽</div>
+                            ${variantsHTML}
                         </div>
                     </div>
                 </div>
@@ -474,22 +470,45 @@
             }).join('');
         }
 
-        function changeQty(id, delta) {
-            const existing = cart.find(item => item.id === id);
-            const product = products.find(p => p.id === id);
+        // Изменение количества (Универсальное для подов и вкусов)
+        function changeQty(cartId, delta, productId, variantName) {
+            const existing = cart.find(item => item.cartId === cartId || (item.id === cartId && !variantName));
             
-            if (existing) {
-                if (delta > 0 && existing.qty >= product.stock) return;
+            // Если это под (без вариантов)
+            if (!variantName) {
+                const product = products.find(p => p.id === productId);
+                let cartItem = cart.find(item => item.id === productId);
                 
-                if (delta > 0 && existing.qty >= product.maxLimit) {
-                    alert(`Максимум ${product.maxLimit} шт. в одни руки!`);
-                    return;
+                if (cartItem) {
+                    if (delta > 0 && cartItem.qty >= product.stock) return;
+                    if (delta > 0 && cartItem.qty >= product.maxLimit) {
+                        alert(`Максимум ${product.maxLimit} шт. в одни руки!`); return;
+                    }
+                    cartItem.qty += delta;
+                    if (cartItem.qty <= 0) cart = cart.filter(item => item.id !== productId); 
+                } else if (delta > 0) {
+                    cart.push({ id: productId, title: product.title, price: product.price, qty: 1 });
                 }
-                
-                existing.qty += delta;
-                if (existing.qty <= 0) cart = cart.filter(item => item.id !== id); 
-            } else if (delta > 0) {
-                cart.push({ ...product, qty: 1 });
+            } 
+            // Если это жижа (с вариантом)
+            else {
+                const product = products.find(p => p.id === productId);
+                const variant = product.variants.find(v => v.name === variantName);
+                let cartItem = cart.find(item => item.cartId === cartId);
+
+                if (cartItem) {
+                    if (delta > 0 && cartItem.qty >= variant.stock) return; // Учитываем остаток вкуса
+                    cartItem.qty += delta;
+                    if (cartItem.qty <= 0) cart = cart.filter(item => item.cartId !== cartId); 
+                } else if (delta > 0) {
+                    cart.push({ 
+                        cartId: cartId, 
+                        id: productId, 
+                        title: `${product.title} (${variantName})`, 
+                        price: product.price, 
+                        qty: 1 
+                    });
+                }
             }
             
             if (window.Telegram && window.Telegram.WebApp) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
@@ -524,16 +543,42 @@
         function renderAdminPanel() {
             const list = document.getElementById('admin-list');
             list.innerHTML = products.map(p => {
-                return `
-                <div class="admin-item">
-                    <div class="admin-header">
-                        <div class="admin-title">${p.title}</div>
-                        <div class="admin-controls">
+                let content = '';
+                
+                if (p.category === 'liquids' && p.variants) {
+                    // Отрисовка вкусов для жиж
+                    let variantsList = p.variants.map((v, index) => `
+                        <div class="admin-variant-row">
+                            <div class="admin-variant-title">${v.name}</div>
+                            <div class="admin-controls">
+                                <button class="admin-btn" onclick="updateVariantStock(${p.id}, ${index}, -1)">-</button>
+                                <input type="number" class="admin-input" value="${v.stock}" onchange="setVariantStock(${p.id}, ${index}, this.value)">
+                                <button class="admin-btn" onclick="updateVariantStock(${p.id}, ${index}, 1)">+</button>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    content = `
+                        ${variantsList}
+                        <button class="add-variant-btn" onclick="addVariant(${p.id})">+ Добавить вкус</button>
+                    `;
+                } else {
+                    // Отрисовка для подов
+                    content = `
+                        <div class="admin-controls" style="justify-content: flex-end;">
                             <button class="admin-btn" onclick="updateStock(${p.id}, -1)">-</button>
                             <input type="number" class="admin-input" value="${p.stock}" onchange="setStock(${p.id}, this.value)">
                             <button class="admin-btn" onclick="updateStock(${p.id}, 1)">+</button>
                         </div>
+                    `;
+                }
+
+                return `
+                <div class="admin-item">
+                    <div class="admin-header">
+                        <div class="admin-title">${p.title}</div>
                     </div>
+                    ${content}
                 </div>
                 `;
             }).join('');
@@ -551,6 +596,30 @@
             p.stock = parseInt(val) || 0;
             if(p.stock < 0) p.stock = 0;
             renderAdminPanel();
+        }
+
+        // Управление вкусами в админке
+        function updateVariantStock(productId, variantIndex, delta) {
+            const p = products.find(p => p.id === productId);
+            p.variants[variantIndex].stock += delta;
+            if(p.variants[variantIndex].stock < 0) p.variants[variantIndex].stock = 0;
+            renderAdminPanel();
+        }
+
+        function setVariantStock(productId, variantIndex, val) {
+            const p = products.find(p => p.id === productId);
+            p.variants[variantIndex].stock = parseInt(val) || 0;
+            if(p.variants[variantIndex].stock < 0) p.variants[variantIndex].stock = 0;
+            renderAdminPanel();
+        }
+
+        function addVariant(productId) {
+            const p = products.find(p => p.id === productId);
+            let name = prompt("Введите название нового вкуса:");
+            if (name && name.trim() !== "") {
+                p.variants.push({ name: name.trim(), stock: 0 });
+                renderAdminPanel();
+            }
         }
 
         function generateCode() {
@@ -585,7 +654,6 @@
             
             orderText += `\n💰 Итого к оплате: ${total} ₽`;
             
-            // Добавляем инфу о том, кто сделал заказ (если данные ТГ подтянулись)
             if (tgUser) {
                 orderText += `\n\n👤 Заказчик: ${tgUser.first_name} ${tgUser.last_name || ''}`;
                 if (tgUser.username) orderText += ` (@${tgUser.username})`;
@@ -603,7 +671,6 @@
             }
         }
 
-        // Запускаем инициализацию профиля и отрисовку товаров
         initProfile();
         renderProducts(); 
         updateBadge();
