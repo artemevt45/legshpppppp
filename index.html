@@ -110,20 +110,26 @@
         }
         @keyframes pianoDrop { to { opacity: 1; transform: translateY(0); } }
 
-        /* ПОИСК */
+        /* ПОИСК И ФИЛЬТРЫ */
         .search-container { padding: 15px 20px 5px 20px; position: relative; display: flex; align-items: center; }
         .search-icon { position: absolute; left: 35px; width: 20px; height: 20px; fill: var(--primary); filter: drop-shadow(0 0 5px var(--primary)); pointer-events: none; z-index: 2; }
         .search-input { width: 100%; padding: 12px 15px 12px 45px; background: var(--surface); border: 1px solid transparent; background: linear-gradient(var(--bg), var(--bg)) padding-box, linear-gradient(45deg, var(--primary), #ffffff, var(--primary)) border-box; border-radius: 12px; color: var(--text); font-size: 14px; outline: none; transition: 0.3s; box-shadow: 0 0 15px var(--primary-glow); }
         .search-input:focus { box-shadow: 0 0 25px var(--primary-glow); }
         .search-input::placeholder { color: var(--text-muted); }
 
-        .filters { display: flex; gap: 10px; padding: 15px 20px; overflow-x: auto; scrollbar-width: none; }
+        .filters { display: flex; gap: 10px; padding: 15px 20px 5px 20px; overflow-x: auto; scrollbar-width: none; }
         .filters::-webkit-scrollbar { display: none; }
         .filter-btn { background: var(--surface); border: 1px solid var(--primary-glow); color: var(--text-muted); padding: 8px 16px; border-radius: 20px; font-size: 14px; white-space: nowrap; transition: 0.3s; cursor: pointer; }
         .filter-btn.active { background: var(--primary); color: var(--bg); font-weight: 800; box-shadow: 0 0 15px var(--primary-glow); }
 
+        /* Подфильтры (Сортировка и Крепость) */
+        .sub-filters { display: flex; gap: 8px; padding: 10px 20px 5px 20px; overflow-x: auto; scrollbar-width: none; }
+        .sub-filters::-webkit-scrollbar { display: none; }
+        .sub-btn { background: transparent; border: 1px solid rgba(128, 128, 128, 0.3); color: var(--text-muted); padding: 6px 12px; border-radius: 10px; font-size: 12px; white-space: nowrap; transition: 0.3s; cursor: pointer; }
+        .sub-btn.active { background: rgba(0, 242, 254, 0.2); border-color: var(--primary); color: var(--primary); font-weight: bold; }
+
         /* СЕТКА И КАРТОЧКИ */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px 20px 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px 20px 20px 20px; align-items: start; }
         .card { border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; position: relative; transition: all 0.3s ease; border: 2px solid transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(135deg, var(--primary), var(--bg), var(--primary)) border-box; background-size: 300% 300%; animation: borderShine 6s linear infinite; }
         @keyframes borderShine { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
@@ -192,6 +198,12 @@
         .remove-btn { background: transparent; border: 1px solid var(--danger); color: var(--danger); border-radius: 8px; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; margin-left: 10px; }
         .remove-btn:hover, .remove-btn:active { background: var(--danger); color: #fff; box-shadow: 0 0 10px var(--danger); }
 
+        /* Умная корзина (Апсейл) */
+        .upsell-banner { background: linear-gradient(135deg, rgba(0,242,254,0.1), rgba(0,0,0,0.5)); border: 1px dashed var(--primary); padding: 12px; border-radius: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;}
+        .upsell-text div:first-child { font-weight: bold; font-size: 14px; color: var(--primary); margin-bottom: 2px;}
+        .upsell-text div:last-child { font-size: 12px; color: var(--text); }
+        .upsell-btn { background: var(--primary); color: var(--bg); border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 0 10px var(--primary-glow); }
+
         #cart-empty-state { text-align: center; margin-top: 50px; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .pug-img { width: 180px; height: 180px; margin-bottom: 20px; filter: drop-shadow(0 0 25px var(--primary-glow)); animation: floatPug 3s ease-in-out infinite; border-radius: 20px; object-fit: contain; }
         @keyframes floatPug { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
@@ -199,13 +211,20 @@
         .go-catalog-btn { background: var(--primary); color: var(--bg); border: none; padding: 12px 24px; border-radius: 12px; font-weight: 800; font-size: 16px; cursor: pointer; box-shadow: 0 0 15px var(--primary-glow); transition: 0.3s; text-transform: uppercase; }
         .go-catalog-btn:active { transform: scale(0.95); }
 
+        /* Пульсирующая кнопка оформления */
+        @keyframes breathe {
+            0% { box-shadow: 0 0 10px var(--primary-glow); transform: scale(1); }
+            50% { box-shadow: 0 0 25px var(--primary), 0 0 40px var(--primary-glow); transform: scale(1.02); }
+            100% { box-shadow: 0 0 10px var(--primary-glow); transform: scale(1); }
+        }
         .checkout-btn { 
             position: fixed; bottom: 90px; left: 20px; right: 20px; 
             background: linear-gradient(90deg, var(--primary) 0%, var(--primary-glow) 100%); 
             color: var(--bg); padding: 16px 20px; border-radius: 16px; border: none; 
             font-size: 16px; font-weight: 800; text-transform: uppercase; 
-            box-shadow: 0 10px 20px var(--primary-glow); cursor: pointer; display: none; 
+            cursor: pointer; display: none; 
             justify-content: space-between; align-items: center;
+            animation: breathe 2s infinite ease-in-out;
         }
 
         .profile-menu-item { background: var(--surface); border: 1px solid var(--primary-glow); padding: 16px; border-radius: 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: var(--text); }
@@ -244,12 +263,33 @@
             <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
             <input type="text" id="searchInput" class="search-input" placeholder="Найти товар..." oninput="handleSearch()">
         </div>
+        
         <div class="filters">
             <button class="filter-btn active" onclick="filterProducts('all', this)">Все товары</button>
             <button class="filter-btn" onclick="filterProducts('pods', this)">Поды</button>
             <button class="filter-btn" onclick="filterProducts('liquids', this)">Жижа</button>
             <button class="filter-btn" onclick="filterProducts('cartridges', this)">Картриджи</button>
         </div>
+
+        <!-- Сортировка -->
+        <div class="sub-filters">
+            <button class="sub-btn active" onclick="setSort('default', this)">По умолч.</button>
+            <button class="sub-btn" onclick="setSort('cheap', this)">Сначала дешевые</button>
+            <button class="sub-btn" onclick="setSort('expensive', this)">Сначала дорогие</button>
+        </div>
+
+        <!-- Фильтр по мг (появляется только для жиж) -->
+        <div class="sub-filters" id="mg-filters" style="display: none;">
+            <button class="sub-btn active" onclick="setMg(0, this)">Все</button>
+            <button class="sub-btn" onclick="setMg(20, this)">20 мг</button>
+            <button class="sub-btn" onclick="setMg(50, this)">50 мг</button>
+            <button class="sub-btn" onclick="setMg(60, this)">60 мг</button>
+            <button class="sub-btn" onclick="setMg(70, this)">70 мг</button>
+            <button class="sub-btn" onclick="setMg(80, this)">80 мг</button>
+            <button class="sub-btn" onclick="setMg(90, this)">90 мг</button>
+            <button class="sub-btn" onclick="setMg(100, this)">100 мг</button>
+        </div>
+
         <div class="grid" id="catalog-grid"></div>
     </div>
 
@@ -258,13 +298,11 @@
             <h2 style="margin-bottom: 20px; color: var(--primary); text-shadow: 0 0 10px var(--primary-glow);">КОРЗИНА</h2>
             <div id="cart-items"></div>
             
-            <!-- Экран пустой корзины с Мопсом -->
             <div id="cart-empty-state">
                 <img src="mops.jpg" alt="Pug" class="pug-img" onerror="this.style.display='none'">
                 <div class="empty-cart-text">Тут пока пусто...</div>
                 <button class="go-catalog-btn" onclick="switchTab('catalog')">Перейти в каталог</button>
             </div>
-            
         </div>
         <button class="checkout-btn" id="checkout-btn" onclick="checkout()"></button>
     </div>
@@ -385,6 +423,7 @@
             window.Telegram.WebApp.setHeaderColor('#02040a');
         }
 
+        // МАССИВ ТОВАРОВ (ДОБАВЛЕН ПАРАМЕТР MG ДЛЯ ЖИЖ)
         let products = [
             { 
                 id: 1, title: "XROS 6", desc: "Мощный под с экраном", price: 2500, category: "pods", badge: "NEW", img: "xros6.jpg",
@@ -412,7 +451,7 @@
                 variants: [ { name: "0.7Ω (3ml)", stock: 8 } ]
             },
             { 
-                id: 10, title: "BJORN HEADSHOT 100", desc: "Кислые вкусы", stock: 1, price: 550, category: "liquids", badge: "", img: "bjornheadshot100.jpg",
+                id: 10, title: "BJORN HEADSHOT 100", desc: "Кислые вкусы", mg: 100, stock: 1, price: 550, category: "liquids", badge: "", img: "bjornheadshot100.jpg",
                 variants: [
                     { name: "Банан с кислинкой", stock: 1 },
                     { name: "Гранат мандарин", stock: 1 },
@@ -422,7 +461,7 @@
                 ]
             },
             { 
-                id: 11, title: "Злая Милфа 70", desc: "Освежающие вкусы", stock: 1, price: 500, category: "liquids", badge: "", img: "zlyamilfa70.jpg",
+                id: 11, title: "Злая Милфа 70", desc: "Освежающие вкусы", mg: 70, stock: 1, price: 500, category: "liquids", badge: "", img: "zlyamilfa70.jpg",
                 variants: [
                     { name: "Ледяная кола", stock: 1 },
                     { name: "Цитрусовый микс", stock: 1 },
@@ -430,7 +469,7 @@
                 ]
             },
             { 
-                id: 12, title: "Злая Монашка Bubble 80", desc: "Вкусы жвачек", stock: 1, price: 500, category: "liquids", badge: "", img: "zlyabubble80.jpg",
+                id: 12, title: "Злая Монашка Bubble 80", desc: "Вкусы жвачек", mg: 80, stock: 1, price: 500, category: "liquids", badge: "", img: "zlyabubble80.jpg",
                 variants: [
                     { name: "Кислый скиттлс черешня", stock: 1 },
                     { name: "Чупа-чупс с колой", stock: 1 },
@@ -438,7 +477,7 @@
                 ]
             },
             { 
-                id: 13, title: "Злая Монашка LEMONADE 80", desc: "Лимонады", stock: 1, price: 500, category: "liquids", badge: "", img: "zlyalemonade80.jpg",
+                id: 13, title: "Злая Монашка LEMONADE 80", desc: "Лимонады", mg: 80, stock: 1, price: 500, category: "liquids", badge: "", img: "zlyalemonade80.jpg",
                 variants: [
                     { name: "Вишнёвый швепс со скиттлс", stock: 1 },
                     { name: "Малина лайм мята", stock: 1 },
@@ -446,7 +485,7 @@
                 ]
             },
             { 
-                id: 14, title: "Злая Монашка SWEET 80", desc: "Сладкие вкусы", stock: 1, price: 500, category: "liquids", badge: "", img: "zlyasweet80.jpg",
+                id: 14, title: "Злая Монашка SWEET 80", desc: "Сладкие вкусы", mg: 80, stock: 1, price: 500, category: "liquids", badge: "", img: "zlyasweet80.jpg",
                 variants: [
                     { name: "Энергетик смородина", stock: 1 },
                     { name: "Фанта апельсин с кислой малиной", stock: 1 },
@@ -454,7 +493,7 @@
                 ]
             },
             { 
-                id: 15, title: "Кислая Убивашка 90", desc: "Кислые вкусы", stock: 1, price: 500, category: "liquids", badge: "", img: "ubivashkakislya90.jpg",
+                id: 15, title: "Кислая Убивашка 90", desc: "Кислые вкусы", mg: 90, stock: 1, price: 500, category: "liquids", badge: "", img: "ubivashkakislya90.jpg",
                 variants: [
                     { name: "Кислый Haribo", stock: 1 },
                     { name: "Кислый мармелад", stock: 1 },
@@ -462,7 +501,7 @@
                 ]
             },
             { 
-                id: 16, title: "Милфа HORNY 90", desc: "Энергетики и напитки", stock: 1, price: 500, category: "liquids", badge: "", img: "zlyamilfahorny90.jpg",
+                id: 16, title: "Милфа HORNY 90", desc: "Энергетики и напитки", mg: 90, stock: 1, price: 500, category: "liquids", badge: "", img: "zlyamilfahorny90.jpg",
                 variants: [
                     { name: "Кислый SKITTLES", stock: 1 },
                     { name: "RED BULL ягоды", stock: 1 },
@@ -470,7 +509,7 @@
                 ]
             },
             { 
-                id: 17, title: "Самоубийца V2 DANGER 100", desc: "Микс вкусов", stock: 1, price: 550, category: "liquids", badge: "", img: "samiubiycav2danger100.jpg",
+                id: 17, title: "Самоубийца V2 DANGER 100", desc: "Микс вкусов", mg: 100, stock: 1, price: 550, category: "liquids", badge: "", img: "samiubiycav2danger100.jpg",
                 variants: [
                     { name: "Классический энергетик", stock: 1 },
                     { name: "Кола лесные ягоды", stock: 1 },
@@ -493,6 +532,8 @@
         let activeCategory = 'all'; 
         let searchQuery = ''; 
         let openAccordions = {}; 
+        let currentSort = 'default';
+        let currentMg = 0;
 
         function handleSearch() {
             searchQuery = document.getElementById('searchInput').value.toLowerCase();
@@ -501,7 +542,30 @@
 
         function filterProducts(category, btnElement) {
             activeCategory = category; 
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.filters .filter-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+            
+            // Показываем фильтры мг только для жиж
+            document.getElementById('mg-filters').style.display = (category === 'liquids') ? 'flex' : 'none';
+            if (category !== 'liquids') {
+                currentMg = 0; // Сбрасываем МГ при смене категории
+                document.querySelectorAll('#mg-filters .sub-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelector('#mg-filters .sub-btn').classList.add('active');
+            }
+
+            renderProducts();
+        }
+
+        function setSort(sortType, btnElement) {
+            currentSort = sortType;
+            document.querySelectorAll('.sub-filters')[0].querySelectorAll('.sub-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+            renderProducts();
+        }
+
+        function setMg(mg, btnElement) {
+            currentMg = mg;
+            document.querySelectorAll('#mg-filters .sub-btn').forEach(btn => btn.classList.remove('active'));
             btnElement.classList.add('active');
             renderProducts();
         }
@@ -518,12 +582,35 @@
             const grid = document.getElementById('catalog-grid');
             
             let filtered = products.filter(p => {
-                if (p.variants) return p.variants.some(v => v.stock > 0);
-                return p.stock > 0;
+                // Проверка наличия
+                if (p.variants) {
+                    if (!p.variants.some(v => v.stock > 0)) return false;
+                } else {
+                    if (p.stock <= 0) return false;
+                }
+
+                // Фильтр по категории
+                if (activeCategory !== 'all' && p.category !== activeCategory) return false;
+
+                // Фильтр по МГ (только для жиж)
+                if (activeCategory === 'liquids' && currentMg > 0 && p.mg !== currentMg) return false;
+
+                // Умный поиск (по названию ИЛИ по вкусам)
+                if (searchQuery !== '') {
+                    let matchTitle = p.title.toLowerCase().includes(searchQuery);
+                    let matchVariant = p.variants && p.variants.some(v => v.name.toLowerCase().includes(searchQuery));
+                    if (!matchTitle && !matchVariant) return false;
+                }
+
+                return true;
             });
 
-            if (activeCategory !== 'all') filtered = filtered.filter(p => p.category === activeCategory);
-            if (searchQuery !== '') filtered = filtered.filter(p => p.title.toLowerCase().includes(searchQuery));
+            // Сортировка
+            if (currentSort === 'cheap') {
+                filtered.sort((a, b) => a.price - b.price);
+            } else if (currentSort === 'expensive') {
+                filtered.sort((a, b) => b.price - a.price);
+            }
             
             grid.innerHTML = filtered.map(p => {
                 let hasVariants = p.variants && p.variants.length > 0;
@@ -544,8 +631,14 @@
 
                 let variantsHTML = '';
                 if (hasVariants) {
+                    // Если это поиск по вкусу, сразу открываем все подходящие варианты (или просто открываем всё)
+                    let forceOpen = searchQuery !== '' && p.variants.some(v => v.name.toLowerCase().includes(searchQuery));
+
                     let variantsList = p.variants.map(v => {
                         if (v.stock <= 0) return ''; 
+                        // При поиске по вкусу показываем только совпадения (или всё, если поиска нет)
+                        if (searchQuery !== '' && !p.title.toLowerCase().includes(searchQuery) && !v.name.toLowerCase().includes(searchQuery)) return '';
+
                         let cartId = `${p.id}_${v.name}`;
                         let cartItem = cart.find(item => item.cartId === cartId);
                         let qty = cartItem ? cartItem.qty : 0;
@@ -566,9 +659,11 @@
                     }).join('');
                     
                     let btnText = isLiquid ? "Выбрать вкус" : "Выбрать цвет";
+                    let isOpen = openAccordions[p.id] || forceOpen;
+                    
                     variantsHTML = `
                         <button class="choose-flavor-btn" onclick="toggleVariants(${p.id})">${btnText}</button>
-                        <div id="variants-${p.id}" class="variants-container" style="display: ${openAccordions[p.id] ? 'flex' : 'none'};">
+                        <div id="variants-${p.id}" class="variants-container" style="display: ${isOpen ? 'flex' : 'none'};">
                             ${variantsList}
                         </div>
                     `;
@@ -677,6 +772,28 @@
             checkoutBtn.style.display = 'flex'; 
             
             let total = 0;
+            
+            // УМНАЯ КОРЗИНА (АПСЕЙЛ)
+            let upsellHTML = '';
+            const hasPodInCart = cart.some(item => {
+                const p = products.find(prod => prod.id === item.id);
+                return p && p.category === 'pods';
+            });
+            const cartridgeProduct = products.find(p => p.category === 'cartridges' && p.variants.some(v => v.stock > 0));
+            const hasCartridgeInCart = cart.some(item => item.category === 'cartridges' || (products.find(p=>p.id===item.id) && products.find(p=>p.id===item.id).category === 'cartridges'));
+
+            if (hasPodInCart && !hasCartridgeInCart && cartridgeProduct) {
+                upsellHTML = `
+                    <div class="upsell-banner">
+                        <div class="upsell-text">
+                            <div>🔥 Отличное дополнение!</div>
+                            <div>${cartridgeProduct.title} - ${cartridgeProduct.price} ₽</div>
+                        </div>
+                        <button class="upsell-btn" onclick="changeQty(${cartridgeProduct.id}, 1, ${cartridgeProduct.id}); renderCart();">+ Добавить</button>
+                    </div>
+                `;
+            }
+
             container.innerHTML = cart.map(item => {
                 const currentProduct = products.find(p => p.id === item.id);
                 if (currentProduct) item.price = currentProduct.price;
@@ -695,7 +812,7 @@
                     </div>
                     <button class="remove-btn" onclick="removeFromCart('${idForDeletion}')">✖</button>
                 </div>`;
-            }).join('');
+            }).join('') + upsellHTML;
 
             checkoutBtn.innerHTML = `<span>Оформить заказ</span> <span>${total} ₽</span>`;
         }
