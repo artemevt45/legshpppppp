@@ -22,7 +22,7 @@
             --bg-image: url('bazatema.jpg');
         }
 
-        /* ТЕМНАЯ ТЕМА (Черная с белым) */
+        /* ТЕМНАЯ ТЕМА */
         body[data-theme="dark"] {
             --bg: #000000;
             --surface: rgba(20, 20, 20, 0.85);
@@ -48,7 +48,7 @@
             --bg-image: url('whitetema.jpg');
         }
 
-        /* КРАСНАЯ ТЕМА (Темно-бардовая, без голубизны) */
+        /* КРАСНАЯ ТЕМА */
         body[data-theme="red"] {
             --bg: #0a0000;
             --surface: rgba(40, 0, 0, 0.85);
@@ -61,7 +61,7 @@
             --bg-image: url('redtema.jpg');
         }
 
-        /* СЕРАЯ ТЕМА (Светло-серый акцент) */
+        /* СЕРАЯ ТЕМА */
         body[data-theme="gray"] {
             --bg: #1a1a1a;
             --surface: rgba(40, 40, 40, 0.85);
@@ -85,6 +85,24 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
+        /* ЭКРАН ЗАГРУЗКИ (SPLASH SCREEN) */
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000;
+            background-color: var(--bg); display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.5s ease-out;
+        }
+        .splash-logo {
+            font-size: 36px; font-weight: 900; letter-spacing: 5px; color: var(--primary);
+            text-shadow: 0 0 20px var(--primary-glow); margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        .splash-spinner {
+            width: 40px; height: 40px; border: 4px solid var(--surface-solid);
+            border-top: 4px solid var(--primary); border-radius: 50%;
+            animation: spin 1s linear infinite; box-shadow: 0 0 15px var(--primary-glow);
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
         .space-bg { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; 
             background: var(--bg-image) center/cover no-repeat;
@@ -97,28 +115,20 @@
             transition: background 0.3s;
         }
 
-        /* АНИМАЦИЯ ЗАГОЛОВКА (ПИАНИНО) */
+        /* ШАПКА */
         .hero { position: relative; height: 100px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(128, 128, 128, 0.2); background: rgba(0,0,0,0.1); }
         .hero h1 { 
-            font-size: 38px; 
-            font-weight: 900; 
-            letter-spacing: 5px; 
-            text-transform: uppercase; 
-            color: var(--primary); 
-            text-shadow: 0 0 20px var(--primary-glow); 
-            display: flex;
-            gap: 2px;
+            font-size: 38px; font-weight: 900; letter-spacing: 5px; text-transform: uppercase; 
+            color: var(--primary); text-shadow: 0 0 20px var(--primary-glow); 
+            display: flex; gap: 2px;
         }
         .hero h1 span {
-            display: inline-block;
-            opacity: 0;
-            transform: translateY(-30px);
+            display: inline-block; opacity: 0; transform: translateY(-30px);
             animation: pianoDrop 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
-        @keyframes pianoDrop {
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes pianoDrop { to { opacity: 1; transform: translateY(0); } }
 
+        /* ПОИСК */
         .search-container { padding: 15px 20px 5px 20px; position: relative; display: flex; align-items: center; }
         .search-icon { position: absolute; left: 35px; width: 20px; height: 20px; fill: var(--primary); filter: drop-shadow(0 0 5px var(--primary)); pointer-events: none; z-index: 2; }
         .search-input { width: 100%; padding: 12px 15px 12px 45px; background: var(--surface); border: 1px solid transparent; background: linear-gradient(var(--bg), var(--bg)) padding-box, linear-gradient(45deg, var(--primary), #ffffff, var(--primary)) border-box; border-radius: 12px; color: var(--text); font-size: 14px; outline: none; transition: 0.3s; box-shadow: 0 0 15px var(--primary-glow); }
@@ -130,22 +140,29 @@
         .filter-btn { background: var(--surface); border: 1px solid var(--primary-glow); color: var(--text-muted); padding: 8px 16px; border-radius: 20px; font-size: 14px; white-space: nowrap; transition: 0.3s; cursor: pointer; }
         .filter-btn.active { background: var(--primary); color: var(--bg); font-weight: 800; box-shadow: 0 0 15px var(--primary-glow); }
 
+        /* СЕТКА И КАРТОЧКИ */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px 20px 20px; }
-
-        .card { border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; position: relative; transition: 0.3s; border: 2px solid transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(135deg, var(--primary), var(--bg), var(--primary)) border-box; background-size: 300% 300%; animation: borderShine 6s linear infinite; }
+        .card { border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; position: relative; transition: all 0.3s ease; border: 2px solid transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(135deg, var(--primary), var(--bg), var(--primary)) border-box; background-size: 300% 300%; animation: borderShine 6s linear infinite; }
         @keyframes borderShine { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        .card:active { transform: scale(0.97); box-shadow: 0 0 25px var(--primary-glow); }
+        /* ИДЕЯ 8: Подсветка карточки при наведении/нажатии */
+        .card:hover, .card:active { transform: scale(0.98) translateY(-2px); box-shadow: 0 0 25px var(--primary-glow), inset 0 0 15px var(--primary-glow); border-color: var(--primary); }
         
         .card-img-wrapper { width: 100%; height: 170px; background: #ffffff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(128, 128, 128, 0.2); position: relative; overflow: hidden; }
-        .card-img { width: 100%; height: 100%; object-fit: contain; padding: 0; }
+        .card-img { width: 100%; height: 100%; object-fit: contain; padding: 0; transition: transform 0.3s; }
+        .card:hover .card-img { transform: scale(1.05); } /* Идея 14 (зум) затесалась бонусом */
         
         .liquid-img-wrapper { background: transparent !important; border-bottom: none !important; }
         .liquid-img { object-fit: cover !important; border-radius: 14px 14px 0 0; }
 
         .card-no-img { width: 40px; height: 40px; fill: var(--primary); opacity: 0.5; filter: drop-shadow(0 0 10px var(--primary)); }
 
-        .badge { position: absolute; top: 10px; left: 10px; background: linear-gradient(90deg, var(--primary), #ffffff); color: #000; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 900; text-transform: uppercase; box-shadow: 0 0 10px var(--primary-glow); z-index: 2; }
+        /* ИДЕЯ 5: Пульсация бейджей */
+        .badge { position: absolute; top: 10px; left: 10px; background: linear-gradient(90deg, var(--primary), #ffffff); color: #000; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 900; text-transform: uppercase; z-index: 2; animation: badgePulse 2s infinite alternate; }
+        @keyframes badgePulse {
+            0% { box-shadow: 0 0 5px var(--primary-glow); transform: scale(1); }
+            100% { box-shadow: 0 0 20px var(--primary), 0 0 10px var(--primary); transform: scale(1.05); }
+        }
 
         .card-body { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
         .card-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; line-height: 1.2; color: var(--text); }
@@ -155,7 +172,7 @@
         .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
         .price { font-size: 18px; font-weight: 800; color: var(--primary); text-shadow: 0 0 8px var(--primary-glow); }
         
-        .buy-btn { background: rgba(128, 128, 128, 0.1); border: 2px solid var(--primary); color: var(--primary); width: 36px; height: 36px; border-radius: 10px; font-size: 24px; font-weight: 800; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; box-shadow: 0 0 15px var(--primary-glow), inset 0 0 10px rgba(0,0,0,0.1); padding-bottom: 3px; line-height: 1; }
+        .buy-btn { background: rgba(128, 128, 128, 0.1); border: 2px solid var(--primary); color: var(--primary); width: 36px; height: 36px; border-radius: 10px; font-size: 24px; font-weight: 800; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; box-shadow: 0 0 15px var(--primary-glow); padding-bottom: 3px; line-height: 1; }
         .buy-btn:active { background: var(--primary); color: var(--bg); box-shadow: 0 0 25px var(--primary); }
         
         .qty-control { display: flex; align-items: center; background: rgba(128, 128, 128, 0.1); border: 1px solid var(--primary); border-radius: 10px; overflow: hidden; }
@@ -168,7 +185,7 @@
         .variants-container { display: none; flex-direction: column; gap: 8px; margin-top: 10px; border-top: 1px solid rgba(128, 128, 128, 0.2); padding-top: 10px; }
         .variant-item { display: flex; justify-content: space-between; align-items: center; background: var(--surface-solid); padding: 6px 10px; border-radius: 8px; border: 1px solid rgba(128, 128, 128, 0.2); }
         
-        .glossy-stock-box { background: linear-gradient(135deg, #ffffff, #c0c0c0, #ffffff); color: #000; font-weight: 900; font-size: 12px; padding: 2px 6px; border-radius: 4px; box-shadow: 0 0 8px rgba(255, 255, 255, 0.6), inset 0 -2px 5px rgba(0,0,0,0.2); text-shadow: 0 1px 1px rgba(255,255,255,0.8); min-width: 22px; text-align: center; margin-right: 8px; }
+        .glossy-stock-box { background: linear-gradient(135deg, #ffffff, #c0c0c0, #ffffff); color: #000; font-weight: 900; font-size: 12px; padding: 2px 6px; border-radius: 4px; box-shadow: 0 0 8px rgba(255, 255, 255, 0.6); min-width: 22px; text-align: center; margin-right: 8px; }
         .variant-name { font-size: 11px; color: var(--text); flex-grow: 1; }
         
         .variant-item .qty-control { height: 28px; }
@@ -176,6 +193,7 @@
         .variant-item .qty-num { font-size: 12px; }
         .variant-item .buy-btn { height: 28px; width: 28px; font-size: 18px; border-radius: 8px; padding-bottom: 2px;}
 
+        /* НИЖНЕЕ МЕНЮ */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 70px; background: var(--nav-bg); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid var(--primary-glow); z-index: 999; padding-bottom: env(safe-area-inset-bottom); transition: background 0.3s; }
         .nav-item { display: flex; justify-content: center; align-items: center; width: 50px; height: 50px; cursor: pointer; position: relative; border-radius: 50%; transition: 0.3s; color: var(--text-muted); }
         .nav-item.active { color: var(--primary); }
@@ -187,10 +205,22 @@
         .page { display: none; animation: fadeIn 0.4s ease-out; } .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* КОРЗИНА */
         .cart-container { padding: 20px; }
         .cart-item { display: flex; justify-content: space-between; align-items: center; background: var(--surface); border: 1px solid var(--primary-glow); padding: 15px; border-radius: 16px; margin-bottom: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
         
-        /* НОВАЯ КНОПКА ОФОРМЛЕНИЯ */
+        /* Кнопка удаления из корзины */
+        .remove-btn { background: transparent; border: 1px solid var(--danger); color: var(--danger); border-radius: 8px; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; margin-left: 10px; }
+        .remove-btn:hover, .remove-btn:active { background: var(--danger); color: #fff; box-shadow: 0 0 10px var(--danger); }
+
+        /* ИДЕЯ 12: Экран пустой корзины */
+        #cart-empty-state { text-align: center; margin-top: 50px; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .pug-img { width: 150px; height: 150px; margin-bottom: 20px; filter: drop-shadow(0 0 25px var(--primary-glow)); animation: floatPug 3s ease-in-out infinite; border-radius: 20px; object-fit: cover;}
+        @keyframes floatPug { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+        .empty-cart-text { font-size: 18px; font-weight: 600; margin-bottom: 20px; color: var(--text); }
+        .go-catalog-btn { background: var(--primary); color: var(--bg); border: none; padding: 12px 24px; border-radius: 12px; font-weight: 800; font-size: 16px; cursor: pointer; box-shadow: 0 0 15px var(--primary-glow); transition: 0.3s; text-transform: uppercase; }
+        .go-catalog-btn:active { transform: scale(0.95); }
+
         .checkout-btn { 
             position: fixed; bottom: 90px; left: 20px; right: 20px; 
             background: linear-gradient(90deg, var(--primary) 0%, var(--primary-glow) 100%); 
@@ -227,6 +257,12 @@
 </head>
 <body>
 
+    <!-- ЭКРАН ЗАГРУЗКИ -->
+    <div id="splash-screen">
+        <div class="splash-logo">LEGION SHOP</div>
+        <div class="splash-spinner"></div>
+    </div>
+
     <div class="space-bg"></div>
     <div class="space-overlay"></div>
 
@@ -249,7 +285,14 @@
         <div class="cart-container">
             <h2 style="margin-bottom: 20px; color: var(--primary); text-shadow: 0 0 10px var(--primary-glow);">КОРЗИНА</h2>
             <div id="cart-items"></div>
-            <div id="cart-empty-state" style="text-align:center; margin-top:50px; color:var(--text-muted);"><p>Ваша корзина пуста</p></div>
+            
+            <!-- Экран пустой корзины с Мопсом -->
+            <div id="cart-empty-state">
+                <img src="https://i.ibb.co/68030Yq/pug.png" alt="Pug" class="pug-img" onerror="this.src='https://i.pinimg.com/originals/9e/1b/7b/9e1b7b5ffb5c5e2e1e4c6e5d4c3b2a1a.png'; this.style.background='var(--surface-solid)'; this.style.border='2px solid var(--primary)';">
+                <div class="empty-cart-text">Тут пока пусто...</div>
+                <button class="go-catalog-btn" onclick="switchTab('catalog')">Перейти в каталог</button>
+            </div>
+            
         </div>
         <button class="checkout-btn" id="checkout-btn" onclick="checkout()"></button>
     </div>
@@ -308,6 +351,40 @@
     </div>
 
     <script>
+        // --- ИДЕЯ 7: SPLASH SCREEN (ЭКРАН ЗАГРУЗКИ) ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                splash.style.opacity = '0';
+                setTimeout(() => { splash.style.display = 'none'; }, 500);
+            }, 1500); // 1.5 секунды показываем загрузку
+        });
+
+        // --- ИДЕЯ 13: TYPEWRITER EFFECT (Печатающийся текст) ---
+        const placeholders = ["Найти девайс...", "Найти жижу...", "Найти картридж...", "Найти XROS..."];
+        let typeIndex = 0, charIndex = 0, isDeleting = false;
+        
+        function typeWriter() {
+            const input = document.getElementById('searchInput');
+            if (input.value !== '') return; // Если пользователь уже что-то ввел, останавливаем анимацию
+
+            const currentText = placeholders[typeIndex];
+            if (isDeleting) { charIndex--; } else { charIndex++; }
+            input.placeholder = currentText.substring(0, charIndex);
+
+            if (!isDeleting && charIndex === currentText.length) {
+                isDeleting = true;
+                setTimeout(typeWriter, 2000); // Пауза в конце слова
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                typeIndex = (typeIndex + 1) % placeholders.length;
+                setTimeout(typeWriter, 500); // Пауза перед новым словом
+            } else {
+                setTimeout(typeWriter, isDeleting ? 50 : 100);
+            }
+        }
+        typeWriter();
+
         // Инициализация темы до отрисовки
         const savedTheme = localStorage.getItem('legion_theme') || 'base';
         document.body.setAttribute('data-theme', savedTheme);
@@ -317,7 +394,6 @@
             localStorage.setItem('legion_theme', theme);
         }
 
-        // Анимация заголовка "Пианино"
         function runPianoEffect() {
             const el = document.getElementById("header-title");
             const targetText = "LEGION SHOP";
@@ -371,9 +447,7 @@
             window.Telegram.WebApp.setHeaderColor('#02040a');
         }
 
-        // --- МАССИВ ТОВАРОВ ---
         let products = [
-            // ПОДЫ
             { 
                 id: 1, title: "XROS 6", desc: "Мощный под с экраном", price: 2500, category: "pods", badge: "NEW", img: "xros6.jpg",
                 variants: [
@@ -395,16 +469,10 @@
                     { name: "Titanium silver", stock: 1 }
                 ]
             },
-            
-            // КАРТРИДЖИ
             { 
                 id: 3, title: "Картридж XROS 0.7Ω", desc: "Vaporesso XROS Series 3ml", price: 300, category: "cartridges", badge: "NEW", img: "karik07om3ml.jpg",
-                variants: [
-                    { name: "0.7Ω (3ml)", stock: 8 }
-                ]
+                variants: [ { name: "0.7Ω (3ml)", stock: 8 } ]
             },
-
-            // ЖИЖИ
             { 
                 id: 10, title: "BJORN HEADSHOT 100", desc: "Кислые вкусы", stock: 1, price: 550, category: "liquids", badge: "", img: "bjornheadshot100.jpg",
                 variants: [
@@ -512,18 +580,12 @@
             const grid = document.getElementById('catalog-grid');
             
             let filtered = products.filter(p => {
-                if (p.variants) {
-                    return p.variants.some(v => v.stock > 0);
-                }
+                if (p.variants) return p.variants.some(v => v.stock > 0);
                 return p.stock > 0;
             });
 
-            if (activeCategory !== 'all') {
-                filtered = filtered.filter(p => p.category === activeCategory);
-            }
-            if (searchQuery !== '') {
-                filtered = filtered.filter(p => p.title.toLowerCase().includes(searchQuery));
-            }
+            if (activeCategory !== 'all') filtered = filtered.filter(p => p.category === activeCategory);
+            if (searchQuery !== '') filtered = filtered.filter(p => p.title.toLowerCase().includes(searchQuery));
             
             grid.innerHTML = filtered.map(p => {
                 let hasVariants = p.variants && p.variants.length > 0;
@@ -546,7 +608,6 @@
                 if (hasVariants) {
                     let variantsList = p.variants.map(v => {
                         if (v.stock <= 0) return ''; 
-                        
                         let cartId = `${p.id}_${v.name}`;
                         let cartItem = cart.find(item => item.cartId === cartId);
                         let qty = cartItem ? cartItem.qty : 0;
@@ -648,6 +709,13 @@
             saveCart(); updateBadge(); renderProducts(); 
         }
 
+        // НОВАЯ ФУНКЦИЯ: Удаление прямо из корзины
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.cartId !== id && item.id !== id);
+            if (window.Telegram && window.Telegram.WebApp) window.Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
+            saveCart(); updateBadge(); renderCart(); renderProducts();
+        }
+
         function saveCart() { try { localStorage.setItem('legion_cart_cosmic', JSON.stringify(cart)); } catch(e) {} }
         
         function updateBadge() {
@@ -664,12 +732,12 @@
             
             if (cart.length === 0) { 
                 container.innerHTML = ''; 
-                emptyState.style.display = 'block'; 
+                emptyState.style.display = 'flex'; 
                 checkoutBtn.style.display = 'none'; 
                 return; 
             }
             emptyState.style.display = 'none'; 
-            checkoutBtn.style.display = 'flex'; // Включаем flex для кнопки
+            checkoutBtn.style.display = 'flex'; 
             
             let total = 0;
             container.innerHTML = cart.map(item => {
@@ -677,10 +745,22 @@
                 if (currentProduct) item.price = currentProduct.price;
                 
                 total += item.price * item.qty;
-                return `<div class="cart-item"><div><div style="font-weight: 600; font-size: 15px;">${item.title}</div><div style="font-size:12px; color:var(--text-muted); margin-top:4px;">${item.qty} шт.</div></div><div style="font-weight:800; font-size:16px; color:var(--primary); text-shadow: 0 0 5px var(--primary);">${item.price * item.qty} ₽</div></div>`;
+                let idForDeletion = item.cartId || item.id;
+                
+                // Добавили кнопку удаления (крестик)
+                return `
+                <div class="cart-item">
+                    <div style="flex-grow: 1;">
+                        <div style="font-weight: 600; font-size: 15px;">${item.title}</div>
+                        <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">${item.qty} шт.</div>
+                    </div>
+                    <div style="font-weight:800; font-size:16px; color:var(--primary); text-shadow: 0 0 5px var(--primary); margin-right: 10px;">
+                        ${item.price * item.qty} ₽
+                    </div>
+                    <button class="remove-btn" onclick="removeFromCart('${idForDeletion}')">✖</button>
+                </div>`;
             }).join('');
 
-            // Обновляем кнопку с итоговой ценой
             checkoutBtn.innerHTML = `<span>Оформить заказ</span> <span>${total} ₽</span>`;
         }
 
