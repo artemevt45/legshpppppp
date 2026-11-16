@@ -202,7 +202,7 @@
         .price { font-size: 18px; font-weight: 800; color: var(--primary); text-shadow: 0 0 8px var(--primary-glow); }
         
         .buy-btn { background: rgba(128, 128, 128, 0.1); border: 2px solid var(--primary); color: var(--primary); width: 36px; height: 36px; border-radius: 10px; font-size: 24px; font-weight: 800; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; box-shadow: 0 0 15px var(--primary-glow); padding-bottom: 3px; line-height: 1; }
-        .buy-btn:active { background: var(--primary); color: var(--bg); box-shadow: 0 0 25px var(--primary); }
+        .buy-btn:active:not(:disabled) { background: var(--primary); color: var(--bg); box-shadow: 0 0 25px var(--primary); }
         
         .qty-control { display: flex; align-items: center; background: rgba(128, 128, 128, 0.1); border: 1px solid var(--primary); border-radius: 10px; overflow: hidden; }
         .qty-btn { background: transparent; border: none; color: var(--primary); width: 28px; height: 32px; font-size: 18px; font-weight: bold; cursor: pointer; }
@@ -533,7 +533,7 @@
             window.Telegram.WebApp.setHeaderColor('#02040a');
         }
 
-        // ОБНОВЛЕННЫЙ МАССИВ (ДОБАВЛЕНЫ ВСЕ ЦВЕТА)
+        // ОБНОВЛЕННЫЙ МАССИВ (ИСПРАВЛЕНЫ ИМЕНА КАРТИНОК И ОСТАТКИ)
         let products = [
             // ПОДЫ
             { 
@@ -598,7 +598,7 @@
                 ]
             },
             { 
-                id: 8, title: "Aegis Hero 5 Racing Edition", brand: "Geekvape", desc: "Флагманский под-мод (Racing)", price: 2600, category: "pods", badge: "NEW", img: "aegishero5racing.jpg",
+                id: 8, title: "Aegis Hero 5 Racing Edition", brand: "Geekvape", desc: "Флагманский под-мод (Racing)", price: 2600, category: "pods", badge: "NEW", img: "aegishero5racingedition.jpg",
                 variants: [ 
                     { name: "Speed Red", stock: 0 },
                     { name: "Vibe Green", stock: 0 },
@@ -738,12 +738,7 @@
             const grid = document.getElementById('catalog-grid');
             
             let filtered = products.filter(p => {
-                if (p.variants) {
-                    if (!p.variants.some(v => v.stock > 0)) return false;
-                } else {
-                    if (p.stock <= 0) return false;
-                }
-
+                // УБРАЛИ ПРОВЕРКУ НА НАЛИЧИЕ, ТЕПЕРЬ ПОКАЗЫВАЮТСЯ ВСЕ ТОВАРЫ
                 if (activeCategory !== 'all' && p.category !== activeCategory) return false;
                 if (activeCategory === 'liquids' && currentMg > 0 && p.mg !== currentMg) return false;
                 if (activeCategory === 'pods' && currentBrand !== 'all' && p.brand !== currentBrand) return false;
@@ -764,10 +759,14 @@
                 let hasVariants = p.variants && p.variants.length > 0;
                 let isLiquid = p.category === 'liquids';
                 
+                // Считаем общий остаток
+                let totalStock = p.variants ? p.variants.reduce((sum, v) => sum + v.stock, 0) : p.stock;
+                let isOutOfStock = totalStock <= 0;
+
                 let imgHTML = '';
                 if (p.img && p.img.trim() !== "") {
                     imgHTML = `
-                        <img src="${p.img}" loading="lazy" class="card-img" alt="${p.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <img src="${p.img}" loading="lazy" class="card-img" alt="${p.title}" style="${isOutOfStock ? 'opacity: 0.5;' : ''}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                         <svg class="card-no-img" style="display:none;" viewBox="0 0 24 24"><path d="M18 4H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 12H8V8h8v8z"/></svg>
                     `;
                 } else {
@@ -779,22 +778,28 @@
                     let forceOpen = searchQuery !== '' && p.variants.some(v => v.name.toLowerCase().includes(searchQuery));
 
                     let variantsList = p.variants.map(v => {
-                        if (v.stock <= 0) return ''; 
+                        // Если общий остаток 0, показываем все варианты как неактивные
                         if (searchQuery !== '' && !p.title.toLowerCase().includes(searchQuery) && !v.name.toLowerCase().includes(searchQuery)) return '';
-
+                        
+                        let isVariantOutOfStock = (v.stock <= 0) || isOutOfStock;
                         let cartId = `${p.id}_${v.name}`;
                         let cartItem = cart.find(item => item.cartId === cartId);
                         let qty = cartItem ? cartItem.qty : 0;
 
-                        let actionHTML = qty === 0 
-                            ? `<button class="buy-btn" onclick="changeQty('${cartId}', 1, ${p.id}, '${v.name}')">+</button>`
-                            : `<div class="qty-control"><button class="qty-btn" onclick="changeQty('${cartId}', -1, ${p.id}, '${v.name}')">-</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty('${cartId}', 1, ${p.id}, '${v.name}')">+</button></div>`;
+                        let actionHTML = '';
+                        if (isVariantOutOfStock) {
+                            actionHTML = `<button class="buy-btn" disabled style="border-color: #666; color: #666; box-shadow: none; cursor: not-allowed;">✖</button>`;
+                        } else {
+                            actionHTML = qty === 0 
+                                ? `<button class="buy-btn" onclick="changeQty('${cartId}', 1, ${p.id}, '${v.name}')">+</button>`
+                                : `<div class="qty-control"><button class="qty-btn" onclick="changeQty('${cartId}', -1, ${p.id}, '${v.name}')">-</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty('${cartId}', 1, ${p.id}, '${v.name}')">+</button></div>`;
+                        }
 
                         return `
-                            <div class="variant-item">
+                            <div class="variant-item" style="${isVariantOutOfStock ? 'opacity: 0.6;' : ''}">
                                 <div style="display: flex; align-items: center; flex-grow: 1;">
-                                    <div class="glossy-stock-box">${v.stock}</div>
-                                    <div class="variant-name">${v.name}</div>
+                                    <div class="glossy-stock-box" style="${isVariantOutOfStock ? 'background: #666; color: #ccc;' : ''}">${v.stock}</div>
+                                    <div class="variant-name" style="${isVariantOutOfStock ? 'text-decoration: line-through; color: #888;' : ''}">${v.name}</div>
                                 </div>
                                 ${actionHTML}
                             </div>
@@ -805,7 +810,7 @@
                     let isOpen = openAccordions[p.id] || forceOpen;
                     
                     variantsHTML = `
-                        <button class="choose-flavor-btn" onclick="toggleVariants(${p.id})">${btnText}</button>
+                        <button class="choose-flavor-btn" onclick="toggleVariants(${p.id})" style="${isOutOfStock ? 'border-color: #666; color: #666;' : ''}">${btnText}</button>
                         <div id="variants-${p.id}" class="variants-container" style="display: ${isOpen ? 'flex' : 'none'};">
                             ${variantsList}
                         </div>
@@ -813,17 +818,28 @@
                 } else {
                     const cartItem = cart.find(item => item.id === p.id);
                     const qty = cartItem ? cartItem.qty : 0;
-                    variantsHTML = qty === 0 
-                        ? `<button class="buy-btn" onclick="changeQty(${p.id}, 1, ${p.id})">+</button>`
-                        : `<div class="qty-control"><button class="qty-btn" onclick="changeQty(${p.id}, -1, ${p.id})">-</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty(${p.id}, 1, ${p.id})">+</button></div>`;
+                    
+                    if (isOutOfStock) {
+                        variantsHTML = `<button class="buy-btn" disabled style="border-color: #666; color: #666; box-shadow: none; cursor: not-allowed;">✖</button>`;
+                    } else {
+                        variantsHTML = qty === 0 
+                            ? `<button class="buy-btn" onclick="changeQty(${p.id}, 1, ${p.id})">+</button>`
+                            : `<div class="qty-control"><button class="qty-btn" onclick="changeQty(${p.id}, -1, ${p.id})">-</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty(${p.id}, 1, ${p.id})">+</button></div>`;
+                    }
                 }
 
-                let infoHTML = hasVariants 
-                    ? `<div class="card-stock"><div class="stock-dot"></div> В наличии</div>` 
-                    : `<div class="card-stock"><div class="stock-dot"></div> В наличии (${p.stock})</div>`;
+                // Вывод наличия
+                let infoHTML = '';
+                if (isOutOfStock) {
+                    infoHTML = `<div class="card-stock" style="color: var(--danger); font-weight: bold;"><div class="stock-dot" style="background: var(--danger); box-shadow: 0 0 8px var(--danger);"></div> Нет в наличии</div>`;
+                } else if (hasVariants) {
+                    infoHTML = `<div class="card-stock"><div class="stock-dot"></div> В наличии</div>`;
+                } else {
+                    infoHTML = `<div class="card-stock"><div class="stock-dot"></div> В наличии (${p.stock})</div>`;
+                }
 
                 return `
-                <div class="card">
+                <div class="card" style="${isOutOfStock ? 'filter: grayscale(0.5); opacity: 0.9;' : ''}">
                     <div class="card-img-wrapper">
                         ${imgHTML}
                         ${p.badge ? `<div class="badge">${p.badge}</div>` : ''}
@@ -835,7 +851,7 @@
                             ${infoHTML}
                         </div>
                         <div class="card-footer" style="${hasVariants ? 'flex-direction: column; align-items: flex-start;' : ''}">
-                            <div class="price" style="${hasVariants ? 'margin-bottom: 5px;' : ''}">${p.price} ₽</div>
+                            <div class="price" style="${hasVariants ? 'margin-bottom: 5px;' : ''} ${isOutOfStock ? 'color: #666; text-shadow: none;' : ''}">${p.price} ₽</div>
                             ${variantsHTML}
                         </div>
                     </div>
