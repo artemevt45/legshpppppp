@@ -185,6 +185,10 @@
         
         .card:hover, .card:active { transform: scale(0.98) translateY(-2px); box-shadow: 0 0 25px var(--primary-glow), inset 0 0 15px var(--primary-glow); border-color: var(--primary); }
         
+        /* Стили для карточки товара, которого нет в наличии */
+        .card.out-of-stock { filter: grayscale(0.5); opacity: 0.85; border-color: #444; }
+        .card.out-of-stock .price { color: #777; text-shadow: none; }
+
         .card-img-wrapper { width: 100%; height: 170px; background: #ffffff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(128, 128, 128, 0.2); position: relative; overflow: hidden; }
         .card-img { width: 100%; height: 100%; object-fit: contain; padding: 5px; transition: transform 0.3s; }
         .card:hover .card-img { transform: scale(1.05); }
@@ -280,7 +284,6 @@
         .theme-btn { flex: 1; padding: 8px; border-radius: 8px; font-weight: bold; cursor: pointer; border: 1px solid transparent; transition: 0.2s; font-family: 'Exo 2', sans-serif;}
         .theme-btn:active { transform: scale(0.95); }
 
-        /* ЗАМЕДЛЯЕМ АНИМАЦИЮ ГРАДИЕНТА НА ТЕЛЕФОНАХ */
         @media (max-width: 768px) {
             .card { animation: borderShine 20s linear infinite; }
         }
@@ -533,7 +536,7 @@
             window.Telegram.WebApp.setHeaderColor('#02040a');
         }
 
-        // ОБНОВЛЕННЫЙ МАССИВ (ИСПРАВЛЕНЫ ИМЕНА КАРТИНОК И ОСТАТКИ)
+        // ОБНОВЛЕННЫЙ МАССИВ (УДАЛЕНЫ HERO 2 и 3)
         let products = [
             // ПОДЫ
             { 
@@ -577,14 +580,6 @@
             },
 
             // GEEKVAPE
-            { 
-                id: 4, title: "Aegis Hero 2", brand: "Geekvape", desc: "Мощный под-мод", price: 1870, category: "pods", badge: "", img: "aegishero2.jpg",
-                variants: [ { name: "Стандарт", stock: 1 } ]
-            },
-            { 
-                id: 5, title: "Aegis Hero 3", brand: "Geekvape", desc: "Защищенный под-мод", price: 1800, category: "pods", badge: "", img: "aegishero3.jpg",
-                variants: [ { name: "Стандарт", stock: 1 } ]
-            },
             { 
                 id: 6, title: "Aegis Hero 5", brand: "Geekvape", desc: "Флагманский под-мод", price: 2600, category: "pods", badge: "ТОП", img: "aegishero5.jpg",
                 variants: [ 
@@ -738,7 +733,6 @@
             const grid = document.getElementById('catalog-grid');
             
             let filtered = products.filter(p => {
-                // УБРАЛИ ПРОВЕРКУ НА НАЛИЧИЕ, ТЕПЕРЬ ПОКАЗЫВАЮТСЯ ВСЕ ТОВАРЫ
                 if (activeCategory !== 'all' && p.category !== activeCategory) return false;
                 if (activeCategory === 'liquids' && currentMg > 0 && p.mg !== currentMg) return false;
                 if (activeCategory === 'pods' && currentBrand !== 'all' && p.brand !== currentBrand) return false;
@@ -766,7 +760,7 @@
                 let imgHTML = '';
                 if (p.img && p.img.trim() !== "") {
                     imgHTML = `
-                        <img src="${p.img}" loading="lazy" class="card-img" alt="${p.title}" style="${isOutOfStock ? 'opacity: 0.5;' : ''}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <img src="${p.img}" loading="lazy" class="card-img" alt="${p.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                         <svg class="card-no-img" style="display:none;" viewBox="0 0 24 24"><path d="M18 4H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 12H8V8h8v8z"/></svg>
                     `;
                 } else {
@@ -778,7 +772,6 @@
                     let forceOpen = searchQuery !== '' && p.variants.some(v => v.name.toLowerCase().includes(searchQuery));
 
                     let variantsList = p.variants.map(v => {
-                        // Если общий остаток 0, показываем все варианты как неактивные
                         if (searchQuery !== '' && !p.title.toLowerCase().includes(searchQuery) && !v.name.toLowerCase().includes(searchQuery)) return '';
                         
                         let isVariantOutOfStock = (v.stock <= 0) || isOutOfStock;
@@ -838,11 +831,15 @@
                     infoHTML = `<div class="card-stock"><div class="stock-dot"></div> В наличии (${p.stock})</div>`;
                 }
 
+                // Оверлей для потемнения картинки (как ты просил)
+                let overlayHTML = isOutOfStock ? `<div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1; pointer-events: none;"></div>` : '';
+
                 return `
-                <div class="card" style="${isOutOfStock ? 'filter: grayscale(0.5); opacity: 0.9;' : ''}">
+                <div class="card ${isOutOfStock ? 'out-of-stock' : ''}">
                     <div class="card-img-wrapper">
                         ${imgHTML}
-                        ${p.badge ? `<div class="badge">${p.badge}</div>` : ''}
+                        ${overlayHTML}
+                        ${p.badge ? `<div class="badge" style="z-index: 3;">${p.badge}</div>` : ''}
                     </div>
                     <div class="card-body">
                         <div>
@@ -851,7 +848,7 @@
                             ${infoHTML}
                         </div>
                         <div class="card-footer" style="${hasVariants ? 'flex-direction: column; align-items: flex-start;' : ''}">
-                            <div class="price" style="${hasVariants ? 'margin-bottom: 5px;' : ''} ${isOutOfStock ? 'color: #666; text-shadow: none;' : ''}">${p.price} ₽</div>
+                            <div class="price" style="${hasVariants ? 'margin-bottom: 5px;' : ''}">${p.price} ₽</div>
                             ${variantsHTML}
                         </div>
                     </div>
