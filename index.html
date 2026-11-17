@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LegionShop | Cosmic</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,8 +15,7 @@
             --bg: #02040a; --surface: rgba(10, 15, 30, 0.85); --surface-solid: #0a0f1e;
             --text: #ffffff; --text-muted: #a0b8d6; --primary: #00f2fe;
             --primary-glow: rgba(0, 242, 254, 0.6); --danger: #ff3366;
-            --nav-bg: rgba(2, 4, 10, 0.95);
-            --bg-image: url('bazatema.jpg'); --modal-bg: #0d1425;
+            --nav-bg: rgba(2, 4, 10, 0.95); --bg-image: url('bazatema.jpg'); --modal-bg: #0d1425;
         }
         body[data-theme="dark"] {
             --bg: #000000; --surface: rgba(20, 20, 20, 0.85); --surface-solid: #141414;
@@ -281,27 +280,27 @@
     </div>
 
     <script>
+        // === SUPABASE CONFIG ===
+        const SUPABASE_URL = 'https://xfgkuwcuelpzqlgnpmjb.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_-d8V0nobaXvNn7rMVcR6Tw_bXVmVNOd';
+        
+        let supabase = null;
+        try {
+            if (typeof window.supabase !== 'undefined') {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            } else {
+                console.warn('Supabase library not loaded');
+            }
+        } catch (e) { console.error(e); }
+
+        // === INIT ===
         const savedTheme = localStorage.getItem('legion_theme') || 'base';
         document.body.setAttribute('data-theme', savedTheme);
-
-        function setTheme(theme) {
-            document.body.setAttribute('data-theme', theme);
-            localStorage.setItem('legion_theme', theme);
-        }
+        function setTheme(theme) { document.body.setAttribute('data-theme', theme); localStorage.setItem('legion_theme', theme); }
 
         function runPianoEffect() {
-            const el = document.getElementById("header-title");
-            const targetText = "LEGION SHOP";
-            el.innerHTML = "";
-            targetText.split("").forEach((char, index) => {
-                if (char === " ") { el.innerHTML += "&nbsp;"; } 
-                else {
-                    const span = document.createElement("span");
-                    span.innerText = char;
-                    span.style.animationDelay = `${index * 0.15}s`;
-                    el.appendChild(span);
-                }
-            });
+            const el = document.getElementById("header-title"); const t = "LEGION SHOP"; el.innerHTML = "";
+            t.split("").forEach((c, i) => { if(c===" ") el.innerHTML+="&nbsp;"; else { const s=document.createElement("span"); s.innerText=c; s.style.animationDelay=`${i*0.15}s`; el.appendChild(s);} });
         }
         runPianoEffect();
 
@@ -311,422 +310,147 @@
             window.Telegram.WebApp.setHeaderColor('#02040a');
         }
 
-        const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user; 
-
+        const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
         function initProfile() {
-            const nameEl = document.getElementById('user-name');
-            const usernameEl = document.getElementById('user-username');
-            const avatarEl = document.getElementById('user-avatar');
-
-            if (tgUser) {
-                let fullName = tgUser.first_name || '';
-                if (tgUser.last_name) fullName += ' ' + tgUser.last_name;
-                nameEl.innerText = fullName;
-                usernameEl.innerText = tgUser.username ? '@' + tgUser.username : '@id' + tgUser.id;
-
-                if (tgUser.photo_url) {
-                    avatarEl.style.backgroundImage = `url('${tgUser.photo_url}')`;
-                    avatarEl.innerText = '';
-                } else {
-                    avatarEl.innerText = (tgUser.first_name ? tgUser.first_name.charAt(0).toUpperCase() : '?');
-                }
-            } else {
-                nameEl.innerText = "Гость";
-                usernameEl.innerText = "@no_telegram";
-                avatarEl.innerText = "Г";
-            }
+            const n=document.getElementById('user-name'), u=document.getElementById('user-username'), a=document.getElementById('user-avatar');
+            if(tgUser){ let f=tgUser.first_name||''; if(tgUser.last_name)f+=' '+tgUser.last_name; n.innerText=f; u.innerText=tgUser.username?'@'+tgUser.username:'@id'+tgUser.id;
+                if(tgUser.photo_url){a.style.backgroundImage=`url('${tgUser.photo_url}')`;a.innerText='';} else a.innerText=(tgUser.first_name?tgUser.first_name[0].toUpperCase():'?');
+            } else {n.innerText="Гость";u.innerText="@no_telegram";a.innerText="Г";}
         }
 
-        // === ДАННЫЕ ТОВАРОВ (РУЧНОЕ УПРАВЛЕНИЕ) ===
-        let products = [
-            { 
-                id: 1, title: "XROS 6", brand: "Vaporesso", desc: "Мощный под с экраном", price: 2500, category: "pods", badge: "NEW", img: "xros6.jpg",
-                variants: [ { name: "Aurora blue", stock: 1 }, { name: "Silk brown", stock: 1 } ]
-            },
-            { 
-                id: 2, title: "XROS 6 Mini", brand: "Vaporesso", desc: "Компактный под", price: 1800, category: "pods", badge: "ХИТ", img: "xros6mini.jpg",
-                variants: [
-                    { name: "Black", stock: 1 }, { name: "Brown", stock: 1 }, { name: "Jelly blue", stock: 1 },
-                    { name: "Jelly pink", stock: 2 }, { name: "Jelly green", stock: 1 }, { name: "Plume pink", stock: 2 },
-                    { name: "Plume white", stock: 2 }, { name: "Titanium black", stock: 1 }, { name: "Titanium silver", stock: 1 }
-                ]
-            },
-            { 
-                id: 7, title: "XROS Pro 2", brand: "Vaporesso", desc: "Премиальный под с батареей 2000 мАч", price: 2500, category: "pods", badge: "ТОП", img: "xrospro2.jpg",
-                variants: [ 
-                    { name: "Glittering Silver", stock: 0 }, { name: "Glittering Gold", stock: 0 }, { name: "Storm Blue", stock: 0 },
-                    { name: "Dawn Purple", stock: 0 }, { name: "Glittering Black", stock: 0 }, { name: "Gem Green", stock: 0 },
-                    { name: "Moonlit Pink", stock: 0 }
-                ]
-            },
-            { 
-                id: 3, title: "Картридж XROS 0.7Ω", desc: "Vaporesso XROS Series 3ml", price: 300, category: "cartridges", badge: "NEW", img: "karik07om3ml.jpg",
-                variants: [ { name: "0.7Ω (3ml)", stock: 8 } ]
-            },
-            { 
-                id: 6, title: "Aegis Hero 5", brand: "Geekvape", desc: "Флагманский под-мод", price: 2600, category: "pods", badge: "ТОП", img: "aegishero5.jpg",
-                variants: [ 
-                    { name: "Blaze Red", stock: 0 }, { name: "Racing Green", stock: 0 }, { name: "Phantom Blue", stock: 0 },
-                    { name: "Iron Black", stock: 0 }, { name: "Pure White", stock: 0 }, { name: "Frost Mint", stock: 0 },
-                    { name: "Steel Silver", stock: 0 }
-                ]
-            },
-            { 
-                id: 8, title: "Aegis Hero 5 Racing Edition", brand: "Geekvape", desc: "Флагманский под-мод (Racing)", price: 2600, category: "pods", badge: "NEW", img: "aegishero5racingedition.jpg",
-                variants: [ 
-                    { name: "Speed Red", stock: 0 }, { name: "Vibe Green", stock: 0 }, { name: "Lightning Yellow", stock: 0 },
-                    { name: "Quantum Cyan", stock: 0 }, { name: "Racing Blue", stock: 0 }
-                ]
-            },
-            { 
-                id: 10, title: "BJORN HEADSHOT 100 мг", desc: "Кислые вкусы", mg: 100, stock: 1, price: 550, category: "liquids", badge: "", img: "bjornheadshot100.jpg",
-                variants: [
-                    { name: "Банан с кислинкой", stock: 1 }, { name: "Гранат мандарин", stock: 1 }, { name: "Грейпфрут сибирские ягоды", stock: 1 },
-                    { name: "Малина клюква", stock: 1 }, { name: "Яблочный Skittles", stock: 1 }
-                ]
-            },
-            { 
-                id: 11, title: "Злая Милфа 70 мг", desc: "Освежающие вкусы", mg: 70, stock: 1, price: 500, category: "liquids", badge: "", img: "zlyamilfa70.jpg",
-                variants: [ { name: "Ледяная кола", stock: 1 }, { name: "Цитрусовый микс", stock: 1 }, { name: "Ананасовая шипучка", stock: 1 } ]
-            },
-            { 
-                id: 12, title: "Злая Монашка Bubble 80 мг", desc: "Вкусы жвачек", mg: 80, stock: 1, price: 500, category: "liquids", badge: "", img: "zlyabubble80.jpg",
-                variants: [ { name: "Кислый скиттлс черешня", stock: 1 }, { name: "Чупа-чупс с колой", stock: 1 }, { name: "Жвачка с кислой малиной", stock: 1 } ]
-            },
-            { 
-                id: 13, title: "Злая Монашка LEMONADE 80 мг", desc: "Лимонады", mg: 80, stock: 1, price: 500, category: "liquids", badge: "", img: "zlyalemonade80.jpg",
-                variants: [ { name: "Вишнёвый швепс со скиттлс", stock: 1 }, { name: "Малина лайм мята", stock: 1 }, { name: "Цитрусовый микс", stock: 1 } ]
-            },
-            { 
-                id: 14, title: "Злая Монашка SWEET 80 мг", desc: "Сладкие вкусы", mg: 80, stock: 1, price: 500, category: "liquids", badge: "", img: "zlyasweet80.jpg",
-                variants: [ { name: "Энергетик смородина", stock: 1 }, { name: "Фанта апельсин с кислой малиной", stock: 1 }, { name: "Гранатовый сок смородина лимон", stock: 1 } ]
-            },
-            { 
-                id: 15, title: "Кислая Убивашка 90 мг", desc: "Кислые вкусы", mg: 90, stock: 1, price: 500, category: "liquids", badge: "", img: "ubivashkakislya90.jpg",
-                variants: [ { name: "Кислый Haribo", stock: 1 }, { name: "Кислый мармелад", stock: 1 }, { name: "Атомный цитрус", stock: 1 } ]
-            },
-            { 
-                id: 16, title: "Милфа HORNY 90 мг", desc: "Энергетики и напитки", mg: 90, stock: 1, price: 500, category: "liquids", badge: "", img: "zlyamilfahorny90.jpg",
-                variants: [ { name: "Кислый SKITTLES", stock: 1 }, { name: "RED BULL ягоды", stock: 1 }, { name: "Освещающая COCA COLA", stock: 1 } ]
-            },
-            { 
-                id: 17, title: "Самоубийца V2 DANGER 100 мг", desc: "Микс вкусов", mg: 100, stock: 1, price: 550, category: "liquids", badge: "", img: "samiubiycav2danger100.jpg",
-                variants: [
-                    { name: "Классический энергетик", stock: 1 }, { name: "Кола лесные ягоды", stock: 1 }, { name: "Энергетик гранат", stock: 1 },
-                    { name: "Зелёный скиттлс", stock: 1 }, { name: "Кислое яблоко ежевика", stock: 1 }
-                ]
-            }
-        ];
-
+        // === DATA & STATE ===
+        let products = [];
         let cart = [];
         try { cart = JSON.parse(localStorage.getItem('legion_cart_cosmic')) || []; } catch(e) {}
+        let activeCategory = 'all', searchQuery = '', openAccordions = {}, currentSort = 'default', currentMg = 0, currentBrand = 'all', currentDiscount = 0;
 
-        let activeCategory = 'all'; 
-        let searchQuery = ''; 
-        let openAccordions = {}; 
-        let currentSort = 'default';
-        let currentMg = 0;
-        let currentBrand = 'all';
-        let currentDiscount = 0;
+        async function loadProducts() {
+            const grid = document.getElementById('catalog-grid');
+            grid.innerHTML = '<div style="padding:40px;text-align:center;color:var(--primary);grid-column:1/-1;">Загрузка каталога...</div>';
+            
+            try {
+                if (!supabase) throw new Error("Supabase client not initialized");
+                const { data: dbProducts, error } = await supabase.from('products').select(`*, variants (id, name, stock)`);
+                if (error) throw error;
+                
+                products = (dbProducts || []).map(p => ({
+                    id: p.id, title: p.title, brand: p.brand || '', desc: p.description, price: p.price,
+                    category: p.category, badge: p.badge, img: p.img, mg: p.mg || 0, stock: p.stock || 0, variants: p.variants || []
+                }));
+                renderProducts();
+            } catch (err) {
+                grid.innerHTML = `<div style="padding:20px;text-align:center;color:var(--danger);grid-column:1/-1;">Ошибка загрузки: ${err.message}</div>`;
+            }
+        }
 
-        // === ФИЛЬТРЫ ===
+        // === FILTERS & RENDER ===
         function openFilters() {
-            const modal = document.getElementById('filter-modal');
-            document.getElementById('mg-section').style.display = (activeCategory === 'liquids') ? 'block' : 'none';
-            document.getElementById('brand-section').style.display = (activeCategory === 'pods') ? 'block' : 'none';
-            modal.style.display = 'flex';
-            setTimeout(() => modal.classList.add('active'), 10);
+            const m=document.getElementById('filter-modal');
+            document.getElementById('mg-section').style.display=(activeCategory==='liquids')?'block':'none';
+            document.getElementById('brand-section').style.display=(activeCategory==='pods')?'block':'none';
+            m.style.display='flex'; setTimeout(()=>m.classList.add('active'),10);
         }
+        function closeFilters() { const m=document.getElementById('filter-modal'); m.classList.remove('active'); setTimeout(()=>m.style.display='none',300); renderProducts(); }
+        function setSort(s){currentSort=s;} function setMg(m){currentMg=parseInt(m);} function setBrand(b){currentBrand=b;}
+        function handleSearch(){ searchQuery=document.getElementById('searchInput').value.toLowerCase(); renderProducts(); }
+        function filterProducts(cat,btn){ activeCategory=cat; document.querySelectorAll('.filters .filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderProducts(); }
+        function toggleVariants(id){ openAccordions[id]=!openAccordions[id]; const c=document.getElementById(`variants-${id}`); if(c)c.style.display=openAccordions[id]?'flex':'none'; }
 
-        function closeFilters() {
-            const modal = document.getElementById('filter-modal');
-            modal.classList.remove('active');
-            setTimeout(() => modal.style.display = 'none', 300);
-            renderProducts();
-        }
-
-        function setSort(sortType) { currentSort = sortType; }
-        function setMg(mg) { currentMg = parseInt(mg); }
-        function setBrand(brand) { currentBrand = brand; }
-        
-        function handleSearch() { 
-            searchQuery = document.getElementById('searchInput').value.toLowerCase(); 
-            renderProducts(); 
-        }
-        
-        function filterProducts(category, btnElement) {
-            activeCategory = category; 
-            document.querySelectorAll('.filters .filter-btn').forEach(btn => btn.classList.remove('active'));
-            btnElement.classList.add('active');
-            renderProducts();
-        }
-
-        function toggleVariants(productId) {
-            openAccordions[productId] = !openAccordions[productId];
-            const container = document.getElementById(`variants-${productId}`);
-            if (container) container.style.display = openAccordions[productId] ? 'flex' : 'none';
-        }
-
-        // === РЕНДЕР КАТАЛОГА ===
         function renderProducts() {
             const grid = document.getElementById('catalog-grid');
             let filtered = products.filter(p => {
-                if (activeCategory !== 'all' && p.category !== activeCategory) return false;
-                if (activeCategory === 'liquids' && currentMg > 0 && p.mg !== currentMg) return false;
-                if (activeCategory === 'pods' && currentBrand !== 'all' && p.brand !== currentBrand) return false;
-                if (searchQuery !== '') {
-                    let matchTitle = p.title.toLowerCase().includes(searchQuery);
-                    let matchVariant = p.variants && p.variants.some(v => v.name.toLowerCase().includes(searchQuery));
-                    if (!matchTitle && !matchVariant) return false;
-                }
+                if(activeCategory!=='all'&&p.category!==activeCategory)return false;
+                if(activeCategory==='liquids'&&currentMg>0&&p.mg!==currentMg)return false;
+                if(activeCategory==='pods'&&currentBrand!=='all'&&p.brand!==currentBrand)return false;
+                if(searchQuery!==''){ let mt=p.title.toLowerCase().includes(searchQuery); let mv=p.variants&&p.variants.some(v=>v.name.toLowerCase().includes(searchQuery)); if(!mt&&!mv)return false; }
                 return true;
             });
-
-            if (currentSort === 'cheap') filtered.sort((a, b) => a.price - b.price);
-            else if (currentSort === 'expensive') filtered.sort((a, b) => b.price - a.price);
+            if(currentSort==='cheap')filtered.sort((a,b)=>a.price-b.price); else if(currentSort==='expensive')filtered.sort((a,b)=>b.price-a.price);
             
             grid.innerHTML = filtered.map(p => {
-                let hasVariants = p.variants && p.variants.length > 0;
-                let isLiquid = p.category === 'liquids';
-                let totalStock = hasVariants ? p.variants.reduce((sum, v) => sum + v.stock, 0) : p.stock;
-                let isOutOfStock = totalStock <= 0;
-
-                let imgHTML = p.img && p.img.trim() !== "" ? 
-                    `<img src="${p.img}" loading="lazy" class="card-img" alt="${p.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                     <svg class="card-no-img" style="display:none;" viewBox="0 0 24 24"><path d="M18 4H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 12H8V8h8v8z"/></svg>` : 
-                    `<svg class="card-no-img" viewBox="0 0 24 24"><path d="M18 4H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 12H8V8h8v8z"/></svg>`;
-
-                let variantsHTML = '';
-                if (hasVariants) {
-                    let forceOpen = searchQuery !== '' && p.variants.some(v => v.name.toLowerCase().includes(searchQuery));
-                    let variantsList = p.variants.map(v => {
-                        if (searchQuery !== '' && !p.title.toLowerCase().includes(searchQuery) && !v.name.toLowerCase().includes(searchQuery)) return '';
-                        let isVariantOutOfStock = (v.stock <= 0) || isOutOfStock;
-                        let cartId = `${p.id}_${v.name}`;
-                        let cartItem = cart.find(item => item.id === p.id && item.variantName === v.name);
-                        let qty = cartItem ? cartItem.qty : 0;
-
-                        let actionHTML = isVariantOutOfStock ? 
-                            `<button class="buy-btn" disabled style="border-color: #666; color: #666; box-shadow: none; cursor: not-allowed;">✖</button>` :
-                            (qty === 0 ? `<button class="buy-btn" onclick="changeQty('${cartId}', 1, ${p.id}, '${v.name}')">+</button>` :
-                            `<div class="qty-control"><button class="qty-btn" onclick="changeQty('${cartId}', -1, ${p.id}, '${v.name}')">-</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty('${cartId}', 1, ${p.id}, '${v.name}')">+</button></div>`);
-
-                        return `<div class="variant-item" style="${isVariantOutOfStock ? 'opacity: 0.6;' : ''}">
-                            <div style="display: flex; align-items: center; flex-grow: 1;">
-                                <div class="glossy-stock-box" style="${isVariantOutOfStock ? 'background: #666; color: #ccc;' : ''}">${v.stock}</div>
-                                <div class="variant-name" style="${isVariantOutOfStock ? 'text-decoration:line-through;color:#888;'}">${v.name}</div>
-                            </div>${actionHTML}</div>`;
+                let hasV=p.variants&&p.variants.length>0, isLiq=p.category==='liquids';
+                let total=hasV?p.variants.reduce((s,v)=>s+v.stock,0):p.stock, oos=total<=0;
+                let img=p.img&&p.img.trim()!==""?`<img src="${p.img}" loading="lazy" class="card-img" alt="${p.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';"><svg class="card-no-img" style="display:none;" viewBox="0 0 24 24"><path d="M18 4H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 12H8V8h8v8z"/></svg>`:`<svg class="card-no-img" viewBox="0 0 24 24"><path d="M18 4H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 12H8V8h8v8z"/></svg>`;
+                
+                let vHTML='';
+                if(hasV){
+                    let force=searchQuery!==''&&p.variants.some(v=>v.name.toLowerCase().includes(searchQuery));
+                    let list=p.variants.map(v=>{
+                        if(searchQuery!==''&&!p.title.toLowerCase().includes(searchQuery)&&!v.name.toLowerCase().includes(searchQuery))return '';
+                        let voos=(v.stock<=0)||oos, cid=`${p.id}_${v.name}`, ci=cart.find(i=>String(i.id)===String(p.id)&&i.variantName===v.name), q=ci?ci.qty:0;
+                        let act=voos?`<button class="buy-btn" disabled style="border-color:#666;color:#666;box-shadow:none;cursor:not-allowed;">✖</button>`:(q===0?`<button class="buy-btn" onclick="changeQty('${cid}',1,'${p.id}','${v.name}')">+</button>`:`<div class="qty-control"><button class="qty-btn" onclick="changeQty('${cid}',-1,'${p.id}','${v.name}')">-</button><span class="qty-num">${q}</span><button class="qty-btn" onclick="changeQty('${cid}',1,'${p.id}','${v.name}')">+</button></div>`);
+                        return `<div class="variant-item" style="${voos?'opacity:0.6;':''}"><div style="display:flex;align-items:center;flex-grow:1;"><div class="glossy-stock-box" style="${voos?'background:#666;color:#ccc;':''}">${v.stock}</div><div class="variant-name" style="${voos?'text-decoration:line-through;color:#888;':''}">${v.name}</div></div>${act}</div>`;
                     }).join('');
-                    
-                    let btnText = isLiquid ? "Выбрать вкус" : "Выбрать цвет";
-                    let isOpen = openAccordions[p.id] || forceOpen;
-                    variantsHTML = `<button class="choose-flavor-btn" onclick="toggleVariants(${p.id})" style="${isOutOfStock ? 'border-color: #666; color: #666;' : ''}">${btnText}</button>
-                        <div id="variants-${p.id}" class="variants-container" style="display: ${isOpen ? 'flex' : 'none'};">${variantsList}</div>`;
+                    let btn=isLiq?"Выбрать вкус":"Выбрать цвет", isOpen=openAccordions[p.id]||force;
+                    vHTML=`<button class="choose-flavor-btn" onclick="toggleVariants('${p.id}')" style="${oos?'border-color:#666;color:#666;':''}">${btn}</button><div id="variants-${p.id}" class="variants-container" style="display:${isOpen?'flex':'none'};">${list}</div>`;
                 } else {
-                    let cartItem = cart.find(item => item.id === p.id && !item.variantName);
-                    let qty = cartItem ? cartItem.qty : 0;
-                    variantsHTML = isOutOfStock ? `<button class="buy-btn" disabled style="border-color: #666; color: #666; box-shadow: none; cursor: not-allowed;">✖</button>` :
-                        (qty === 0 ? `<button class="buy-btn" onclick="changeQty(${p.id}, 1, ${p.id})">+</button>` :
-                        `<div class="qty-control"><button class="qty-btn" onclick="changeQty(${p.id}, -1, ${p.id})">-</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty(${p.id}, 1, ${p.id})">+</button></div>`);
+                    let ci=cart.find(i=>String(i.id)===String(p.id)&&!i.variantName), q=ci?ci.qty:0;
+                    vHTML=oos?`<button class="buy-btn" disabled style="border-color:#666;color:#666;box-shadow:none;cursor:not-allowed;">✖</button>`:(q===0?`<button class="buy-btn" onclick="changeQty('${p.id}',1,'${p.id}')">+</button>`:`<div class="qty-control"><button class="qty-btn" onclick="changeQty('${p.id}',-1,'${p.id}')">-</button><span class="qty-num">${q}</span><button class="qty-btn" onclick="changeQty('${p.id}',1,'${p.id}')">+</button></div>`);
                 }
-
-                let infoHTML = isOutOfStock ? `<div class="card-stock" style="color: var(--danger); font-weight: bold;"><div class="stock-dot" style="background: var(--danger); box-shadow: 0 0 8px var(--danger);"></div> Нет в наличии</div>` :
-                    (hasVariants ? `<div class="card-stock"><div class="stock-dot"></div> В наличии</div>` : `<div class="card-stock"><div class="stock-dot"></div> В наличии (${p.stock})</div>`);
-
-                let overlayHTML = isOutOfStock ? `<div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1; pointer-events: none;"></div>` : '';
-
-                return `<div class="card ${isOutOfStock ? 'out-of-stock' : ''}">
-                    <div class="card-img-wrapper">${imgHTML}${overlayHTML}${p.badge ? `<div class="badge" style="z-index: 3;">${p.badge}</div>` : ''}</div>
-                    <div class="card-body">
-                        <div>
-                            <div class="card-title">${p.title}</div>
-                            <div style="font-size:10px; color:var(--primary); margin-bottom:4px; line-height:1.1;">${p.desc}</div>
-                            ${infoHTML}
-                        </div>
-                        <div class="card-footer" style="${hasVariants ? 'flex-direction: column; align-items: flex-start;' : ''}">
-                            <div class="price" style="${hasVariants ? 'margin-bottom: 5px;' : ''}">${p.price} ₽</div>
-                            ${variantsHTML}
-                        </div>
-                    </div>
-                </div>`;
+                
+                let info=oos?`<div class="card-stock" style="color:var(--danger);font-weight:bold;"><div class="stock-dot" style="background:var(--danger);box-shadow:0 0 8px var(--danger);"></div> Нет в наличии</div>`:(hasV?`<div class="card-stock"><div class="stock-dot"></div> В наличии</div>`:`<div class="card-stock"><div class="stock-dot"></div> В наличии (${p.stock})</div>`);
+                let ov=oos?`<div style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:1;pointer-events:none;"></div>`:'';
+                
+                return `<div class="card ${oos?'out-of-stock':''}"><div class="card-img-wrapper">${img}${ov}${p.badge?`<div class="badge" style="z-index:3;">${p.badge}</div>`:''}</div><div class="card-body"><div><div class="card-title">${p.title}</div><div style="font-size:10px;color:var(--primary);margin-bottom:4px;line-height:1.1;">${p.desc}</div>${info}</div><div class="card-footer" style="${hasV?'flex-direction:column;align-items:flex-start;':''}"><div class="price" style="${hasV?'margin-bottom:5px;':''}">${p.price} ₽</div>${vHTML}</div></div></div>`;
             }).join('');
         }
 
-        // === КОРЗИНА ===
-        function changeQty(cartId, delta, productId, variantName) {
-            let cartItem;
-            if (variantName) {
-                cartItem = cart.find(item => item.id === productId && item.variantName === variantName);
-            } else {
-                cartItem = cart.find(item => item.id === productId && !item.variantName);
-            }
-            
-            const product = products.find(p => p.id === productId);
-            if (!product) return;
-
-            let currentStock = variantName ? (product.variants.find(v => v.name === variantName)?.stock || 0) : product.stock;
-
-            if (cartItem) {
-                if (delta > 0 && cartItem.qty >= currentStock) return;
-                cartItem.qty += delta;
-                if (cartItem.qty <= 0) cart = cart.filter(item => item !== cartItem); 
-            } else if (delta > 0) {
-                cart.push({ 
-                    id: productId, 
-                    variantName: variantName || null,
-                    title: variantName ? `${product.title} (${variantName})` : product.title, 
-                    price: product.price, 
-                    qty: 1 
-                });
-            }
-            
-            if (window.Telegram?.WebApp) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
-            saveCart(); updateBadge(); renderProducts(); 
+        // === CART ===
+        function changeQty(cid,delta,pid,vn){
+            let ci=vn?cart.find(i=>String(i.id)===String(pid)&&i.variantName===vn):cart.find(i=>String(i.id)===String(pid)&&!i.variantName);
+            const p=products.find(x=>String(x.id)===String(pid)); if(!p)return;
+            let cur=vn?(p.variants.find(v=>v.name===vn)?.stock||0):p.stock;
+            if(ci){ if(delta>0&&ci.qty>=cur)return; ci.qty+=delta; if(ci.qty<=0)cart=cart.filter(i=>i!==ci); }
+            else if(delta>0){ cart.push({id:pid,variantName:vn||null,title:vn?`${p.title} (${vn})`:p.title,price:p.price,qty:1}); }
+            if(window.Telegram?.WebApp)window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+            saveCart();updateBadge();renderProducts();
         }
-
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            if (window.Telegram?.WebApp) window.Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
-            saveCart(); updateBadge(); renderCart(); renderProducts();
-        }
-
-        function saveCart() { try { localStorage.setItem('legion_cart_cosmic', JSON.stringify(cart)); } catch(e) {} }
-        function updateBadge() {
-            const total = cart.reduce((sum, item) => sum + item.qty, 0);
-            const badge = document.getElementById('cart-badge');
-            if (total > 0) { badge.style.display = 'flex'; badge.innerText = total; }
-            else { badge.style.display = 'none'; }
-        }
+        function removeFromCart(i){ cart.splice(i,1); if(window.Telegram?.WebApp)window.Telegram.WebApp.HapticFeedback.impactOccurred('heavy'); saveCart();updateBadge();renderCart();renderProducts(); }
+        function saveCart(){ try{localStorage.setItem('legion_cart_cosmic',JSON.stringify(cart));}catch(e){} }
+        function updateBadge(){ const t=cart.reduce((s,i)=>s+i.qty,0), b=document.getElementById('cart-badge'); if(t>0){b.style.display='flex';b.innerText=t;}else b.style.display='none'; }
 
         async function applyPromo() {
-            const code = document.getElementById('promoInput').value.trim().toUpperCase();
-            const msgEl = document.getElementById('promoMessage');
-            if (!code) return;
-
-            msgEl.innerText = "Проверка...";
-            msgEl.style.color = "var(--text-muted)";
-
-            try {
-                const { data: promo, error } = await supabase.from('promocodes').select('*').eq('code', code).eq('is_active', true).single();
-                if (error || !promo) {
-                    msgEl.innerText = `❌ Промокод не найден или отключен`;
-                    msgEl.style.color = "var(--danger)";
-                    currentDiscount = 0;
-                    renderCart();
-                    return;
-                }
-
-                const userId = tgUser?.id?.toString() || 'guest';
-                const { data: used } = await supabase.from('used_promos').select('*').eq('code', code).eq('user_id', userId);
-                if (used && used.length > 0) {
-                    msgEl.innerText = `❌ Вы уже использовали этот промокод`;
-                    msgEl.style.color = "var(--danger)";
-                    currentDiscount = 0;
-                    renderCart();
-                    return;
-                }
-
-                msgEl.innerText = `✅ Промокод применен! Скидка: ${promo.discount} ₽`;
-                msgEl.style.color = "var(--primary)";
-                currentDiscount = promo.discount;
-                renderCart();
-            } catch(e) {
-                msgEl.innerText = "Ошибка проверки: " + e.message;
-                msgEl.style.color = "var(--danger)";
-            }
+            const code=document.getElementById('promoInput').value.trim().toUpperCase(), m=document.getElementById('promoMessage');
+            if(!code)return; if(!supabase){m.innerText="База не подключена";m.style.color="var(--danger)";return;}
+            m.innerText="Проверка..."; m.style.color="var(--text-muted)";
+            try{
+                const {data:promo,error}=await supabase.from('promocodes').select('*').eq('code',code).eq('is_active',true).single();
+                if(error||!promo){m.innerText="❌ Промокод не найден или отключен";m.style.color="var(--danger)";currentDiscount=0;renderCart();return;}
+                const uid=tgUser?.id?.toString()||'guest';
+                const {data:used}=await supabase.from('used_promos').select('*').eq('code',code).eq('user_id',uid);
+                if(used&&used.length>0){m.innerText="❌ Вы уже использовали этот промокод";m.style.color="var(--danger)";currentDiscount=0;renderCart();return;}
+                m.innerText=`✅ Промокод применен! Скидка: ${promo.discount} ₽`;m.style.color="var(--primary)";currentDiscount=promo.discount;renderCart();
+            }catch(e){m.innerText="Ошибка проверки: "+e.message;m.style.color="var(--danger)";}
         }
 
         function renderCart() {
-            const container = document.getElementById('cart-items');
-            const emptyState = document.getElementById('cart-empty-state');
-            const checkoutBtn = document.getElementById('checkout-btn');
-            
-            if (cart.length === 0) { 
-                container.innerHTML = ''; emptyState.style.display = 'flex'; checkoutBtn.style.display = 'none'; return; 
-            }
-            emptyState.style.display = 'none'; checkoutBtn.style.display = 'flex'; 
-            
-            let total = 0;
-            container.innerHTML = cart.map((item, index) => {
-                const currentProduct = products.find(p => p.id === item.id);
-                if (currentProduct) item.price = currentProduct.price;
-                total += item.price * item.qty;
-                
-                return `<div class="cart-item">
-                    <div style="flex-grow: 1;">
-                        <div style="font-weight: 600; font-size: 15px;">${item.title}</div>
-                        <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">${item.qty} шт.</div>
-                    </div>
-                    <div style="font-weight:800; font-size:16px; color:var(--primary); text-shadow: 0 0 5px var(--primary); margin-right: 10px;">${item.price * item.qty} ₽</div>
-                    <button class="remove-btn" onclick="removeFromCart(${index})">✖</button>
-                </div>`;
-            }).join('');
-
-            let finalTotal = Math.max(0, total - currentDiscount);
-            checkoutBtn.innerHTML = `<span>Оформить заказ</span> <span>${finalTotal} ₽ ${currentDiscount > 0 ? `<span style="font-size:12px;text-decoration:line-through;opacity:0.7;">${total} ₽</span>` : ''}</span>`;
+            const c=document.getElementById('cart-items'), e=document.getElementById('cart-empty-state'), btn=document.getElementById('checkout-btn');
+            if(cart.length===0){c.innerHTML='';e.style.display='flex';btn.style.display='none';return;}
+            e.style.display='none';btn.style.display='flex'; let total=0;
+            c.innerHTML=cart.map((it,i)=>{ const cp=products.find(p=>String(p.id)===String(it.id)); if(cp)it.price=cp.price; total+=it.price*it.qty;
+                return `<div class="cart-item"><div style="flex-grow:1;"><div style="font-weight:600;font-size:15px;">${it.title}</div><div style="font-size:12px;color:var(--text-muted);margin-top:4px;">${it.qty} шт.</div></div><div style="font-weight:800;font-size:16px;color:var(--primary);text-shadow:0 0 5px var(--primary);margin-right:10px;">${it.price*it.qty} ₽</div><button class="remove-btn" onclick="removeFromCart(${i})">✖</button></div>`; }).join('');
+            let f=Math.max(0,total-currentDiscount);
+            btn.innerHTML=`<span>Оформить заказ</span> <span>${f} ₽ ${currentDiscount>0?`<span style="font-size:12px;text-decoration:line-through;opacity:0.7;">${total} ₽</span>`:''}</span>`;
         }
 
-        // === НАВИГАЦИЯ И CHECKOUT ===
-        function switchTab(tabId) {
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-            document.getElementById(`page-${tabId}`).classList.add('active');
-            document.getElementById(`nav-${tabId}`).classList.add('active');
-            if (tabId === 'cart') renderCart();
-        }
-
+        // === NAV & CHECKOUT ===
+        function switchTab(id){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); document.getElementById(`page-${id}`).classList.add('active'); document.getElementById(`nav-${id}`).classList.add('active'); if(id==='cart')renderCart(); }
+        
         async function checkout() {
-            if (cart.length === 0) return;
-            let orderText = "🛒 Новый заказ из приложения:\n\n";
-            let total = 0;
+            if(cart.length===0)return; let txt="🛒 Новый заказ из приложения:\n\n", total=0;
+            cart.forEach((it,i)=>{ const cp=products.find(p=>String(p.id)===String(it.id)); if(cp)it.price=cp.price; txt+=`${i+1}. ${it.title} — ${it.qty} шт. (${it.price*it.qty} ₽)\n`; total+=it.price*it.qty; });
+            let f=Math.max(0,total-currentDiscount); txt+=`\n💰 Итого к оплате: ${f} ₽`; if(currentDiscount>0)txt+=` (Скидка по промокоду: -${currentDiscount} ₽)`;
+            if(tgUser){ txt+=`\n\n👤 Заказчик: ${tgUser.first_name} ${tgUser.last_name||''}`; txt+=tgUser.username?` (@${tgUser.username})`:` (ID: ${tgUser.id})`; } else txt+=`\n\n👤 Заказчик: Гость`;
             
-            cart.forEach((item, index) => {
-                const currentProduct = products.find(p => p.id === item.id);
-                if (currentProduct) item.price = currentProduct.price;
-                orderText += `${index + 1}. ${item.title} — ${item.qty} шт. (${item.price * item.qty} ₽)\n`;
-                total += item.price * item.qty;
-            });
+            if(currentDiscount>0&&tgUser&&supabase){ const code=document.getElementById('promoInput').value.trim().toUpperCase(); try{await supabase.from('used_promos').insert({user_id:tgUser.id.toString(),code:code});}catch(e){console.log(e);} }
             
-            let finalTotal = Math.max(0, total - currentDiscount);
-            orderText += `\n💰 Итого к оплате: ${finalTotal} ₽`;
-            if (currentDiscount > 0) orderText += ` (Скидка по промокоду: -${currentDiscount} ₽)`;
-            
-            if (tgUser) {
-                orderText += `\n\n👤 Заказчик: ${tgUser.first_name} ${tgUser.last_name || ''}`;
-                if (tgUser.username) orderText += ` (@${tgUser.username})`;
-                else orderText += ` (ID: ${tgUser.id})`;
-            } else {
-                orderText += `\n\n👤 Заказчик: Гость (данные Telegram не получены)`;
-            }
-
-            if (currentDiscount > 0 && tgUser) {
-                const code = document.getElementById('promoInput').value.trim().toUpperCase();
-                try {
-                    await supabase.from('used_promos').insert({ user_id: tgUser.id.toString(), code: code });
-                } catch(e) { console.log('Promo save failed', e); }
-            }
-            
-            cart = [];
-            currentDiscount = 0;
-            document.getElementById('promoInput').value = '';
-            document.getElementById('promoMessage').innerText = '';
-            saveCart(); updateBadge(); renderProducts(); switchTab('catalog');
-            
-            const encodedText = encodeURIComponent(orderText);
-            const managerUsername = 'managerlegionshop';
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.openTelegramLink(`https://t.me/${managerUsername}?text=${encodedText}`);
-            } else {
-                window.open(`https://t.me/${managerUsername}?text=${encodedText}`, '_blank');
-            }
+            cart=[];currentDiscount=0;document.getElementById('promoInput').value='';document.getElementById('promoMessage').innerText='';
+            saveCart();updateBadge();renderProducts();switchTab('catalog');
+            const enc=encodeURIComponent(txt);
+            if(window.Telegram?.WebApp)window.Telegram.WebApp.openTelegramLink(`https://t.me/managerlegionshop?text=${enc}`); else window.open(`https://t.me/managerlegionshop?text=${enc}`,'_blank');
         }
 
-        // === СТАРТ ===
-        setTimeout(async () => {
-            initProfile();
-            updateBadge();
-            renderProducts(); 
-        }, 50);
+        setTimeout(async ()=>{ initProfile(); updateBadge(); await loadProducts(); }, 50);
     </script>
 </body>
 </html>
