@@ -358,7 +358,35 @@
         }
         runPianoEffect();
 
+// ==========================================
+        // 2. ТЕМА, TELEGRAM И ПРОФИЛЬ
+        // ==========================================
+        const savedTheme = localStorage.getItem('legion_theme') || 'base';
+        document.body.setAttribute('data-theme', savedTheme);
+
+        function setTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('legion_theme', theme);
+        }
+
+        function runPianoEffect() {
+            const el = document.getElementById("header-title");
+            const targetText = "LEGION SHOP";
+            el.innerHTML = "";
+            targetText.split("").forEach((char, index) => {
+                if (char === " ") { el.innerHTML += "&nbsp;"; } 
+                else {
+                    const span = document.createElement("span");
+                    span.innerText = char;
+                    span.style.animationDelay = `${index * 0.15}s`;
+                    el.appendChild(span);
+                }
+            });
+        }
+        runPianoEffect();
+
         // === БЕЗОПАСНАЯ ИНИЦИАЛИЗАЦИЯ TELEGRAM ===
+        // Сначала настраиваем WebApp, потом берем данные
         if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.ready(); 
             window.Telegram.WebApp.expand();
@@ -366,10 +394,12 @@
             window.Telegram.WebApp.enableClosingConfirmation();
         }
 
-        const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
         const ADMIN_USERNAME = 'managerlegionshop'; 
 
         function initProfile() {
+            // Получаем данные ВНУТРИ функции, когда Telegram уже точно готов
+            const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
+            
             const nameEl = document.getElementById('user-name');
             const usernameEl = document.getElementById('user-username');
             const avatarEl = document.getElementById('user-avatar');
@@ -399,6 +429,7 @@
                 avatarEl.style.backgroundImage = 'none';
             }
         }
+        
         // ==========================================
         // 3. ДАННЫЕ И ЗАГРУЗКА ИЗ БАЗЫ
         // ==========================================
