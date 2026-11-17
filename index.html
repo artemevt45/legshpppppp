@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LegionShop | Cosmic</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
     <!-- Подключаем локальный файл библиотеки -->
     <script src="supabase.js"></script>
     
@@ -320,17 +320,19 @@
         let initError = null;
 
         if (typeof window.supabase === 'undefined') {
-            initError = "❌ Файл supabase.js не найден.";
+            initError = "❌ Файл supabase.js не найден. Убедись, что он лежит в корне репозитория рядом с index.html.";
+        } else if (!SUPABASE_URL.includes('supabase.co')) {
+            initError = "❌ Неверный Project URL. Проверь настройки Supabase -> API.";
         } else {
             try {
                 supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
             } catch (e) {
-                initError = "❌ Ошибка клиента: " + e.message;
+                initError = "❌ Ошибка создания клиента: " + e.message;
             }
         }
 
         // ==========================================
-        // 2. ТЕМА И ЗАГОЛОВОК
+        // 2. БАЗОВЫЕ ПЕРЕМЕННЫЕ И ИНИЦИАЛИЗАЦИЯ
         // ==========================================
         const savedTheme = localStorage.getItem('legion_theme') || 'base';
         document.body.setAttribute('data-theme', savedTheme);
@@ -356,52 +358,43 @@
         }
         runPianoEffect();
 
-        // ==========================================
-        // 3. ПОЛЬЗОВАТЕЛЬ И АДМИНКА (ИСПРАВЛЕНО)
-        // ==========================================
-        // Принудительно сообщаем Telegram, что приложение готово к получению данных
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.ready(); 
-            window.Telegram.WebApp.expand();
-            window.Telegram.WebApp.setHeaderColor('#02040a');
-        }
-
         const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
-        const ADMIN_USERNAME = 'managerlegionshop'; 
-
+        
         function initProfile() {
             const nameEl = document.getElementById('user-name');
             const usernameEl = document.getElementById('user-username');
             const avatarEl = document.getElementById('user-avatar');
 
             if (tgUser) {
-                // Если данные пришли - показываем реального юзера
                 let fullName = tgUser.first_name || '';
                 if (tgUser.last_name) fullName += ' ' + tgUser.last_name;
                 nameEl.innerText = fullName;
                 usernameEl.innerText = tgUser.username ? '@' + tgUser.username : '@id' + tgUser.id;
-
                 if (tgUser.photo_url) {
                     avatarEl.style.backgroundImage = `url('${tgUser.photo_url}')`;
                     avatarEl.innerText = '';
                 } else {
                     avatarEl.innerText = (tgUser.first_name ? tgUser.first_name.charAt(0).toUpperCase() : '?');
                 }
-
-                // Проверка админа по нику
-                if (tgUser.username && tgUser.username.toLowerCase() === ADMIN_USERNAME) {
-                    document.getElementById('nav-admin').style.display = 'flex';
-                }
             } else {
-                // Если данных нет (ПК или баг ТГ) - показываем Гостя
                 nameEl.innerText = "Гость";
                 usernameEl.innerText = "@no_telegram";
                 avatarEl.innerText = "Г";
             }
         }
 
+        const ADMIN_USERNAME = 'managerlegionshop'; 
+        if (tgUser && tgUser.username && tgUser.username.toLowerCase() === ADMIN_USERNAME) {
+            document.getElementById('nav-admin').style.display = 'flex';
+        }
+
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.expand();
+            window.Telegram.WebApp.setHeaderColor('#02040a');
+        }
+
         // ==========================================
-        // 4. ДАННЫЕ И ЗАГРУЗКА ИЗ БАЗЫ
+        // 3. ДАННЫЕ И ЗАГРУЗКА ИЗ БАЗЫ
         // ==========================================
         let products = [];
         let cart = [];
@@ -462,7 +455,7 @@
         }
 
         // ==========================================
-        // 5. ФИЛЬТРЫ И ОТРИСОВКА
+        // 4. ФИЛЬТРЫ И ОТРИСОВКА
         // ==========================================
         function openFilters() {
             const modal = document.getElementById('filter-modal');
@@ -482,12 +475,7 @@
         function setSort(sortType) { currentSort = sortType; }
         function setMg(mg) { currentMg = parseInt(mg); }
         function setBrand(brand) { currentBrand = brand; }
-        
-        function handleSearch() { 
-            searchQuery = document.getElementById('searchInput').value.toLowerCase(); 
-            renderProducts(); 
-        }
-        
+        function handleSearch() { searchQuery = document.getElementById('searchInput').value.toLowerCase(); renderProducts(); }
         function filterProducts(category, btnElement) {
             activeCategory = category; 
             document.querySelectorAll('.filters .filter-btn').forEach(btn => btn.classList.remove('active'));
@@ -547,7 +535,7 @@
                         return `<div class="variant-item" style="${isVariantOutOfStock ? 'opacity: 0.6;' : ''}">
                             <div style="display: flex; align-items: center; flex-grow: 1;">
                                 <div class="glossy-stock-box" style="${isVariantOutOfStock ? 'background: #666; color: #ccc;' : ''}">${v.stock}</div>
-                                <div class="variant-name" style="${isVariantOutOfStock ? 'text-decoration:line-through;color:#888;'}">${v.name}</div>
+                                <div class="variant-name" style="${isVariantOutOfStock ? 'text-decoration: line-through; color: #888;' : ''}">${v.name}</div>
                             </div>${actionHTML}</div>`;
                     }).join('');
                     
@@ -586,7 +574,7 @@
         }
 
         // ==========================================
-        // 6. КОРЗИНА И ПРОМОКОДЫ
+        // 5. КОРЗИНА И ПРОМОКОДЫ
         // ==========================================
         function changeQty(cartId, delta, productId, variantName) {
             let cartItem;
@@ -699,11 +687,11 @@
             }).join('');
 
             let finalTotal = Math.max(0, total - currentDiscount);
-            checkoutBtn.innerHTML = `<span>Оформить заказ</span> <span>${finalTotal} ₽ ${currentDiscount > 0 ? `<span style="font-size:12px;text-decoration:line-through;opacity:0.7;">${total} ₽</span>` : ''}</span>`;
+            checkoutBtn.innerHTML = `<span>Оформить заказ</span> <span>${finalTotal} ₽ ${currentDiscount > 0 ? `<span style="font-size:12px; text-decoration:line-through; opacity:0.7;">${total} ₽</span>` : ''}</span>`;
         }
 
         // ==========================================
-        // 7. АДМИН-ПАНЕЛЬ (С ЗАПИСЬЮ В БД)
+        // 6. АДМИН-ПАНЕЛЬ (С ЗАПИСЬЮ В БД)
         // ==========================================
         function renderAdminPanel() {
             const list = document.getElementById('admin-list');
@@ -783,7 +771,7 @@
         }
 
         // ==========================================
-        // 8. НАВИГАЦИЯ И ОФОРМЛЕНИЕ ЗАКАЗА
+        // 7. НАВИГАЦИЯ И ОФОРМЛЕНИЕ ЗАКАЗА
         // ==========================================
         function switchTab(tabId) {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
@@ -814,8 +802,6 @@
                 orderText += `\n\n👤 Заказчик: ${tgUser.first_name} ${tgUser.last_name || ''}`;
                 if (tgUser.username) orderText += ` (@${tgUser.username})`;
                 else orderText += ` (ID: ${tgUser.id})`;
-            } else {
-                orderText += `\n\n👤 Заказчик: Гость (данные Telegram не получены)`;
             }
 
             if (currentDiscount > 0 && tgUser && supabase) {
