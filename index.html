@@ -388,57 +388,10 @@
             document.getElementById('nav-admin').style.display = 'flex';
         }
 
-        // === ИСПРАВЛЕННАЯ ИНИЦИАЛИЗАЦИЯ TELEGRAM ===
-if (window.Telegram && window.Telegram.WebApp) {
-    // 1. Сначала говорим Телеграму, что мы готовы
-    window.Telegram.WebApp.ready(); 
-    // 2. Разворачиваем на весь экран
-    window.Telegram.WebApp.expand();
-    // 3. Устанавливаем цвет хедера под нашу тему
-    window.Telegram.WebApp.setHeaderColor('#02040a');
-    
-    // 4. Включаем подтверждение закрытия (чтобы случайно не выйти)
-    window.Telegram.WebApp.enableClosingConfirmation();
-}
-
-// Получаем данные пользователя безопасным способом
-const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
-
-function initProfile() {
-    const nameEl = document.getElementById('user-name');
-    const usernameEl = document.getElementById('user-username');
-    const avatarEl = document.getElementById('user-avatar');
-
-    // Проверяем наличие данных И то, что они не пустые
-    if (tgUser && tgUser.id) {
-        let fullName = tgUser.first_name || 'Пользователь';
-        if (tgUser.last_name) fullName += ' ' + tgUser.last_name;
-        
-        nameEl.innerText = fullName;
-        usernameEl.innerText = tgUser.username ? '@' + tgUser.username : `ID: ${tgUser.id}`;
-
-        if (tgUser.photo_url) {
-            avatarEl.style.backgroundImage = `url('${tgUser.photo_url}')`;
-            avatarEl.innerText = '';
-        } else {
-            // Если нет фото, берем первую букву имени
-            avatarEl.innerText = fullName.charAt(0).toUpperCase();
-            avatarEl.style.backgroundImage = 'none';
+        if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.expand();
+                window.Telegram.WebApp.setHeaderColor('#02040a');
         }
-
-        // Проверка админа по нику (регистронезависимо)
-        const ADMIN_USERNAME = 'managerlegionshop';
-        if (tgUser.username && tgUser.username.toLowerCase() === ADMIN_USERNAME) {
-            document.getElementById('nav-admin').style.display = 'flex';
-        }
-    } else {
-        // Fallback, если данных действительно нет (например, открыли в браузере ПК)
-        nameEl.innerText = "Гость";
-        usernameEl.innerText = "@no_telegram";
-        avatarEl.innerText = "Г";
-        avatarEl.style.backgroundImage = 'none';
-    }
-}
 
         // ==========================================
         // 3. ДАННЫЕ И ЗАГРУЗКА ИЗ БАЗЫ
