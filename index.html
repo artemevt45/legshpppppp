@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LegionShop | Cosmic</title>
-    <!-- Telegram WebApp -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Supabase через CDN (ждем загрузки) -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Подключаем локальный файл библиотеки -->
+    <script src="supabase.js"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;800;900&display=swap" rel="stylesheet">
     
     <style>
+        /* БАЗОВАЯ ТЕМА */
         :root, body[data-theme="base"] {
             --bg: #02040a; --surface: rgba(10, 15, 30, 0.85); --surface-solid: #0a0f1e;
             --text: #ffffff; --text-muted: #a0b8d6; --primary: #00f2fe;
@@ -311,7 +311,7 @@
 
     <script>
         // ==========================================
-        // 1. ИНИЦИАЛИЗАЦИЯ SUPABASE (С ЗАЩИТОЙ ОТ БЛОКИРОВКИ)
+        // 1. ИНИЦИАЛИЗАЦИЯ SUPABASE
         // ==========================================
         const SUPABASE_URL = 'https://xfgkuwcuelpzqlgnpmjb.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_-d8V0nobaXvNn7rMVcR6Tw_bXVmVNOd';
@@ -319,29 +319,18 @@
         let supabase = null;
         let initError = null;
 
-        // Ждем появления window.supabase (из CDN)
-        if (typeof window.supabase !== 'undefined') {
+        if (typeof window.supabase === 'undefined') {
+            initError = "❌ Файл supabase.js не найден.";
+        } else {
             try {
                 supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
             } catch (e) {
-                initError = "❌ Ошибка создания клиента: " + e.message;
+                initError = "❌ Ошибка клиента: " + e.message;
             }
-        } else {
-            // Если библиотека еще не загрузилась, пробуем подождать
-            console.warn("Supabase library not loaded yet. Waiting...");
-            setTimeout(() => {
-                if (typeof window.supabase !== 'undefined' && !supabase) {
-                    try { supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } 
-                    catch (e) { initError = "❌ Ошибка создания клиента: " + e.message; }
-                } else if (!supabase) {
-                    initError = "❌ Библиотека Supabase не загрузилась. Проверьте интернет или CDN.";
-                    document.getElementById('catalog-grid').innerHTML = `<div style="padding:40px;text-align:center;color:var(--danger);grid-column:1/-1;font-weight:bold;">${initError}</div>`;
-                }
-            }, 2000);
         }
 
         // ==========================================
-        // 2. БАЗОВЫЕ ПЕРЕМЕННЫЕ И ИНИЦИАЛИЗАЦИЯ
+        // 2. ТЕМА И ЗАГОЛОВОК
         // ==========================================
         const savedTheme = localStorage.getItem('legion_theme') || 'base';
         document.body.setAttribute('data-theme', savedTheme);
@@ -367,8 +356,12 @@
         }
         runPianoEffect();
 
+        // ==========================================
+        // 3. ПОЛЬЗОВАТЕЛЬ И АДМИНКА (ИСПРАВЛЕНО)
+        // ==========================================
+        // Принудительно сообщаем Telegram, что приложение готово к получению данных
         if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.ready(); 
             window.Telegram.WebApp.expand();
             window.Telegram.WebApp.setHeaderColor('#02040a');
         }
@@ -382,6 +375,7 @@
             const avatarEl = document.getElementById('user-avatar');
 
             if (tgUser) {
+                // Если данные пришли - показываем реального юзера
                 let fullName = tgUser.first_name || '';
                 if (tgUser.last_name) fullName += ' ' + tgUser.last_name;
                 nameEl.innerText = fullName;
@@ -394,10 +388,12 @@
                     avatarEl.innerText = (tgUser.first_name ? tgUser.first_name.charAt(0).toUpperCase() : '?');
                 }
 
+                // Проверка админа по нику
                 if (tgUser.username && tgUser.username.toLowerCase() === ADMIN_USERNAME) {
                     document.getElementById('nav-admin').style.display = 'flex';
                 }
             } else {
+                // Если данных нет (ПК или баг ТГ) - показываем Гостя
                 nameEl.innerText = "Гость";
                 usernameEl.innerText = "@no_telegram";
                 avatarEl.innerText = "Г";
@@ -405,7 +401,7 @@
         }
 
         // ==========================================
-        // 3. ДАННЫЕ И ЗАГРУЗКА ИЗ БАЗЫ
+        // 4. ДАННЫЕ И ЗАГРУЗКА ИЗ БАЗЫ
         // ==========================================
         let products = [];
         let cart = [];
@@ -427,13 +423,6 @@
                 return;
             }
 
-            // Если клиент еще не готов, ждем
-            if (!supabase) {
-                grid.innerHTML = '<div style="padding:40px;text-align:center;color:var(--primary);grid-column:1/-1;">Ожидание подключения к базе...</div>';
-                setTimeout(loadProducts, 1000);
-                return;
-            }
-
             grid.innerHTML = '<div style="padding:40px;text-align:center;color:var(--primary);grid-column:1/-1;">Загрузка каталога...</div>';
             
             try {
@@ -441,7 +430,11 @@
                     .from('products')
                     .select(`*, variants (id, name, stock)`);
 
-                if (error) throw error;
+                if (error) {
+                    console.error('Ошибка загрузки БД:', error);
+                    grid.innerHTML = `<div style="padding:20px;text-align:center;color:var(--danger);grid-column:1/-1;">Ошибка БД: ${error.message}<br><small>Проверь RLS политики и URL</small></div>`;
+                    return;
+                }
 
                 if (!dbProducts || dbProducts.length === 0) {
                     grid.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);grid-column:1/-1;">База пуста или доступ запрещен (RLS).</div>';
@@ -464,12 +457,12 @@
 
                 renderProducts();
             } catch (err) {
-                grid.innerHTML = `<div style="padding:20px;text-align:center;color:var(--danger);grid-column:1/-1;">Ошибка загрузки: ${err.message}</div>`;
+                grid.innerHTML = `<div style="padding:20px;text-align:center;color:var(--danger);grid-column:1/-1;">Сетевая ошибка: ${err.message}</div>`;
             }
         }
 
         // ==========================================
-        // 4. ФИЛЬТРЫ И ОТРИСОВКА
+        // 5. ФИЛЬТРЫ И ОТРИСОВКА
         // ==========================================
         function openFilters() {
             const modal = document.getElementById('filter-modal');
@@ -593,7 +586,7 @@
         }
 
         // ==========================================
-        // 5. КОРЗИНА И ПРОМОКОДЫ
+        // 6. КОРЗИНА И ПРОМОКОДЫ
         // ==========================================
         function changeQty(cartId, delta, productId, variantName) {
             let cartItem;
@@ -710,7 +703,7 @@
         }
 
         // ==========================================
-        // 6. АДМИН-ПАНЕЛЬ (С ЗАПИСЬЮ В БД)
+        // 7. АДМИН-ПАНЕЛЬ (С ЗАПИСЬЮ В БД)
         // ==========================================
         function renderAdminPanel() {
             const list = document.getElementById('admin-list');
@@ -741,21 +734,18 @@
 
         async function updateStockDB(id, delta) {
             const p = products.find(p => String(p.id) === String(id));
-            if(!p) return;
             p.stock = Math.max(0, p.stock + delta);
             renderAdminPanel();
             if(supabase) await supabase.from('products').update({ stock: p.stock }).eq('id', id);
         }
         async function setStockDB(id, val) {
             const p = products.find(p => String(p.id) === String(id));
-            if(!p) return;
             p.stock = Math.max(0, parseInt(val) || 0);
             renderAdminPanel();
             if(supabase) await supabase.from('products').update({ stock: p.stock }).eq('id', id);
         }
         async function updateVariantStockDB(productId, variantIndex, delta) {
             const p = products.find(p => String(p.id) === String(productId));
-            if(!p || !p.variants[variantIndex]) return;
             const v = p.variants[variantIndex];
             v.stock = Math.max(0, v.stock + delta);
             renderAdminPanel();
@@ -763,7 +753,6 @@
         }
         async function setVariantStockDB(productId, variantIndex, val) {
             const p = products.find(p => String(p.id) === String(productId));
-            if(!p || !p.variants[variantIndex]) return;
             const v = p.variants[variantIndex];
             v.stock = Math.max(0, parseInt(val) || 0);
             renderAdminPanel();
@@ -776,12 +765,10 @@
                 const { data, error } = await supabase.from('variants').insert({ product_id: productId, name: name.trim(), stock: 0 }).select();
                 if (!error && data) {
                     const p = products.find(p => String(p.id) === String(productId));
-                    if(p) {
-                        p.variants.push(data[0]);
-                        renderAdminPanel();
-                    }
+                    p.variants.push(data[0]);
+                    renderAdminPanel();
                 } else {
-                    alert("Ошибка добавления: " + (error ? error.message : 'Неизвестно'));
+                    alert("Ошибка добавления: " + error.message);
                 }
             }
         }
@@ -796,7 +783,7 @@
         }
 
         // ==========================================
-        // 7. НАВИГАЦИЯ И ОФОРМЛЕНИЕ ЗАКАЗА
+        // 8. НАВИГАЦИЯ И ОФОРМЛЕНИЕ ЗАКАЗА
         // ==========================================
         function switchTab(tabId) {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
