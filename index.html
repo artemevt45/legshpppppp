@@ -332,7 +332,7 @@
         }
 
         // ==========================================
-        // 2. БАЗОВЫЕ ПЕРЕМЕННЫЕ И ИНИЦИАЛИЗАЦИЯ
+        // 2. ТЕМА, TELEGRAM И ПРОФИЛЬ
         // ==========================================
         const savedTheme = localStorage.getItem('legion_theme') || 'base';
         document.body.setAttribute('data-theme', savedTheme);
@@ -358,41 +358,47 @@
         }
         runPianoEffect();
 
+        // === БЕЗОПАСНАЯ ИНИЦИАЛИЗАЦИЯ TELEGRAM ===
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready(); 
+            window.Telegram.WebApp.expand();
+            window.Telegram.WebApp.setHeaderColor('#02040a');
+            window.Telegram.WebApp.enableClosingConfirmation();
+        }
+
         const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
-        
+        const ADMIN_USERNAME = 'managerlegionshop'; 
+
         function initProfile() {
             const nameEl = document.getElementById('user-name');
             const usernameEl = document.getElementById('user-username');
             const avatarEl = document.getElementById('user-avatar');
 
-            if (tgUser) {
-                let fullName = tgUser.first_name || '';
+            if (tgUser && tgUser.id) {
+                let fullName = tgUser.first_name || 'Пользователь';
                 if (tgUser.last_name) fullName += ' ' + tgUser.last_name;
+                
                 nameEl.innerText = fullName;
-                usernameEl.innerText = tgUser.username ? '@' + tgUser.username : '@id' + tgUser.id;
+                usernameEl.innerText = tgUser.username ? '@' + tgUser.username : `ID: ${tgUser.id}`;
+
                 if (tgUser.photo_url) {
                     avatarEl.style.backgroundImage = `url('${tgUser.photo_url}')`;
                     avatarEl.innerText = '';
                 } else {
-                    avatarEl.innerText = (tgUser.first_name ? tgUser.first_name.charAt(0).toUpperCase() : '?');
+                    avatarEl.innerText = fullName.charAt(0).toUpperCase();
+                    avatarEl.style.backgroundImage = 'none';
+                }
+
+                if (tgUser.username && tgUser.username.toLowerCase() === ADMIN_USERNAME) {
+                    document.getElementById('nav-admin').style.display = 'flex';
                 }
             } else {
                 nameEl.innerText = "Гость";
                 usernameEl.innerText = "@no_telegram";
                 avatarEl.innerText = "Г";
+                avatarEl.style.backgroundImage = 'none';
             }
         }
-
-        const ADMIN_USERNAME = 'managerlegionshop'; 
-        if (tgUser && tgUser.username && tgUser.username.toLowerCase() === ADMIN_USERNAME) {
-            document.getElementById('nav-admin').style.display = 'flex';
-        }
-
-        if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.expand();
-                window.Telegram.WebApp.setHeaderColor('#02040a');
-        }
-
         // ==========================================
         // 3. ДАННЫЕ И ЗАГРУЗКА ИЗ БАЗЫ
         // ==========================================
