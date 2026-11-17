@@ -805,11 +805,10 @@
         }
 
         // Запуск приложения
-        setTimeout(async () => {
-            initProfile();
-            updateBadge();
-            await loadProducts(); 
-        }, 50);
+        // Запуск без задержки, так как скрипты теперь грузятся последовательно
+        initProfile();
+        updateBadge();
+        loadProducts(); 
     </script>
 </body>
 </html>
