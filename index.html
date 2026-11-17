@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LegionShop | Cosmic</title>
     <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
-    <!-- Подключаем Supabase -->
+    <!-- Подключаем локальный файл библиотеки -->
     <script src="supabase.js"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;800;900&display=swap" rel="stylesheet">
     
     <style>
-        /* БАЗОВАЯ ТЕМА (Сине-голубая) */
+        /* БАЗОВАЯ ТЕМА */
         :root, body[data-theme="base"] {
             --bg: #02040a; --surface: rgba(10, 15, 30, 0.85); --surface-solid: #0a0f1e;
             --text: #ffffff; --text-muted: #a0b8d6; --primary: #00f2fe;
@@ -313,12 +313,23 @@
         // ==========================================
         // 1. ИНИЦИАЛИЗАЦИЯ SUPABASE
         // ==========================================
-        // Вставь сюда свой Project URL из Supabase (Settings -> API)
-        // Обычно он выглядит как https://d8v0noba.supabase.co
-        const SUPABASE_URL = 'https://xfgkuwcuelpzqlgnpmjb.supabase.co'; 
+        const SUPABASE_URL = 'https://xfgkuwcuelpzqlgnpmjb.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_-d8V0nobaXvNn7rMVcR6Tw_bXVmVNOd';
         
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        let supabase = null;
+        let initError = null;
+
+        if (typeof window.supabase === 'undefined') {
+            initError = "❌ Файл supabase.js не найден. Убедись, что он лежит в корне репозитория рядом с index.html.";
+        } else if (!SUPABASE_URL.includes('supabase.co')) {
+            initError = "❌ Неверный Project URL. Проверь настройки Supabase -> API.";
+        } else {
+            try {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            } catch (e) {
+                initError = "❌ Ошибка создания клиента: " + e.message;
+            }
+        }
 
         // ==========================================
         // 2. БАЗОВЫЕ ПЕРЕМЕННЫЕ И ИНИЦИАЛИЗАЦИЯ
@@ -398,33 +409,49 @@
         let currentDiscount = 0;
 
         async function loadProducts() {
-            document.getElementById('catalog-grid').innerHTML = '<div style="padding:40px; text-align:center; color:var(--primary); grid-column: 1/-1;">Загрузка каталога...</div>';
+            const grid = document.getElementById('catalog-grid');
             
-            const { data: dbProducts, error } = await supabase
-                .from('products')
-                .select(`*, variants (id, name, stock)`);
-
-            if (error) {
-                console.error('Ошибка загрузки БД:', error);
-                document.getElementById('catalog-grid').innerHTML = '<div style="padding:20px; text-align:center; color:var(--danger); grid-column: 1/-1;">Ошибка подключения к базе. Проверьте URL и ключ.</div>';
+            if (initError) {
+                grid.innerHTML = `<div style="padding:40px;text-align:center;color:var(--danger);grid-column:1/-1;font-weight:bold;">${initError}</div>`;
                 return;
             }
 
-            products = dbProducts.map(p => ({
-                id: p.id, // Может быть строкой, будем приводить к строке при сравнении
-                title: p.title,
-                brand: p.brand || '',
-                desc: p.description,
-                price: p.price,
-                category: p.category,
-                badge: p.badge,
-                img: p.img,
-                mg: p.mg || 0,
-                stock: p.stock || 0,
-                variants: p.variants || []
-            }));
+            grid.innerHTML = '<div style="padding:40px;text-align:center;color:var(--primary);grid-column:1/-1;">Загрузка каталога...</div>';
+            
+            try {
+                const { data: dbProducts, error } = await supabase
+                    .from('products')
+                    .select(`*, variants (id, name, stock)`);
 
-            renderProducts();
+                if (error) {
+                    console.error('Ошибка загрузки БД:', error);
+                    grid.innerHTML = `<div style="padding:20px;text-align:center;color:var(--danger);grid-column:1/-1;">Ошибка БД: ${error.message}<br><small>Проверь RLS политики и URL</small></div>`;
+                    return;
+                }
+
+                if (!dbProducts || dbProducts.length === 0) {
+                    grid.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);grid-column:1/-1;">База пуста или доступ запрещен (RLS).</div>';
+                    return;
+                }
+
+                products = dbProducts.map(p => ({
+                    id: p.id,
+                    title: p.title,
+                    brand: p.brand || '',
+                    desc: p.description,
+                    price: p.price,
+                    category: p.category,
+                    badge: p.badge,
+                    img: p.img,
+                    mg: p.mg || 0,
+                    stock: p.stock || 0,
+                    variants: p.variants || []
+                }));
+
+                renderProducts();
+            } catch (err) {
+                grid.innerHTML = `<div style="padding:20px;text-align:center;color:var(--danger);grid-column:1/-1;">Сетевая ошибка: ${err.message}</div>`;
+            }
         }
 
         // ==========================================
@@ -598,6 +625,7 @@
             const code = document.getElementById('promoInput').value.trim().toUpperCase();
             const msgEl = document.getElementById('promoMessage');
             if (!code) return;
+            if (!supabase) { msgEl.innerText = "База не подключена"; msgEl.style.color = "var(--danger)"; return; }
 
             msgEl.innerText = "Проверка...";
             msgEl.style.color = "var(--text-muted)";
@@ -627,7 +655,8 @@
                 currentDiscount = promo.discount;
                 renderCart();
             } catch(e) {
-                msgEl.innerText = "Ошибка проверки";
+                msgEl.innerText = "Ошибка проверки: " + e.message;
+                msgEl.style.color = "var(--danger)";
             }
         }
 
@@ -695,31 +724,32 @@
             const p = products.find(p => String(p.id) === String(id));
             p.stock = Math.max(0, p.stock + delta);
             renderAdminPanel();
-            await supabase.from('products').update({ stock: p.stock }).eq('id', id);
+            if(supabase) await supabase.from('products').update({ stock: p.stock }).eq('id', id);
         }
         async function setStockDB(id, val) {
             const p = products.find(p => String(p.id) === String(id));
             p.stock = Math.max(0, parseInt(val) || 0);
             renderAdminPanel();
-            await supabase.from('products').update({ stock: p.stock }).eq('id', id);
+            if(supabase) await supabase.from('products').update({ stock: p.stock }).eq('id', id);
         }
         async function updateVariantStockDB(productId, variantIndex, delta) {
             const p = products.find(p => String(p.id) === String(productId));
             const v = p.variants[variantIndex];
             v.stock = Math.max(0, v.stock + delta);
             renderAdminPanel();
-            await supabase.from('variants').update({ stock: v.stock }).eq('id', v.id);
+            if(supabase) await supabase.from('variants').update({ stock: v.stock }).eq('id', v.id);
         }
         async function setVariantStockDB(productId, variantIndex, val) {
             const p = products.find(p => String(p.id) === String(productId));
             const v = p.variants[variantIndex];
             v.stock = Math.max(0, parseInt(val) || 0);
             renderAdminPanel();
-            await supabase.from('variants').update({ stock: v.stock }).eq('id', v.id);
+            if(supabase) await supabase.from('variants').update({ stock: v.stock }).eq('id', v.id);
         }
         async function addVariant(productId) {
             const name = prompt("Введите название нового варианта (вкус/цвет):");
             if (name && name.trim() !== "") {
+                if(!supabase) { alert("База не подключена"); return; }
                 const { data, error } = await supabase.from('variants').insert({ product_id: productId, name: name.trim(), stock: 0 }).select();
                 if (!error && data) {
                     const p = products.find(p => String(p.id) === String(productId));
@@ -774,8 +804,7 @@
                 else orderText += ` (ID: ${tgUser.id})`;
             }
 
-            // Записываем использование промокода в БД
-            if (currentDiscount > 0 && tgUser) {
+            if (currentDiscount > 0 && tgUser && supabase) {
                 const code = document.getElementById('promoInput').value.trim().toUpperCase();
                 await supabase.from('used_promos').insert({ user_id: tgUser.id.toString(), code: code });
             }
@@ -798,8 +827,8 @@
         // Запуск приложения
         setTimeout(async () => {
             initProfile();
-            await loadProducts(); 
             updateBadge();
+            await loadProducts(); 
         }, 50);
     </script>
 </body>
