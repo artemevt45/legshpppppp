@@ -160,9 +160,6 @@
         .admin-variant-title { font-size: 12px; color: var(--text-muted); flex-grow: 1; }
         .add-variant-btn { width: 100%; background: rgba(46, 204, 113, 0.1); color: var(--admin-color); border: 1px dashed var(--admin-color); padding: 8px; border-radius: 8px; font-weight: bold; font-size: 12px; margin-top: 5px; cursor: pointer; }
 
-        .export-btn { width: 100%; background: var(--admin-color); color: var(--bg); border: none; padding: 15px; border-radius: 12px; font-weight: bold; margin-top: 20px; cursor: pointer; font-size: 16px; }
-        #export-textarea { width: 100%; height: 150px; background: #000; color: var(--admin-color); border: 1px solid var(--admin-color); margin-top: 10px; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 12px; display: none; }
-
         .theme-btn { flex: 1; padding: 8px; border-radius: 8px; font-weight: bold; cursor: pointer; border: 1px solid transparent; transition: 0.2s; font-family: 'Exo 2', sans-serif;}
         .theme-btn:active { transform: scale(0.95); }
 
@@ -284,8 +281,6 @@
             <h2 style="margin-bottom: 20px; color: var(--admin-color);">АДМИН-ПАНЕЛЬ</h2>
             <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Изменения сохраняются в базу данных автоматически.</p>
             <div id="admin-list"></div>
-            <button class="export-btn" onclick="generateCode()">Сгенерировать резервный код</button>
-            <textarea id="export-textarea" readonly></textarea>
         </div>
     </div>
 
@@ -528,7 +523,7 @@
                         return `<div class="variant-item" style="${isVariantOutOfStock ? 'opacity: 0.6;' : ''}">
                             <div style="display: flex; align-items: center; flex-grow: 1;">
                                 <div class="glossy-stock-box" style="${isVariantOutOfStock ? 'background: #666; color: #ccc;' : ''}">${v.stock}</div>
-                                <div class="variant-name" style="${isVariantOutOfStock ? 'text-decoration: line-through; color: #888;' : ''}">${v.name}</div>
+                                <div class="variant-name" style="${isVariantOutOfStock ? 'text-decoration:line-through;color:#888;'}">${v.name}</div>
                             </div>${actionHTML}</div>`;
                     }).join('');
                     
@@ -677,9 +672,10 @@
             }).join('');
 
             let finalTotal = Math.max(0, total - currentDiscount);
-            checkoutBtn.innerHTML = `<span>Оформить заказ</span> <span>${finalTotal} ₽ ${currentDiscount > 0 ? `<span style="font-size:12px; text-decoration:line-through; opacity:0.7;">${total} ₽</span>` : ''}</span>`;
+            checkoutBtn.innerHTML = `<span>Оформить заказ</span> <span>${finalTotal} ₽ ${currentDiscount > 0 ? `<span style="font-size:12px;text-decoration:line-through;opacity:0.7;">${total} ₽</span>` : ''}</span>`;
         }
 
+        // === АДМИНКА С СОХРАНЕНИЕМ В БД ===
         function renderAdminPanel() {
             const list = document.getElementById('admin-list');
             list.innerHTML = products.map(p => {
@@ -709,18 +705,21 @@
 
         async function updateStockDB(id, delta) {
             const p = products.find(p => String(p.id) === String(id));
+            if(!p) return;
             p.stock = Math.max(0, p.stock + delta);
             renderAdminPanel();
             if(supabase) await supabase.from('products').update({ stock: p.stock }).eq('id', id);
         }
         async function setStockDB(id, val) {
             const p = products.find(p => String(p.id) === String(id));
+            if(!p) return;
             p.stock = Math.max(0, parseInt(val) || 0);
             renderAdminPanel();
             if(supabase) await supabase.from('products').update({ stock: p.stock }).eq('id', id);
         }
         async function updateVariantStockDB(productId, variantIndex, delta) {
             const p = products.find(p => String(p.id) === String(productId));
+            if(!p || !p.variants[variantIndex]) return;
             const v = p.variants[variantIndex];
             v.stock = Math.max(0, v.stock + delta);
             renderAdminPanel();
@@ -728,6 +727,7 @@
         }
         async function setVariantStockDB(productId, variantIndex, val) {
             const p = products.find(p => String(p.id) === String(productId));
+            if(!p || !p.variants[variantIndex]) return;
             const v = p.variants[variantIndex];
             v.stock = Math.max(0, parseInt(val) || 0);
             renderAdminPanel();
@@ -740,21 +740,14 @@
                 const { data, error } = await supabase.from('variants').insert({ product_id: productId, name: name.trim(), stock: 0 }).select();
                 if (!error && data) {
                     const p = products.find(p => String(p.id) === String(productId));
-                    p.variants.push(data[0]);
-                    renderAdminPanel();
+                    if(p) {
+                        p.variants.push(data[0]);
+                        renderAdminPanel();
+                    }
                 } else {
-                    alert("Ошибка добавления: " + error.message);
+                    alert("Ошибка добавления: " + (error ? error.message : 'Неизвестно'));
                 }
             }
-        }
-
-        function generateCode() {
-            const textarea = document.getElementById('export-textarea');
-            textarea.value = "let products = " + JSON.stringify(products, null, 4) + ";";
-            textarea.style.display = 'block';
-            textarea.select();
-            document.execCommand('copy');
-            alert("Резервный код скопирован!");
         }
 
         function switchTab(tabId) {
