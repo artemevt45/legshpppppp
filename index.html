@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LegionShop | Cosmic</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="supabase.js"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,7 +15,7 @@
             --bg: #02040a; --surface: rgba(10, 15, 30, 0.85); --surface-solid: #0a0f1e;
             --text: #ffffff; --text-muted: #a0b8d6; --primary: #00f2fe;
             --primary-glow: rgba(0, 242, 254, 0.6); --danger: #ff3366;
-            --admin-color: #2ecc71; --nav-bg: rgba(2, 4, 10, 0.95);
+            --nav-bg: rgba(2, 4, 10, 0.95);
             --bg-image: url('bazatema.jpg'); --modal-bg: #0d1425;
         }
         body[data-theme="dark"] {
@@ -282,24 +281,6 @@
     </div>
 
     <script>
-        // === КОНФИГУРАЦИЯ ===
-        const SUPABASE_URL = 'https://xfgkuwcuelpzqlgnpmjb.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_-d8V0nobaXvNn7rMVcR6Tw_bXVmVNOd';
-        
-        let supabase = null;
-        let initError = null;
-
-        if (typeof window.supabase === 'undefined') {
-            initError = "❌ Библиотека Supabase не загружена.";
-        } else {
-            try {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            } catch (e) {
-                initError = "❌ Ошибка инициализации: " + e.message;
-            }
-        }
-
-        // === ТЕМА И ЗАГОЛОВОК ===
         const savedTheme = localStorage.getItem('legion_theme') || 'base';
         document.body.setAttribute('data-theme', savedTheme);
 
@@ -324,7 +305,6 @@
         }
         runPianoEffect();
 
-        // === TELEGRAM INIT ===
         if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.ready();
             window.Telegram.WebApp.expand();
@@ -357,8 +337,87 @@
             }
         }
 
-        // === ДАННЫЕ И СОСТОЯНИЕ ===
-        let products = [];
+        // === ДАННЫЕ ТОВАРОВ (РУЧНОЕ УПРАВЛЕНИЕ) ===
+        let products = [
+            { 
+                id: 1, title: "XROS 6", brand: "Vaporesso", desc: "Мощный под с экраном", price: 2500, category: "pods", badge: "NEW", img: "xros6.jpg",
+                variants: [ { name: "Aurora blue", stock: 1 }, { name: "Silk brown", stock: 1 } ]
+            },
+            { 
+                id: 2, title: "XROS 6 Mini", brand: "Vaporesso", desc: "Компактный под", price: 1800, category: "pods", badge: "ХИТ", img: "xros6mini.jpg",
+                variants: [
+                    { name: "Black", stock: 1 }, { name: "Brown", stock: 1 }, { name: "Jelly blue", stock: 1 },
+                    { name: "Jelly pink", stock: 2 }, { name: "Jelly green", stock: 1 }, { name: "Plume pink", stock: 2 },
+                    { name: "Plume white", stock: 2 }, { name: "Titanium black", stock: 1 }, { name: "Titanium silver", stock: 1 }
+                ]
+            },
+            { 
+                id: 7, title: "XROS Pro 2", brand: "Vaporesso", desc: "Премиальный под с батареей 2000 мАч", price: 2500, category: "pods", badge: "ТОП", img: "xrospro2.jpg",
+                variants: [ 
+                    { name: "Glittering Silver", stock: 0 }, { name: "Glittering Gold", stock: 0 }, { name: "Storm Blue", stock: 0 },
+                    { name: "Dawn Purple", stock: 0 }, { name: "Glittering Black", stock: 0 }, { name: "Gem Green", stock: 0 },
+                    { name: "Moonlit Pink", stock: 0 }
+                ]
+            },
+            { 
+                id: 3, title: "Картридж XROS 0.7Ω", desc: "Vaporesso XROS Series 3ml", price: 300, category: "cartridges", badge: "NEW", img: "karik07om3ml.jpg",
+                variants: [ { name: "0.7Ω (3ml)", stock: 8 } ]
+            },
+            { 
+                id: 6, title: "Aegis Hero 5", brand: "Geekvape", desc: "Флагманский под-мод", price: 2600, category: "pods", badge: "ТОП", img: "aegishero5.jpg",
+                variants: [ 
+                    { name: "Blaze Red", stock: 0 }, { name: "Racing Green", stock: 0 }, { name: "Phantom Blue", stock: 0 },
+                    { name: "Iron Black", stock: 0 }, { name: "Pure White", stock: 0 }, { name: "Frost Mint", stock: 0 },
+                    { name: "Steel Silver", stock: 0 }
+                ]
+            },
+            { 
+                id: 8, title: "Aegis Hero 5 Racing Edition", brand: "Geekvape", desc: "Флагманский под-мод (Racing)", price: 2600, category: "pods", badge: "NEW", img: "aegishero5racingedition.jpg",
+                variants: [ 
+                    { name: "Speed Red", stock: 0 }, { name: "Vibe Green", stock: 0 }, { name: "Lightning Yellow", stock: 0 },
+                    { name: "Quantum Cyan", stock: 0 }, { name: "Racing Blue", stock: 0 }
+                ]
+            },
+            { 
+                id: 10, title: "BJORN HEADSHOT 100 мг", desc: "Кислые вкусы", mg: 100, stock: 1, price: 550, category: "liquids", badge: "", img: "bjornheadshot100.jpg",
+                variants: [
+                    { name: "Банан с кислинкой", stock: 1 }, { name: "Гранат мандарин", stock: 1 }, { name: "Грейпфрут сибирские ягоды", stock: 1 },
+                    { name: "Малина клюква", stock: 1 }, { name: "Яблочный Skittles", stock: 1 }
+                ]
+            },
+            { 
+                id: 11, title: "Злая Милфа 70 мг", desc: "Освежающие вкусы", mg: 70, stock: 1, price: 500, category: "liquids", badge: "", img: "zlyamilfa70.jpg",
+                variants: [ { name: "Ледяная кола", stock: 1 }, { name: "Цитрусовый микс", stock: 1 }, { name: "Ананасовая шипучка", stock: 1 } ]
+            },
+            { 
+                id: 12, title: "Злая Монашка Bubble 80 мг", desc: "Вкусы жвачек", mg: 80, stock: 1, price: 500, category: "liquids", badge: "", img: "zlyabubble80.jpg",
+                variants: [ { name: "Кислый скиттлс черешня", stock: 1 }, { name: "Чупа-чупс с колой", stock: 1 }, { name: "Жвачка с кислой малиной", stock: 1 } ]
+            },
+            { 
+                id: 13, title: "Злая Монашка LEMONADE 80 мг", desc: "Лимонады", mg: 80, stock: 1, price: 500, category: "liquids", badge: "", img: "zlyalemonade80.jpg",
+                variants: [ { name: "Вишнёвый швепс со скиттлс", stock: 1 }, { name: "Малина лайм мята", stock: 1 }, { name: "Цитрусовый микс", stock: 1 } ]
+            },
+            { 
+                id: 14, title: "Злая Монашка SWEET 80 мг", desc: "Сладкие вкусы", mg: 80, stock: 1, price: 500, category: "liquids", badge: "", img: "zlyasweet80.jpg",
+                variants: [ { name: "Энергетик смородина", stock: 1 }, { name: "Фанта апельсин с кислой малиной", stock: 1 }, { name: "Гранатовый сок смородина лимон", stock: 1 } ]
+            },
+            { 
+                id: 15, title: "Кислая Убивашка 90 мг", desc: "Кислые вкусы", mg: 90, stock: 1, price: 500, category: "liquids", badge: "", img: "ubivashkakislya90.jpg",
+                variants: [ { name: "Кислый Haribo", stock: 1 }, { name: "Кислый мармелад", stock: 1 }, { name: "Атомный цитрус", stock: 1 } ]
+            },
+            { 
+                id: 16, title: "Милфа HORNY 90 мг", desc: "Энергетики и напитки", mg: 90, stock: 1, price: 500, category: "liquids", badge: "", img: "zlyamilfahorny90.jpg",
+                variants: [ { name: "Кислый SKITTLES", stock: 1 }, { name: "RED BULL ягоды", stock: 1 }, { name: "Освещающая COCA COLA", stock: 1 } ]
+            },
+            { 
+                id: 17, title: "Самоубийца V2 DANGER 100 мг", desc: "Микс вкусов", mg: 100, stock: 1, price: 550, category: "liquids", badge: "", img: "samiubiycav2danger100.jpg",
+                variants: [
+                    { name: "Классический энергетик", stock: 1 }, { name: "Кола лесные ягоды", stock: 1 }, { name: "Энергетик гранат", stock: 1 },
+                    { name: "Зелёный скиттлс", stock: 1 }, { name: "Кислое яблоко ежевика", stock: 1 }
+                ]
+            }
+        ];
+
         let cart = [];
         try { cart = JSON.parse(localStorage.getItem('legion_cart_cosmic')) || []; } catch(e) {}
 
@@ -369,53 +428,6 @@
         let currentMg = 0;
         let currentBrand = 'all';
         let currentDiscount = 0;
-
-        // === ЗАГРУЗКА ПРОДУКТОВ ===
-        async function loadProducts() {
-            const grid = document.getElementById('catalog-grid');
-            
-            if (initError) {
-                grid.innerHTML = `<div style="padding:40px;text-align:center;color:var(--danger);grid-column:1/-1;font-weight:bold;">${initError}</div>`;
-                return;
-            }
-
-            grid.innerHTML = '<div style="padding:40px;text-align:center;color:var(--primary);grid-column:1/-1;">Загрузка каталога...</div>';
-            
-            try {
-                const { data: dbProducts, error } = await supabase
-                    .from('products')
-                    .select(`*, variants (id, name, stock)`);
-
-                if (error) {
-                    console.error('Ошибка загрузки БД:', error);
-                    grid.innerHTML = `<div style="padding:20px;text-align:center;color:var(--danger);grid-column:1/-1;">Ошибка БД: ${error.message}<br><small>Проверь RLS политики и URL</small></div>`;
-                    return;
-                }
-
-                if (!dbProducts || dbProducts.length === 0) {
-                    grid.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);grid-column:1/-1;">База пуста или доступ запрещен (RLS).</div>';
-                    return;
-                }
-
-                products = dbProducts.map(p => ({
-                    id: p.id,
-                    title: p.title,
-                    brand: p.brand || '',
-                    desc: p.description,
-                    price: p.price,
-                    category: p.category,
-                    badge: p.badge,
-                    img: p.img,
-                    mg: p.mg || 0,
-                    stock: p.stock || 0,
-                    variants: p.variants || []
-                }));
-
-                renderProducts();
-            } catch (err) {
-                grid.innerHTML = `<div style="padding:20px;text-align:center;color:var(--danger);grid-column:1/-1;">Сетевая ошибка: ${err.message}</div>`;
-            }
-        }
 
         // === ФИЛЬТРЫ ===
         function openFilters() {
@@ -491,13 +503,13 @@
                         if (searchQuery !== '' && !p.title.toLowerCase().includes(searchQuery) && !v.name.toLowerCase().includes(searchQuery)) return '';
                         let isVariantOutOfStock = (v.stock <= 0) || isOutOfStock;
                         let cartId = `${p.id}_${v.name}`;
-                        let cartItem = cart.find(item => String(item.id) === String(p.id) && item.variantName === v.name);
+                        let cartItem = cart.find(item => item.id === p.id && item.variantName === v.name);
                         let qty = cartItem ? cartItem.qty : 0;
 
                         let actionHTML = isVariantOutOfStock ? 
                             `<button class="buy-btn" disabled style="border-color: #666; color: #666; box-shadow: none; cursor: not-allowed;">✖</button>` :
-                            (qty === 0 ? `<button class="buy-btn" onclick="changeQty('${cartId}', 1, '${p.id}', '${v.name}')">+</button>` :
-                            `<div class="qty-control"><button class="qty-btn" onclick="changeQty('${cartId}', -1, '${p.id}', '${v.name}')">-</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty('${cartId}', 1, '${p.id}', '${v.name}')">+</button></div>`);
+                            (qty === 0 ? `<button class="buy-btn" onclick="changeQty('${cartId}', 1, ${p.id}, '${v.name}')">+</button>` :
+                            `<div class="qty-control"><button class="qty-btn" onclick="changeQty('${cartId}', -1, ${p.id}, '${v.name}')">-</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty('${cartId}', 1, ${p.id}, '${v.name}')">+</button></div>`);
 
                         return `<div class="variant-item" style="${isVariantOutOfStock ? 'opacity: 0.6;' : ''}">
                             <div style="display: flex; align-items: center; flex-grow: 1;">
@@ -508,14 +520,14 @@
                     
                     let btnText = isLiquid ? "Выбрать вкус" : "Выбрать цвет";
                     let isOpen = openAccordions[p.id] || forceOpen;
-                    variantsHTML = `<button class="choose-flavor-btn" onclick="toggleVariants('${p.id}')" style="${isOutOfStock ? 'border-color: #666; color: #666;' : ''}">${btnText}</button>
+                    variantsHTML = `<button class="choose-flavor-btn" onclick="toggleVariants(${p.id})" style="${isOutOfStock ? 'border-color: #666; color: #666;' : ''}">${btnText}</button>
                         <div id="variants-${p.id}" class="variants-container" style="display: ${isOpen ? 'flex' : 'none'};">${variantsList}</div>`;
                 } else {
-                    let cartItem = cart.find(item => String(item.id) === String(p.id) && !item.variantName);
+                    let cartItem = cart.find(item => item.id === p.id && !item.variantName);
                     let qty = cartItem ? cartItem.qty : 0;
                     variantsHTML = isOutOfStock ? `<button class="buy-btn" disabled style="border-color: #666; color: #666; box-shadow: none; cursor: not-allowed;">✖</button>` :
-                        (qty === 0 ? `<button class="buy-btn" onclick="changeQty('${p.id}', 1, '${p.id}')">+</button>` :
-                        `<div class="qty-control"><button class="qty-btn" onclick="changeQty('${p.id}', -1, '${p.id}')">-</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty('${p.id}', 1, '${p.id}')">+</button></div>`);
+                        (qty === 0 ? `<button class="buy-btn" onclick="changeQty(${p.id}, 1, ${p.id})">+</button>` :
+                        `<div class="qty-control"><button class="qty-btn" onclick="changeQty(${p.id}, -1, ${p.id})">-</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty(${p.id}, 1, ${p.id})">+</button></div>`);
                 }
 
                 let infoHTML = isOutOfStock ? `<div class="card-stock" style="color: var(--danger); font-weight: bold;"><div class="stock-dot" style="background: var(--danger); box-shadow: 0 0 8px var(--danger);"></div> Нет в наличии</div>` :
@@ -544,12 +556,12 @@
         function changeQty(cartId, delta, productId, variantName) {
             let cartItem;
             if (variantName) {
-                cartItem = cart.find(item => String(item.id) === String(productId) && item.variantName === variantName);
+                cartItem = cart.find(item => item.id === productId && item.variantName === variantName);
             } else {
-                cartItem = cart.find(item => String(item.id) === String(productId) && !item.variantName);
+                cartItem = cart.find(item => item.id === productId && !item.variantName);
             }
             
-            const product = products.find(p => String(p.id) === String(productId));
+            const product = products.find(p => p.id === productId);
             if (!product) return;
 
             let currentStock = variantName ? (product.variants.find(v => v.name === variantName)?.stock || 0) : product.stock;
@@ -590,7 +602,6 @@
             const code = document.getElementById('promoInput').value.trim().toUpperCase();
             const msgEl = document.getElementById('promoMessage');
             if (!code) return;
-            if (!supabase) { msgEl.innerText = "База не подключена"; msgEl.style.color = "var(--danger)"; return; }
 
             msgEl.innerText = "Проверка...";
             msgEl.style.color = "var(--text-muted)";
@@ -637,7 +648,7 @@
             
             let total = 0;
             container.innerHTML = cart.map((item, index) => {
-                const currentProduct = products.find(p => String(p.id) === String(item.id));
+                const currentProduct = products.find(p => p.id === item.id);
                 if (currentProduct) item.price = currentProduct.price;
                 total += item.price * item.qty;
                 
@@ -670,7 +681,7 @@
             let total = 0;
             
             cart.forEach((item, index) => {
-                const currentProduct = products.find(p => String(p.id) === String(item.id));
+                const currentProduct = products.find(p => p.id === item.id);
                 if (currentProduct) item.price = currentProduct.price;
                 orderText += `${index + 1}. ${item.title} — ${item.qty} шт. (${item.price * item.qty} ₽)\n`;
                 total += item.price * item.qty;
@@ -688,9 +699,11 @@
                 orderText += `\n\n👤 Заказчик: Гость (данные Telegram не получены)`;
             }
 
-            if (currentDiscount > 0 && tgUser && supabase) {
+            if (currentDiscount > 0 && tgUser) {
                 const code = document.getElementById('promoInput').value.trim().toUpperCase();
-                await supabase.from('used_promos').insert({ user_id: tgUser.id.toString(), code: code });
+                try {
+                    await supabase.from('used_promos').insert({ user_id: tgUser.id.toString(), code: code });
+                } catch(e) { console.log('Promo save failed', e); }
             }
             
             cart = [];
@@ -712,7 +725,7 @@
         setTimeout(async () => {
             initProfile();
             updateBadge();
-            await loadProducts(); 
+            renderProducts(); 
         }, 50);
     </script>
 </body>
