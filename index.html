@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LegionShop | Cosmic</title>
-    <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
+    <!-- 1. УБРАН defer ДЛЯ КОРРЕКТНОЙ ЗАГРУЗКИ -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <!-- Подключаем локальный файл библиотеки -->
     <script src="supabase.js"></script>
     
@@ -331,7 +332,35 @@
             }
         }
 
-                // === ИСПРАВЛЕННАЯ ИНИЦИАЛИЗАЦИЯ TELEGRAM ===
+        // ==========================================
+        // 2. ТЕМА, TELEGRAM И ПРОФИЛЬ
+        // ==========================================
+        const savedTheme = localStorage.getItem('legion_theme') || 'base';
+        document.body.setAttribute('data-theme', savedTheme);
+
+        function setTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('legion_theme', theme);
+        }
+
+        // 2. ДОБАВЛЕНА ПРОПАВШАЯ ФУНКЦИЯ АНИМАЦИИ
+        function runPianoEffect() {
+            const el = document.getElementById("header-title");
+            if(!el) return;
+            const targetText = "LEGION SHOP";
+            el.innerHTML = "";
+            targetText.split("").forEach((char, index) => {
+                if (char === " ") { el.innerHTML += "&nbsp;"; } 
+                else {
+                    const span = document.createElement("span");
+                    span.innerText = char;
+                    span.style.animationDelay = `${index * 0.15}s`;
+                    el.appendChild(span);
+                }
+            });
+        }
+
+        // 3. ИСПРАВЛЕННАЯ ИНИЦИАЛИЗАЦИЯ TELEGRAM
         const tg = window.Telegram?.WebApp;
         
         if (tg) {
@@ -373,6 +402,7 @@
                 avatarEl.style.backgroundImage = 'none';
             }
         }
+
         // ==========================================
         // 3. ДАННЫЕ И ЗАГРУЗКА ИЗ БАЗЫ
         // ==========================================
@@ -804,8 +834,8 @@
             }
         }
 
-        // Запуск приложения
-        // Запуск без задержки, так как скрипты теперь грузятся последовательно
+        // 4. ЗАПУСК ПРИЛОЖЕНИЯ (ДОБАВЛЕН runPianoEffect)
+        runPianoEffect();
         initProfile();
         updateBadge();
         loadProducts(); 
