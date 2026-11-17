@@ -303,24 +303,26 @@
     </div>
 
     <script>
+        // === КОНФИГУРАЦИЯ ===
         const SUPABASE_URL = 'https://xfgkuwcuelpzqlgnpmjb.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_-d8V0nobaXvNn7rMVcR6Tw_bXVmVNOd';
+        const ADMIN_USERNAME = 'managerlegionshop'; 
         
         let supabase = null;
         let initError = null;
 
+        // Инициализация Supabase с проверкой
         if (typeof window.supabase === 'undefined') {
-            initError = "❌ Файл supabase.js не найден.";
-        } else if (!SUPABASE_URL.includes('supabase.co')) {
-            initError = "❌ Неверный Project URL.";
+            initError = "❌ Библиотека Supabase не загружена. Проверьте файл supabase.js";
         } else {
             try {
                 supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
             } catch (e) {
-                initError = "❌ Ошибка клиента: " + e.message;
+                initError = "❌ Ошибка инициализации Supabase: " + e.message;
             }
         }
 
+        // === ТЕМА И ЗАГОЛОВОК ===
         const savedTheme = localStorage.getItem('legion_theme') || 'base';
         document.body.setAttribute('data-theme', savedTheme);
 
@@ -345,14 +347,14 @@
         }
         runPianoEffect();
 
+        // === TELEGRAM INIT ===
         if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.ready();
             window.Telegram.WebApp.expand();
             window.Telegram.WebApp.setHeaderColor('#02040a');
         }
 
-        const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
-        const ADMIN_USERNAME = 'managerlegionshop'; 
+        const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user; 
 
         function initProfile() {
             const nameEl = document.getElementById('user-name');
@@ -382,6 +384,7 @@
             }
         }
 
+        // === ДАННЫЕ И СОСТОЯНИЕ ===
         let products = [];
         let cart = [];
         try { cart = JSON.parse(localStorage.getItem('legion_cart_cosmic')) || []; } catch(e) {}
@@ -394,6 +397,7 @@
         let currentBrand = 'all';
         let currentDiscount = 0;
 
+        // === ЗАГРУЗКА ПРОДУКТОВ ===
         async function loadProducts() {
             const grid = document.getElementById('catalog-grid');
             
@@ -440,6 +444,7 @@
             }
         }
 
+        // === ФИЛЬТРЫ ===
         function openFilters() {
             const modal = document.getElementById('filter-modal');
             document.getElementById('mg-section').style.display = (activeCategory === 'liquids') ? 'block' : 'none';
@@ -477,6 +482,7 @@
             if (container) container.style.display = openAccordions[productId] ? 'flex' : 'none';
         }
 
+        // === РЕНДЕР КАТАЛОГА ===
         function renderProducts() {
             const grid = document.getElementById('catalog-grid');
             let filtered = products.filter(p => {
@@ -561,6 +567,7 @@
             }).join('');
         }
 
+        // === КОРЗИНА ===
         function changeQty(cartId, delta, productId, variantName) {
             let cartItem;
             if (variantName) {
@@ -675,7 +682,7 @@
             checkoutBtn.innerHTML = `<span>Оформить заказ</span> <span>${finalTotal} ₽ ${currentDiscount > 0 ? `<span style="font-size:12px;text-decoration:line-through;opacity:0.7;">${total} ₽</span>` : ''}</span>`;
         }
 
-        // === АДМИНКА С СОХРАНЕНИЕМ В БД ===
+        // === АДМИНКА ===
         function renderAdminPanel() {
             const list = document.getElementById('admin-list');
             list.innerHTML = products.map(p => {
@@ -750,6 +757,7 @@
             }
         }
 
+        // === НАВИГАЦИЯ И CHECKOUT ===
         function switchTab(tabId) {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
@@ -803,6 +811,7 @@
             }
         }
 
+        // === СТАРТ ===
         setTimeout(async () => {
             initProfile();
             updateBadge();
